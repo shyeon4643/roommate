@@ -1,0 +1,23 @@
+body{
+    padding: 0;
+    margin: 0;
+}
+.header{
+    background-image:linear-gradient(to right, #e2c2dd,#d599c5,#c96fa8,#bd3e89);
+    display: flex;
+    justify-content: space-between;
+}
+
+#header_header_list{
+    list-style:none;
+    display: flex;
+}
+
+li{
+    width:100px;
+}
+
+.header_link{
+    text-decoration:none;
+    color: white;
+}
