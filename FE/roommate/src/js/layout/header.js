@@ -13,7 +13,10 @@ const  Header=()=>{
             <div id="header_header">
                 <ul id="header_header_list">
                     <li>
-                    <Link to="/posts" className="header_link"><h4>게시판</h4></Link>
+                    <Link to="/monthly/posts" className="header_link"><h4>전세</h4></Link>
+                    </li>
+                    <li>
+                    <Link to="/charter/posts" className="header_link"><h4>월세</h4></Link>
                     </li>
                     <li>
                     <Link to="/login" className="header_link"><h4>로그인</h4></Link>

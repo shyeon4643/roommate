@@ -8,7 +8,9 @@ import Header from "./js/layout/header";
 import BoardTable from "./js/post/boardTable";
 import Comment from "./js/post/comment";
 import DetailPost from "./js/post/detailPost";
+import WritePost from "./js/post/writePost";
 import MyPage from "./js/user/mypage";
+import WriteDetailRoommate from "./js/user/writeDetailRoommate";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Join />} />
+        <Route path="/writeDetailRoommate" element={<WriteDetailRoommate />} />
+        <Route path="/writePost" element={<WritePost />} />
       </Routes>
         </div>
         <Footer />

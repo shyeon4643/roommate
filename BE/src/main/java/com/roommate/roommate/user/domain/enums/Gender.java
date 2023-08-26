@@ -6,5 +6,5 @@ import lombok.Getter;
 public enum Gender {
     남,
     여,
-    무
+    상관없어요
 }

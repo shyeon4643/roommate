@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../../css/boardTable.css";
 
 function BoardTable({res}){
     return(
@@ -31,11 +32,11 @@ function BoardTable({res}){
                         </tr>
                     ))}
                 </tbody>
-            </table>
-        </div>
-        <Link to="/writePost" className="board-write-button">
+                <Link to="/writePost" className="board-write-button">
             글쓰기
         </Link>
+            </table>
+        </div>
     </div>
     )
 }
