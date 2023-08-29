@@ -1,0 +1,42 @@
+.mypage_container{
+    width:50%;
+    margin: 0 auto;
+}
+
+.mypage_inform{
+    display: flex;
+    margin-top: 10%;
+    justify-content: space-around;
+}
+
+.profile_field{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.mypage_roommateInfo_name{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.mypage_roommateInfo_table{
+    width: 100%;
+    padding: 10%;
+    margin-left: 10%;
+}
+
+.detailRoommateInfo{
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 15px;
+    margin :25%;
+    float: center;
+    border-radius: 10px;
+    color:aliceblue;
+    background-color: #e2c2dd;
+}
+
+.mypage_name{
+    margin-left: 40%;
+}
