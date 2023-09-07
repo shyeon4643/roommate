@@ -1,9 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../../css/mypage.css";
+import Sidebar from "../layout/sidebar";
+import "../layout/sidebar.js";
 
 function MyPage({imageUrl, name, nickname, email, lifeCycle, pet, smoking, gender, wishRoommate, fee}){
     return(
+        <div className="mypage_wrapper">
+            <Sidebar />
         <div className="mypage_container">
             <div className="mypage_continer_name">
                     <h1 className="mypage_name">회원정보</h1>
@@ -55,6 +59,7 @@ function MyPage({imageUrl, name, nickname, email, lifeCycle, pet, smoking, gende
                     </div>
                 <Link to="/detailRoommate" className="detailRoommateInfo">내가 원하는 룸메이트 정보 수정하기</Link>
                 </div>
+        </div>
         </div>
     )
 

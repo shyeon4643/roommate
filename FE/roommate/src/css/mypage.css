@@ -1,3 +1,7 @@
+.mypage_wrapper{
+    width:100%;
+}
+
 .mypage_container{
     width:50%;
     margin: 0 auto;
@@ -33,7 +37,7 @@
     margin :25%;
     float: center;
     border-radius: 10px;
-    color:aliceblue;
+    color:black;
     background-color: #e2c2dd;
 }
 

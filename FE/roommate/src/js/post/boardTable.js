@@ -32,10 +32,10 @@ function BoardTable({res}){
                         </tr>
                     ))}
                 </tbody>
-                <Link to="/writePost" className="board-write-button">
+            </table>
+            <Link to="/writePost" className="board-write-button">
             글쓰기
         </Link>
-            </table>
         </div>
     </div>
     )

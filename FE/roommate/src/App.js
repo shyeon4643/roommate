@@ -5,9 +5,14 @@ import Join from "./js/home/join";
 import Login from "./js/home/login";
 import Footer from "./js/layout/footer";
 import Header from "./js/layout/header";
+import Sidebar from "./js/layout/sidebar";
+import BoardCharter from "./js/post/boardCharter";
+import BoardMonthly from "./js/post/boardMonthly";
 import BoardTable from "./js/post/boardTable";
 import Comment from "./js/post/comment";
 import DetailPost from "./js/post/detailPost";
+import MyComments from "./js/post/myComments";
+import MyPosts from "./js/post/myPosts";
 import WritePost from "./js/post/writePost";
 import MyPage from "./js/user/mypage";
 import WriteDetailRoommate from "./js/user/writeDetailRoommate";
@@ -27,7 +32,12 @@ function App() {
         <Route path="/join" element={<Join />} />
         <Route path="/writeDetailRoommate" element={<WriteDetailRoommate />} />
         <Route path="/writePost" element={<WritePost />} />
-      </Routes>
+        <Route path="/monthly/posts" element={<BoardMonthly />} />
+        <Route path="/charter/posts" element={<BoardCharter />} />
+        <Route path="/user/posts" element={<MyPosts />}/>
+        <Route path="/user/comments" element={<MyComments />} />
+        <Route path="/sidebar" element={<Sidebar />} />
+          </Routes>
         </div>
         <Footer />
       </div>

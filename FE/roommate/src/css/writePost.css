@@ -31,4 +31,6 @@
     border: none;
     background-color: #e2c2dd;
     border-radius: 10px;  
+    width:100%;
+    margin-left: 2%;
 }
