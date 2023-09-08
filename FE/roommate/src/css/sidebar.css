@@ -1,0 +1,13 @@
+.sidebar_ul{
+    list-style: none;
+    padding: 0px;
+	margin: 0px;
+    overflow: auto;
+	position: fixed;
+    left:10px;
+}
+
+.sidebar_li_link{
+    color: black;
+    text-decoration: none;
+}

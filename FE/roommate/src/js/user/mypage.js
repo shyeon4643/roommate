@@ -1,10 +1,27 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../css/mypage.css";
 import Sidebar from "../layout/sidebar";
 import "../layout/sidebar.js";
 
 function MyPage({imageUrl, name, nickname, email, lifeCycle, pet, smoking, gender, wishRoommate, fee}){
+
+    const [myPage, setMyPage] = useState("");
+
+    useEffect(()=>{
+        try{
+            axios({
+                method: "GET",
+                url: `/user`
+            }).then((response) =>{
+                setMyPage(response.data);
+            });
+        }catch(error){
+            console.error("데이터를 가져오는 중 에러가 발생했습니다.", error);
+        }
+    })
+
     return(
         <div className="mypage_wrapper">
             <Sidebar />

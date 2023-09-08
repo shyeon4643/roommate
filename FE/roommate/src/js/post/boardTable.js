@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../../css/boardTable.css";
 
-function BoardTable({res}){
+function BoardTable({postData}){
     return(
         <div>
         <div className="board-table-container">
@@ -17,8 +17,8 @@ function BoardTable({res}){
                 </tr>
                 </thead>
                 <tbody className="board-table-body">
-                {res &&
-                    res.map((response, index) => (
+                {postData &&
+                    postData.map((response, index) => (
                         <tr key={response.id}>
                             <td>
                                 <Link to={`/v1/post/${response.category}/${response.postId}`}>

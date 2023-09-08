@@ -214,7 +214,7 @@ public class UserController {
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("USER_UPDATED")
-                        .responseMessage("USER 정보 변경 완료")
+                        .responseMessage("USER 삭제 완료")
                         .data(response)
                         .build());
     }

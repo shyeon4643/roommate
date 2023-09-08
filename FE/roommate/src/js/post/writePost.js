@@ -1,7 +1,67 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 import "../../css/writePost.css";
 
 function WritePost(){
+
+    const formData = new FormData();
+    const [postId, setPostId] = useState("");
+    const [category, setCategory] = useState("");
+    const [title, setTitle] = useState("");
+    const [area, setArea] = useState("");
+    const [fee, setFee] = useState("");
+    const [body, setBody] = useState("");
+    const [files, setFiles] = useState(null);
+
+    const handleNewPost = async(e) =>{
+        e.preventDefault();
+        try{
+            formData.append("postId", postId);
+            formData.append("category", category);
+            formData.append("title", title);
+            formData.append("area", area);
+            formData.append("fee", fee);
+            formData.append("body", body);
+            if(files){
+                formData.append("files", files);
+            }
+            axios({
+                method : "POST",
+                url : "/writePost",
+                data : formData
+            }).then((response) => {
+                window.location.href = `/post/${category}/${postId}`;
+            })
+        }catch(error){
+            console.log("글 등록 중 에러 발생  : ", error);
+        }
+    }
+
+    const handleUpdatePost = async() => {
+        try{
+        formData.append("postid", postId);
+            formData.append("category", category);
+            formData.append("title", title);
+            formData.append("area", area);
+            formData.append("fee", fee);
+            formData.append("body", body);
+            if(files){
+                formData.append("files", files);
+            }
+            axios({
+                method : "PUT",
+                url : `/post/${category}/${postId}`,
+                data : formData,
+
+            }).then((response) => {
+                window.location.href = `/post/${category}/${postId}`;
+            })
+        }catch(error){
+            console.log("게시글 수정 중에 에러 발생 : ", error);
+        }
+            
+    }
+    
     return(
         <div className="writePost_container">
             <div className="writePost_body">
@@ -9,13 +69,15 @@ function WritePost(){
                 <div>
             <input type="text"
                 className="writePost_input"
-                placeholder="제목을 입력하세요."/>
+                placeholder="제목을 입력하세요."
+                value={title}/>
                 </div>
                 <div className="writePost_input_middle1">
                 <select
                 id="writePost_input_category"
                 name="writePost_category"
                 className="writePost_input"
+                value={category}
             >
               <option value="">카테고리를 선택하세요</option>
               <option value="월세">월세</option>
@@ -25,6 +87,7 @@ function WritePost(){
                 id="writePost_input_category"
                 name="writePost_category"
                 className="writePost_input"
+                value={area}
             >
               <option value="">지역을 선택하세요</option>
               <option value="강남구">강남구</option>
@@ -57,12 +120,14 @@ function WritePost(){
                 name="attachments"
                 className="writePost_input"
                 accept="image/*,video/*"
+                value={files}
             />
             <input
                 type="text"
                 id="writePost_input_fee"
                 placeholder="fee"
                 className="writePost_input"
+                value={fee}
             />
 </div>
             <div>
@@ -70,9 +135,16 @@ function WritePost(){
             id="writePost_input_text"
                 className="writePost_input"
                 placeholder="내용을 입력하세요."/>
+                value={body}
             </div>
             <button type="submit" className="writePost_button">
             출간하기
+          </button>
+          <button
+          type="submit" 
+          className="writePost_button"
+          onClick={handleUpdatePost}>
+            수정하기
           </button>
             </div>
         </div>
