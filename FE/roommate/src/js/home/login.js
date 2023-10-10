@@ -15,16 +15,19 @@ function Login(){
             formData.append("password", password);
             axios({
                 method : "POST",
-                url : `/login`,
+                url : "/login",
                 data:formData
             }).then((response) => {
-                window.location.href =`/`;
+                const JWT = response;
+                localStorage.setItem("JWT", JWT);
             })
         }catch(error){
             console.log("로그인 중 에러 발생 : ", error);
         }
     }
 
+
+   
 
     return(
         <div className="login_container">

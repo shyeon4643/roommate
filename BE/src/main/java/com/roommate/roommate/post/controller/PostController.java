@@ -324,7 +324,7 @@ public class PostController {
     public ResponseEntity<DefaultResponseDto> deletedLike(@PathVariable("postId") Long postId,
                                                           @PathVariable("likeId") Long likeId,
                                                           HttpServletRequest servletRequest) {
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("token"));
             LikedPhoto likedPhoto = postService.deletedLike(likeId, uid);
 
             LikedInfoResponseDto response = new LikedInfoResponseDto(likedPhoto);

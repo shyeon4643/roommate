@@ -58,14 +58,15 @@ public class UserService {
      * 500(SERVER_ERROR)
      */
     @Transactional
-    public User login(SignInRequestDto signInRequestDto){
+    public String login(SignInRequestDto signInRequestDto){
         User user = userRepository.findByUidAndIsDeletedIsFalse(signInRequestDto.getUid()).get();
         if(!passwordEncoder.matches(signInRequestDto.getPassword(),user.getPassword())){
             throw new RuntimeException();
         }
         String token = jwtTokenProvider.createToken(String.valueOf(user.getUid()), Role.convertEnum(user.getRole()));
+        user.setToken(token);
         log.info("[Login Token] token : {} ",token);
-        return user;
+        return token;
 
     }
 

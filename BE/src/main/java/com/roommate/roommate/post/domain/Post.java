@@ -54,11 +54,12 @@ public class Post extends BaseEntity {
     }
 
     @Builder
-    public Post(String title, String body, PostCategory category, PostArea area, User user){
+    public Post(String title, String body, int fee, PostCategory category, PostArea area, User user){
         this.title=title;
         this.body=body;
         this.category=category;
         this.area=area;
+        this.fee=fee;
         this.user=user;
         this.setIsDeleted(false);
     }

@@ -24,11 +24,14 @@ const handleJoin=()=>{
     formData.append("phoneNum",phoneNum);
 
     axios({
+        headers :{
+            "Content-Type": `application/json`,
+        },
         method:"POST",
-        url : `/join`,
-        data : formData
+        url : "/join",
+        data : formData,
     }).then((response) =>{
-        window.location.href =`/login`;
+        window.location.href = "/login"
     })
     }catch(error){
         console.log("회원 가입 중 오류 : ", error);
@@ -43,6 +46,7 @@ const handleJoin=()=>{
             <h1 className="join_title">회원가입</h1>
             <form onSubmit={handleJoin}>
                     <table className="join_table">
+                        <tbody>
                         <tr>
                                 <td className="join_field_name">이름</td>
                                 <td>
@@ -113,6 +117,7 @@ const handleJoin=()=>{
                             onChange={(e) => setPhoneNum(e.target.value)}/>
                             </td>
                             </tr>
+                            </tbody>
                     </table>
                     <button
                     className="join-submit-button"

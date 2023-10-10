@@ -35,6 +35,7 @@ function App() {
         <Route path="/monthly/posts" element={<BoardMonthly />} />
         <Route path="/charter/posts" element={<BoardCharter />} />
         <Route path="/user/posts" element={<MyPosts />}/>
+        <Route path="/post/:category/:postId" element={<DetailPost />} />
         <Route path="/user/comments" element={<MyComments />} />
         <Route path="/sidebar" element={<Sidebar />} />
           </Routes>

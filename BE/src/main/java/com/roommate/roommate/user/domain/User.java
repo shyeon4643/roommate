@@ -33,6 +33,7 @@ public class User extends BaseEntity implements UserDetails {
     private String mbti;
     private String nickname;
     private Character role;
+    private String token;
 
     @Embedded
     private DetailRoommate detailRoommate;

@@ -86,15 +86,13 @@ public class UserController {
     public ResponseEntity<DefaultResponseDto> login(@RequestBody @Valid SignInRequestDto signInRequesetDto){
         log.info("[login] 회원 로그인 정보 전달");
 
-        User user = userService.login(signInRequesetDto);
-
-        UserInfoResponseDto response = new UserInfoResponseDto(user);
+        String token = userService.login(signInRequesetDto);
 
         return ResponseEntity.status(201)
                 .body(DefaultResponseDto.builder()
                         .responseCode("USER_LOGIN")
                         .responseMessage("회원 로그인 완료")
-                        .data(response)
+                        .data(token)
                         .build());
     }
 

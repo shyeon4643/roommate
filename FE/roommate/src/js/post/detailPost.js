@@ -1,16 +1,22 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Comment from "./comment";
 
-function DetailPost({postId, title, body, category, likeCount, viewCount, imageUrl, comments}){
-    const [post, setPost] = useState(null);
+function DetailPost(){
+    const { category, postId } = useParams();
+    const [Post, setPost] = useState(null);
 
 
     useEffect(()=>{
         try{
             axios({
                 method : "GET",
-                url : `/post/${category}/${postId}`
+                url : `/post/${category}/${postId}`,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: localStorage.getItem('JWT'),
+                  },
             }).then((response) => {
                 setPost(response.data.data);
             });
@@ -18,6 +24,15 @@ function DetailPost({postId, title, body, category, likeCount, viewCount, imageU
             console.log("게시글 불러오는 중에 오류 : ", error);
         }
         });
+
+        const {
+            title,
+            imageUrl,
+            body,
+            likeCount,
+            viewCount,
+            comments,
+          } = setPost;
 
     return(
         <div className="detailPost_container">

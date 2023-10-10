@@ -47,6 +47,7 @@ public class PostService {
                     .body(createPostRequestDto.getBody())
                     .area(PostArea.valueOf(createPostRequestDto.getArea()))
                     .category(PostCategory.valueOf(createPostRequestDto.getCategory()))
+                    .fee(createPostRequestDto.getFee())
                     .user(user)
                     .build();
             if(createPostRequestDto.getFiles()!=null) {
