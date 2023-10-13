@@ -15,7 +15,7 @@ import MyComments from "./js/post/myComments";
 import MyPosts from "./js/post/myPosts";
 import WritePost from "./js/post/writePost";
 import MyPage from "./js/user/mypage";
-import WriteDetailRoommate from "./js/user/writeDetailRoommate";
+import DetailRoommate from "./js/user/detailRoommate";
 
 function App() {
   return (
@@ -30,7 +30,8 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Join />} />
-        <Route path="/writeDetailRoommate" element={<WriteDetailRoommate />} />
+        <Route path="/updateDetailRoommate" element={<DetailRoommate />} />
+        <Route path="/writeDetailRoommate" element={<DetailRoommate />} />
         <Route path="/writePost" element={<WritePost />} />
         <Route path="/monthly/posts" element={<BoardMonthly />} />
         <Route path="/charter/posts" element={<BoardCharter />} />

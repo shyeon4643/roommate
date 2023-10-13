@@ -13,7 +13,7 @@ function BoardMonthly(){
                 method: "GET",
                 url: `/${category}/posts`
             }).then((response) =>{
-                setPostData(response.data);
+                setPostData(response.data.data);
             });
         }catch(error){
             console.error("게시물 데이터를 가져오는 중 에러가 발생했습니다.", error);

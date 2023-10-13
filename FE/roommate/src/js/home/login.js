@@ -4,22 +4,23 @@ import "../../css/login.css";
 
 
 function Login(){
-
-    const formData = new FormData();
     const [uid, setUid] = useState("");
     const [password, setPassword] = useState("");
 
     const handleLogin =()=>{
         try{
-            formData.append("uid", uid);
-            formData.append("password", password);
+            const data ={
+                uid : uid,
+                password : password
+            }
             axios({
                 method : "POST",
                 url : "/login",
-                data:formData
+                data:data,
             }).then((response) => {
-                const JWT = response;
-                localStorage.setItem("JWT", JWT);
+                console.log(response.data);
+                localStorage.setItem("JWT", response.data.data.token);
+                window.location.href = "/writeDetailRoommate";
             })
         }catch(error){
             console.log("로그인 중 에러 발생 : ", error);
@@ -33,7 +34,7 @@ function Login(){
         <div className="login_container">
             <div className="login_body">
                 <h1 id="login_title">로그인</h1>
-                <form onSubmit={handleLogin}>
+                <form>
                 <input type="text"
                 className="login_input"
                 placeholder="ID"
@@ -46,7 +47,8 @@ function Login(){
                 onChange={(e) => setPassword(e.target.value)}/>
                 <button
                     className="login-submit-button"
-                    type="submit"
+                    type="button"
+                    onClick={handleLogin}
                 >
                   로그인
                 </button>

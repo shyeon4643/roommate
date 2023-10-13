@@ -27,13 +27,14 @@ function WritePost(){
             axios({
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: localStorage.getItem('JWT'),
+                    'JWT': localStorage.getItem('JWT'),
                   },
                 method : "POST",
                 url : "/writePost",
                 data : formData
-            }).then((response) => {
-                window.location.href = `/post/${category}/${postId}`;
+            }).then((response) =>{
+                console.log(response.data.data);
+                window.location.href = `/post/${category}/${response.data.data.postId}`;
             })
         }catch(error){
             console.log("글 등록 중 에러 발생  : ", error);
@@ -74,7 +75,7 @@ function WritePost(){
                 className="writePost_input"
                 placeholder="제목을 입력하세요."
                 onChange={(e) => setTitle(e.target.value)}
-                value={title}/>
+                value={title||''}/>
                 </div>
                 <div className="writePost_input_middle1">
                 <select
@@ -127,7 +128,7 @@ function WritePost(){
                 className="writePost_input"
                 accept="image/*,video/*"
                 onChange={(e) => setFiles(e.target.value)}
-                value={files}
+                value={files||''}
             />
             <input
                 type="text"
@@ -135,7 +136,7 @@ function WritePost(){
                 placeholder="fee"
                 className="writePost_input"
                 onChange={(e) => setFee(e.target.value)}
-                value={fee}
+                value={fee||''}
             />
 </div>
             <div>
@@ -143,16 +144,16 @@ function WritePost(){
             id="writePost_input_text"
                 className="writePost_input"
                 onChange={(e) => setBody(e.target.value)}
-                value={body}
+                value={body||''}
                 placeholder="내용을 입력하세요."/>
             </div>
-            <button type="submit" 
+            <button type="button"
             className="writePost_button"
             onClick={handleNewPost}>
             출간하기
           </button>
           <button
-          type="submit" 
+          type="button"
           className="writePost_button"
           style={{display:"none"}}
           onClick={handleUpdatePost}>

@@ -4,7 +4,6 @@ import "../../css/join.css";
 
 function Join(){
 
-    const formData = new FormData();
     const[name, setName] = useState("");
     const[uid, setUid] = useState("");
     const[password, setPassword] = useState("");
@@ -15,23 +14,24 @@ function Join(){
     
 const handleJoin=()=>{
     try{
-    formData.append("name", name);
-    formData.append("uid",uid);
-    formData.append("password",password);
-    formData.append("birth", birth);
-    formData.append("email",email);
-    formData.append("nickname",nickname);
-    formData.append("phoneNum",phoneNum);
+
+        const data ={
+            uid : uid,
+            password : password,
+            name:name,
+            birth : birth,
+            email : email,
+            nickname : nickname,
+            phoneNum : phoneNum,
+        }
 
     axios({
-        headers :{
-            "Content-Type": `application/json`,
-        },
         method:"POST",
         url : "/join",
-        data : formData,
+        data : data,
     }).then((response) =>{
-        window.location.href = "/login"
+        console.log(response.data);
+        window.location.href = "/login";
     })
     }catch(error){
         console.log("회원 가입 중 오류 : ", error);
@@ -44,7 +44,7 @@ const handleJoin=()=>{
         <div className="join_container">
             <div className="join_body">
             <h1 className="join_title">회원가입</h1>
-            <form onSubmit={handleJoin}>
+            <form>
                     <table className="join_table">
                         <tbody>
                         <tr>
@@ -121,7 +121,8 @@ const handleJoin=()=>{
                     </table>
                     <button
                     className="join-submit-button"
-                    type="submit"
+                    type="button"
+                    onClick={handleJoin}
                 >
                     회원가입
                 </button>
