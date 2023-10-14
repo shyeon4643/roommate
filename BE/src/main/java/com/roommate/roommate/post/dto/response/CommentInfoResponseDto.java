@@ -21,10 +21,9 @@ public class CommentInfoResponseDto {
     @ApiModelProperty(position = 1, required = true, value ="Post 식별자", example = "1")
     private Long commentId;
     private Long postId;
-    private String email;
+    private String writer;
     private String body;
     private PostCategory category;
-    private PostArea area;
     private boolean commentDeleted;
     private LocalDateTime updateAt;
 
@@ -33,7 +32,7 @@ public class CommentInfoResponseDto {
         this.postId=comment.getPost().getId();
         this.commentDeleted=comment.getIsDeleted();
         this.category=comment.getPost().getCategory();
-        this.email=comment.getUser().getEmail();
+        this.writer=comment.getUser().getNickname();
         this.updateAt=comment.getUpdatedAt();
         this.body=comment.getBody();
     }

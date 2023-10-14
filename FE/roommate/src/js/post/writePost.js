@@ -1,5 +1,6 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "../../css/writePost.css";
 
 function WritePost(){
@@ -12,6 +13,26 @@ function WritePost(){
     const [fee, setFee] = useState("");
     const [body, setBody] = useState("");
     const [files, setFiles] = useState(null);
+    const location = useLocation();
+    const userContent = location.state;
+    useEffect(() => {
+        const updateBtn = document.querySelector("#updatePost_button");
+        const wrtieBtn = document.querySelector("#writePost_button");
+        if (userContent) {
+            setPostId(userContent.postId);
+            setCategory(userContent.category);
+            setTitle(userContent.title);
+            setBody(userContent.body);
+            setArea(userContent.area);
+            setFee(userContent.fee);
+            setFiles(userContent.files);
+            wrtieBtn.style.display = "none";
+            updateBtn.style.display = "block";
+        } else {
+            wrtieBtn.style.display = "block";
+            updateBtn.style.display = "none";
+        }
+    }, []);
 
     const handleNewPost = async(e) =>{
         e.preventDefault();
@@ -148,12 +169,14 @@ function WritePost(){
                 placeholder="내용을 입력하세요."/>
             </div>
             <button type="button"
+             id="writePost_button"
             className="writePost_button"
             onClick={handleNewPost}>
             출간하기
           </button>
           <button
           type="button"
+          id="updatePost_button"
           className="writePost_button"
           style={{display:"none"}}
           onClick={handleUpdatePost}>

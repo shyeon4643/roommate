@@ -158,11 +158,11 @@ public class PostService {
         }
     }
 
-    public List<LikedPhoto> findAllLikedPostsByUser(String uid){
+    public List<LikedPost> findAllLikedPostsByUser(String uid){
         List<Post> posts = new ArrayList<>();
         try {
             User user= userService.findByUid(uid);
-            List<LikedPhoto> postLikes = postLikedRepository.findByUserIdAndIsDeletedIsFalse(user.getId());
+            List<LikedPost> postLikes = postLikedRepository.findByUserIdAndIsDeletedIsFalse(user.getId());
 
 
             return postLikes;
@@ -173,17 +173,17 @@ public class PostService {
     }
 
     @Transactional
-    public LikedPhoto saveLike(Long postId, String uid) {
+    public LikedPost saveLike(Long postId, String uid) {
         try {
             User user = userService.findByUid(uid);
             Post post = postRepository.findById(postId).get();
-            LikedPhoto likedPhoto = LikedPhoto.builder()
+            LikedPost likedPost = LikedPost.builder()
                     .post(post)
                     .user(user)
                     .build();
 
-            postLikedRepository.save(likedPhoto);
-            return likedPhoto;
+            postLikedRepository.save(likedPost);
+            return likedPost;
         } catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(SERVER_ERROR);
@@ -192,13 +192,13 @@ public class PostService {
     }
 
     @Transactional
-    public LikedPhoto deletedLike(Long likeId, String uid) {
+    public LikedPost deletedLike(Long likeId, String uid) {
         try {
             User user = userService.findByUid(uid);
-            LikedPhoto likedPhoto = postLikedRepository.findByIdAndUserId(likeId,user.getId());
-            likedPhoto.delete();
+            LikedPost likedPost = postLikedRepository.findByIdAndUserId(likeId,user.getId());
+            likedPost.delete();
 
-            return likedPhoto;
+            return likedPost;
         } catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(SERVER_ERROR);

@@ -9,6 +9,7 @@ function Join(){
     const[password, setPassword] = useState("");
     const[birth, setBirth] = useState("");
     const[email, setEmail] = useState("");
+    const[mbti, setMbti] = useState("");
     const[nickname, setNickname] = useState("");
     const[phoneNum, setPhoneNum] = useState("");
     
@@ -23,6 +24,7 @@ const handleJoin=()=>{
             email : email,
             nickname : nickname,
             phoneNum : phoneNum,
+            mbti : mbti,
         }
 
     axios({
@@ -107,6 +109,35 @@ const handleJoin=()=>{
                             onChange={(e) => setNickname(e.target.value)}/>
                             </td>
                             </tr>
+                        <tr>
+                            <td className="join_field_name">MBTI</td>
+                            <td>
+                            <select
+                                name="mbti"
+                                className="join_input"
+                                value={mbti}
+                                onChange={(e) => setMbti(e.target.value)}
+                            >
+                                <option value="">MBTI를 선택하세요</option>
+                                <option value="ISTJ" >ISTJ</option>
+                                <option value="ISFJ" >ISFJ</option>
+                                <option value="INFJ" >INFJ</option>
+                                <option value="INTJ" >INTJ</option>
+                                <option value="ISTP" >ISTP</option>
+                                <option value="ISFP" >ISFP</option>
+                                <option value="INFP" >INFP</option>
+                                <option value="INTP" >INTP</option>
+                                <option value="ESTP" >ESTP</option>
+                                <option value="ESFP" >ESFP</option>
+                                <option value="ENFP" >ENFP</option>
+                                <option value="ENTP" >ENTP</option>
+                                <option value="ESTJ" >ESTJ</option>
+                                <option value="ESFJ" >ESFJ</option>
+                                <option value="ENFJ" >ENFJ</option>
+                                <option value="ENTJ" >ENTJ</option>
+                            </select>
+                            </td>
+                        </tr>
                             <tr>
                                 <td className="join_field_name">전화번호</td>
                                 <td>

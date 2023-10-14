@@ -100,7 +100,7 @@ public class CommentService {
         }
     }
 
-   /* @Transactional
+    /*@Transactional
     public void savePhoto(Comment comment, List<MultipartFile> files) throws Exception {
         if (files.size() != 0) {
             String projectPath = System.getProperty("user.dir") + "\\\\BE\\\\school\\\\src\\\\main\\\\resources\\\\static\\\\comments";

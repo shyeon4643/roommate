@@ -33,6 +33,7 @@ function App() {
         <Route path="/updateDetailRoommate" element={<DetailRoommate />} />
         <Route path="/writeDetailRoommate" element={<DetailRoommate />} />
         <Route path="/writePost" element={<WritePost />} />
+        <Route path="/updatePost" element={<WritePost />} />
         <Route path="/monthly/posts" element={<BoardMonthly />} />
         <Route path="/charter/posts" element={<BoardCharter />} />
         <Route path="/user/posts" element={<MyPosts />}/>

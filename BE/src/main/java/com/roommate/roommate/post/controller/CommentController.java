@@ -44,8 +44,7 @@ public class CommentController {
                     description = "SERVER_ERROR"),
     })
     @PostMapping(value="/post/{category}/{postId}/comment")
-    public ResponseEntity<DefaultResponseDto> saveComment(@PathVariable("category") String category,
-                                                          @PathVariable("postId") Long postId,
+    public ResponseEntity<DefaultResponseDto> saveComment(@PathVariable("postId") Long postId,
                                                           @RequestBody CreateCommentRequestDto createCommentRequestDto,
                                                           HttpServletRequest servletRequest) throws Exception{
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
@@ -74,9 +73,7 @@ public class CommentController {
                     description = "SERVER_ERROR"),
     })
     @PutMapping(value="/post/{category}/{postId}/comment/{commentId}")
-    public ResponseEntity<DefaultResponseDto> updateComment(@PathVariable("category") String category,
-                                                            @PathVariable("postId") Long postId,
-                                                            @RequestBody CreateCommentRequestDto createCommentRequestDto,
+    public ResponseEntity<DefaultResponseDto> updateComment(@RequestBody CreateCommentRequestDto createCommentRequestDto,
                                                             @PathVariable("commentId") Long commentId,
                                                             HttpServletRequest servletRequest){
             String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
@@ -136,9 +133,7 @@ public class CommentController {
                     description = "SERVER_ERROR"),
     })
     @DeleteMapping("/post/{category}/{postId}/comment/{commentId}")
-    public ResponseEntity<DefaultResponseDto> deleteComment(@PathVariable("category") String category,
-                                                            @PathVariable("commentId") Long commentId,
-                                                            @PathVariable("postId") Long postId,
+    public ResponseEntity<DefaultResponseDto> deleteComment(@PathVariable("commentId") Long commentId,
                                                             HttpServletRequest servletRequest) {
             String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
 

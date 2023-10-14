@@ -4,6 +4,7 @@ import com.roommate.roommate.config.security.CustomAccessDeniedHandler;
 import com.roommate.roommate.config.security.CustomAuthenticationEntryPoint;
 import com.roommate.roommate.config.security.JwtAuthenticationFilter;
 import com.roommate.roommate.config.security.JwtTokenProvider;
+import io.swagger.models.HttpMethod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +16,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity // 웹 보안 활성화
@@ -26,10 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http
-                .httpBasic().disable()
                 .csrf().disable()//사이트 간 요청 위조
-                .cors()
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS
@@ -48,17 +49,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*")); // Origin URL 등록
-        configuration.setAllowedMethods(Arrays.asList("*")); // 사용할 CRUD 메소드 등록
-        configuration.setAllowedHeaders(Arrays.asList("*")); // 사용할 Header 등록
-        configuration.setExposedHeaders(Arrays.asList("JWT", "token")); // ExpoesdHeader에 클라이언트가 응답에 접근할 수 있는 header들을 추가
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-
-        return source;
-    }
 }

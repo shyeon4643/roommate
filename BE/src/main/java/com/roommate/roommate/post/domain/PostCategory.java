@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public enum PostCategory {
     charter,
-    monthly;
+    monthly,
+    None;
 
     private String value;
 }

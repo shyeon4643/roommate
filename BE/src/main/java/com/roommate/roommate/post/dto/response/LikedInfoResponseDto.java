@@ -1,6 +1,6 @@
 package com.roommate.roommate.post.dto.response;
 
-import com.roommate.roommate.post.domain.LikedPhoto;
+import com.roommate.roommate.post.domain.LikedPost;
 import com.roommate.roommate.user.domain.User;
 import io.swagger.annotations.ApiModel;
 import lombok.AccessLevel;
@@ -23,18 +23,18 @@ public class LikedInfoResponseDto {
     private boolean isDeleted;
     private List<PostInfoResponseDto> posts = new ArrayList<>();
 
-    public LikedInfoResponseDto(LikedPhoto likedPhoto){
-        this.likedId= likedPhoto.getId();
-        this.postId= likedPhoto.getPost().getId();
-        this.isDeleted= likedPhoto.getIsDeleted();
+    public LikedInfoResponseDto(LikedPost likedPost){
+        this.likedId= likedPost.getId();
+        this.postId= likedPost.getPost().getId();
+        this.isDeleted= likedPost.getIsDeleted();
     }
 
-    public LikedInfoResponseDto(LikedPhoto likedPhoto, User user){
+    public LikedInfoResponseDto(LikedPost likedPhoto, User user){
         this.likedId= likedPhoto.getId();
         if(user.getLikedPosts()!=null){
-            List<LikedPhoto> likedPosts = user.getLikedPosts();
-            for(LikedPhoto likedPost : likedPosts){
-                this.posts.add(new PostInfoResponseDto(likedPost.getPost()));
+            List<LikedPost> likedPosts = user.getLikedPosts();
+            for(LikedPost likedPost : likedPosts){
+                this.posts.add(new PostInfoResponseDto(likedPost.getPost(),user));
             }
         }
     }

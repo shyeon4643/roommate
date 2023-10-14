@@ -33,6 +33,24 @@ public class DetailRoommate {
     @Enumerated(EnumType.STRING)
     private PostArea area;
 
+    public void update(LifeCycle lifeCycle,
+                       Smoking smoking,
+                       Gender gender,
+                       Pet pet,
+                       Integer fee,
+                       String wishRoommate,
+                       PostCategory category,
+                       PostArea area){
+        this.lifeCycle=lifeCycle;
+        this.smoking=smoking;
+        this.gender=gender;
+        this.pet=pet;
+        this.fee=fee;
+        this.wishRoommate=wishRoommate;
+        this.category=category;
+        this.area=area;
+    }
+
 
 
 }

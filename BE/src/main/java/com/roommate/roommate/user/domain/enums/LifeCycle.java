@@ -6,5 +6,7 @@ import lombok.Getter;
 public enum LifeCycle {
     야행성,
     주행성,
-    상관없어요
+    상관없어요,
+    None;
+    private String value;
 }

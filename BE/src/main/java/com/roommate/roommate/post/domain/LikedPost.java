@@ -11,7 +11,7 @@ import com.roomate.roomate.common.BaseEntity;
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class LikedPhoto extends BaseEntity {
+public class LikedPost extends BaseEntity {
 
     @Id
     @Column(name="like_id")
@@ -29,7 +29,7 @@ public class LikedPhoto extends BaseEntity {
 
 
     @Builder
-    public LikedPhoto(Post post, User user){
+    public LikedPost(Post post, User user){
         this.post=post;
         this.user=user;
         this.setIsDeleted(false);

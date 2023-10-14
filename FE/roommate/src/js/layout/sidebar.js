@@ -1,8 +1,28 @@
 import React from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import "../../css/sidebar.css";
 
 function Sidebar(){
+
+    const deleteUser = async() =>{
+        try{
+        axios({
+            headers: {
+                "Content-Type": "application/json",
+                'JWT': localStorage.getItem('JWT'),
+            },
+            method : "DELETE",
+            url : "/user",
+        }).then((response) =>{
+            console.log(response.data.data);
+            localStorage.removeItem('JWT');
+            window.location.href = `/`;
+        })
+    }catch(error){
+        console.log("유저 삭제 중 에러 발생  : ", error);
+    }
+}
     return(
         <div className="sidebar_wrapper">
             <div className="sidebar">
@@ -18,9 +38,10 @@ function Sidebar(){
                     </Link>
                 </li>
                 <li className="sidebar_li">
-                    <Link to="/delete/user" className="sidebar_li_link">
+                    <button type= "button"
+                            onClick={deleteUser}>
                         <h3>회원 탈퇴</h3>
-                    </Link>
+                    </button>
                 </li>
                 </ul>
             </div>

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.roomate.roomate.common.BaseEntity;
 import com.roommate.roommate.post.domain.Comment;
 import com.roommate.roommate.post.domain.Post;
-import com.roommate.roommate.post.domain.LikedPhoto;
+import com.roommate.roommate.post.domain.LikedPost;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,15 +42,15 @@ public class User extends BaseEntity implements UserDetails {
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<LikedPhoto> likes = new ArrayList<>();
+    private List<LikedPost> likes = new ArrayList<>();
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
-    public List<LikedPhoto> getLikedPosts() {
+    public List<LikedPost> getLikedPosts() {
         int size = this.likes.size();
         if (size < 1)
             return null;
-        List<LikedPhoto> likedPosts = new ArrayList<>(this.likes);
+        List<LikedPost> likedPosts = new ArrayList<>(this.likes);
         likedPosts.removeIf(likedPost -> likedPost.getIsDeleted().equals(true));
         Collections.reverse(likedPosts);
         return likedPosts;
@@ -69,6 +69,7 @@ public class User extends BaseEntity implements UserDetails {
                 String phoneNum,
                 String email,
                 Date birth,
+                String mbti,
                 String nickname){
         this.uid=uid;
         this.password=password;
@@ -77,6 +78,7 @@ public class User extends BaseEntity implements UserDetails {
         this.email=email;
         this.birth=birth;
         this.nickname=nickname;
+        this.mbti=mbti;
         this.role='U';
         this.setDetailRoommate(null);
         this.setIsDeleted(false);
@@ -95,6 +97,16 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     public void delete(){
+        this.uid=null;
+        this.nickname=null;
+        this.email=null;
+        this.birth=null;
+        this.phoneNum=null;
+        this.mbti=null;
+        this.role=null;
+        this.password=null;
+        this.token=null;
+        this.setDetailRoommate(null);
         this.setIsDeleted(true);
     }
 

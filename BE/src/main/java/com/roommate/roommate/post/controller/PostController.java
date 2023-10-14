@@ -3,7 +3,7 @@ package com.roommate.roommate.post.controller;
 import com.roommate.roommate.common.DefaultResponseDto;
 import com.roommate.roommate.config.security.JwtTokenProvider;
 import com.roommate.roommate.post.domain.Post;
-import com.roommate.roommate.post.domain.LikedPhoto;
+import com.roommate.roommate.post.domain.LikedPost;
 import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
 import com.roommate.roommate.post.dto.response.LikedInfoResponseDto;
 import com.roommate.roommate.post.dto.response.PostInfoResponseDto;
@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class PostController {
-
-    private final PostRepository postRepository;
     private final UserService userService;
     private final PostService postService;
     private final JwtTokenProvider jwtTokenProvider;
@@ -55,6 +53,7 @@ public class PostController {
                                                        CreatePostRequestDto createPostRequestDto)
             throws Exception{
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        User user = userService.findByUid(uid);
         if(postService.findPostByUid(uid)!=null) {
             return ResponseEntity.status(401)
                     .body(DefaultResponseDto.builder()
@@ -64,7 +63,7 @@ public class PostController {
                             .build());
         }else{
             Post post = postService.savePost(createPostRequestDto, uid);
-            PostInfoResponseDto response = new PostInfoResponseDto(post);
+            PostInfoResponseDto response = new PostInfoResponseDto(post,user);
             return ResponseEntity.status(200)
                     .body(DefaultResponseDto.builder()
                             .responseCode("POST_REGISTERED")
@@ -93,9 +92,10 @@ public class PostController {
     @GetMapping("/user/posts")
     public ResponseEntity<DefaultResponseDto> findAllPostsByUser(HttpServletRequest servletRequest){
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        User user = userService.findByUid(uid);
         Post post = postService.findPostByUid(uid);
 
-        PostInfoResponseDto response = new PostInfoResponseDto(post);
+        PostInfoResponseDto response = new PostInfoResponseDto(post, user);
 
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
@@ -120,11 +120,14 @@ public class PostController {
                     description = "SERVER_ERROR"),
     })
     @GetMapping("/{category}/posts")
-    public ResponseEntity<DefaultResponseDto> findAllPostsByCategory(@PathVariable("category")String category){
+    public ResponseEntity<DefaultResponseDto> findAllPostsByCategory(@PathVariable("category")String category,
+                                                                     HttpServletRequest servletRequest){
+        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        User user = userService.findByUid(uid);
         List<Post> posts = postService.findAllPostsByCategory(category);
 
         List<PostInfoResponseDto> response = posts.stream().map(post
-                -> new PostInfoResponseDto(post)).collect(Collectors.toList());
+                -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
 
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
@@ -148,11 +151,15 @@ public class PostController {
                     description = "SERVER_ERROR"),
     })
     @GetMapping("/posts/{area}")
-    public ResponseEntity<DefaultResponseDto> findAllPostsByArea(@PathVariable("area")String area){
+    public ResponseEntity<DefaultResponseDto> findAllPostsByArea(@PathVariable("area")String area,
+                                                                 HttpServletRequest servletRequest){
+        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        User user = userService.findByUid(uid);
+
         List<Post> posts = postService.findAllPostsByArea(area);
 
         List<PostInfoResponseDto> response = posts.stream().map(post
-                -> new PostInfoResponseDto(post)).collect(Collectors.toList());
+                -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
 
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
@@ -177,10 +184,13 @@ public class PostController {
                     description = "SERVER_ERROR"),
     })
     @GetMapping("/post/{category}/{postId}")
-    public ResponseEntity<DefaultResponseDto> findOnePost(@PathVariable("postId") Long postId){
+    public ResponseEntity<DefaultResponseDto> findOnePost(@PathVariable("postId") Long postId,
+                                                          HttpServletRequest servletRequest){
+        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        User user = userService.findByUid(uid);
 
         Post post = postService.findOnePost(postId);
-        PostInfoResponseDto response = new PostInfoResponseDto(post);
+        PostInfoResponseDto response = new PostInfoResponseDto(post,user);
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("POST_FOUND")
@@ -207,9 +217,10 @@ public class PostController {
                                                          @RequestBody CreatePostRequestDto createPostRequestDto,
                                                          HttpServletRequest servletRequest){
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        User user = userService.findByUid(uid);
         Post post = postService.updatePost(postId, createPostRequestDto, uid);
 
-        PostInfoResponseDto response = new PostInfoResponseDto(post);
+        PostInfoResponseDto response = new PostInfoResponseDto(post,user);
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("POST_UPDATEED")
@@ -238,9 +249,10 @@ public class PostController {
     public ResponseEntity<DefaultResponseDto> deletePost(@PathVariable("postId") Long postId,
                                                          HttpServletRequest servletRequest){
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        User user = userService.findByUid(uid);
         Post post = postService.deletePost(postId,uid);
 
-        PostInfoResponseDto response = new PostInfoResponseDto(post);
+        PostInfoResponseDto response = new PostInfoResponseDto(post,user);
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("POST_DELETED")
@@ -267,7 +279,7 @@ public class PostController {
     public ResponseEntity<DefaultResponseDto> findAllLikedPostsByUser(HttpServletRequest servletRequest) {
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
         User user = userService.findByUid(uid);
-        List<LikedPhoto> likes = postService.findAllLikedPostsByUser(uid);
+        List<LikedPost> likes = postService.findAllLikedPostsByUser(uid);
 
         List<LikedInfoResponseDto> response = likes.stream().map(like
                 -> new LikedInfoResponseDto(like,user)).collect(Collectors.toList());
@@ -296,9 +308,9 @@ public class PostController {
     public ResponseEntity<DefaultResponseDto> saveLike(@PathVariable("postId") Long postId,
                                                        HttpServletRequest servletRequest) {
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        LikedPhoto likedPhoto = postService.saveLike(postId,uid);
+        LikedPost likedPost = postService.saveLike(postId,uid);
 
-        LikedInfoResponseDto response = new LikedInfoResponseDto(likedPhoto);
+        LikedInfoResponseDto response = new LikedInfoResponseDto(likedPost);
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("LIKE_WORK")
@@ -325,9 +337,9 @@ public class PostController {
                                                           @PathVariable("likeId") Long likeId,
                                                           HttpServletRequest servletRequest) {
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("token"));
-            LikedPhoto likedPhoto = postService.deletedLike(likeId, uid);
+            LikedPost likedPost = postService.deletedLike(likeId, uid);
 
-            LikedInfoResponseDto response = new LikedInfoResponseDto(likedPhoto);
+            LikedInfoResponseDto response = new LikedInfoResponseDto(likedPost);
             return ResponseEntity.status(200)
                     .body(DefaultResponseDto.builder()
                             .responseCode("LIKE_WORK")

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5cfaa520-ba9e-4dae-aefe-8dc9aa1cf25b" name="변경" comment="Feat : 프론트 - axios 설정">
+      <change beforePath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/post/domain/PostArea.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/post/domain/PostArea.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/post/domain/PostCategory.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/post/domain/PostCategory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/user/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/user/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/user/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/user/domain/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/user/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BE/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/BE/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FE/roommate/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/FE/roommate/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FE/roommate/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/FE/roommate/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FE/roommate/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/FE/roommate/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FE/roommate/src/js/home/join.js" beforeDir="false" afterPath="$PROJECT_DIR$/FE/roommate/src/js/home/join.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FE/roommate/src/js/home/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/FE/roommate/src/js/home/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FE/roommate/src/js/post/boardTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/FE/roommate/src/js/post/boardTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FE/roommate/src/js/post/writePost.js" beforeDir="false" afterPath="$PROJECT_DIR$/FE/roommate/src/js/post/writePost.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FE/roommate/src/setProxy.js" beforeDir="false" afterPath="$PROJECT_DIR$/FE/roommate/src/setProxy.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/BE">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/BE">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="roomate" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="roomate" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="roomate" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="isToolWindowVisible" value="false" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2UPzeb6OtrFHKOh6um4BPSusU0N" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/user/Desktop/song/coding/Spring/roommate&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;모듈&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.28850573&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.javacompiler&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;5784b934b32c6f7cd5c3fb215c4cbc07&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\song\coding\Spring\roommate\BE" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.RoommateApplication">
+    <configuration name="BE [bootJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/BE" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="bootJar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="BE [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/BE" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="RoommateApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="com.roomate.roomate.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.roommate.roommate.RoommateApplication" />
+      <extension name="software.aws.toolkits.jetbrains.core.execution.JavaAwsConnectionExtension">
+        <option name="credential" />
+        <option name="region" />
+        <option name="useCurrentConnection" value="false" />
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.BE [build]" />
+        <item itemvalue="Gradle.BE [bootJar]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="애플리케이션 수준" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="5cfaa520-ba9e-4dae-aefe-8dc9aa1cf25b" name="변경" comment="" />
+      <created>1692856104568</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1692856104568</updated>
+      <workItem from="1692856106790" duration="2588000" />
+      <workItem from="1692858769722" duration="14845000" />
+      <workItem from="1692875190526" duration="151000" />
+      <workItem from="1692878591639" duration="2335000" />
+      <workItem from="1692881649511" duration="17195000" />
+      <workItem from="1692935704439" duration="8328000" />
+      <workItem from="1692965484762" duration="401000" />
+      <workItem from="1692966874362" duration="1422000" />
+      <workItem from="1693052127500" duration="3609000" />
+      <workItem from="1693317999189" duration="614000" />
+      <workItem from="1693325151573" duration="200000" />
+      <workItem from="1693405947401" duration="774000" />
+      <workItem from="1693541795130" duration="1024000" />
+      <workItem from="1693603396677" duration="12000" />
+      <workItem from="1694106151108" duration="76000" />
+      <workItem from="1694151856990" duration="189000" />
+      <workItem from="1694157208746" duration="7357000" />
+      <workItem from="1694761131111" duration="8826000" />
+      <workItem from="1694792987290" duration="510000" />
+      <workItem from="1694845428683" duration="191000" />
+      <workItem from="1694928616065" duration="4810000" />
+      <workItem from="1694935425505" duration="3843000" />
+      <workItem from="1697030998189" duration="2763000" />
+      <workItem from="1697034624929" duration="246000" />
+      <workItem from="1697034924742" duration="3190000" />
+      <workItem from="1697088505441" duration="15249000" />
+      <workItem from="1697126501696" duration="3791000" />
+      <workItem from="1697174064575" duration="36452000" />
+      <workItem from="1697277967069" duration="7493000" />
+      <workItem from="1697313602062" duration="4000" />
+    </task>
+    <task id="LOCAL-00001" summary="Feat : 유효성 체크 &amp; 예외처리 제외 구현 완료">
+      <created>1692943386382</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1692943386382</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Feat : 유효성 체크 &amp; 예외처리 제외 구현 완료">
+      <created>1692943512344</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1692943512344</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Feat : 프론트 회원가입, 로그인, 홈,디테일포스트 구현">
+      <created>1692981978600</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1692981978600</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Feat : 프론트 - 원하는 룸메이트, 게시글 작성 구현">
+      <created>1693066823841</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1693066823841</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Feat : 프론트 - footer 하단 고정 및 마이페이지 구현">
+      <created>1693325301511</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1693325301511</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Feat : 프론트 - 내가 쓴 게시글&amp;댓글 구현">
+      <created>1694106202130</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1694106202130</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Feat : 프론트 - axios 설정">
+      <created>1694165583807</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1694165583807</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Feat : 유효성 체크 &amp; 예외처리 제외 구현 완료" />
+    <MESSAGE value="Feat : 프론트 회원가입, 로그인, 홈,디테일포스트 구현" />
+    <MESSAGE value="Feat : 프론트 - 원하는 룸메이트, 게시글 작성 구현" />
+    <MESSAGE value="Feat : 프론트 - footer 하단 고정 및 마이페이지 구현" />
+    <MESSAGE value="Feat : 프론트 - 내가 쓴 게시글&amp;댓글 구현" />
+    <MESSAGE value="Feat : 프론트 - axios 설정" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feat : 프론트 - axios 설정" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/post/controller/PostController.java</url>
+          <line>54</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/FE/roommate/src/js/post/writePost.js</url>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

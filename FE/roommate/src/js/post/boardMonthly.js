@@ -10,6 +10,9 @@ function BoardMonthly(){
     useEffect(()=>{
         try{
             axios({
+                headers: {
+                    'JWT': localStorage.getItem('JWT'),
+                },
                 method: "GET",
                 url: `/${category}/posts`
             }).then((response) =>{

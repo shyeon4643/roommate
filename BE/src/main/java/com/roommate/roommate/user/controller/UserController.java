@@ -3,11 +3,12 @@ package com.roommate.roommate.user.controller;
 import com.roommate.roommate.common.DefaultResponseDto;
 import com.roommate.roommate.config.security.JwtTokenProvider;
 import com.roommate.roommate.user.domain.User;
-import com.roommate.roommate.user.dto.request.CreateDetailRoommateRequestDto;
+import com.roommate.roommate.user.dto.request.DetailRoommateRequestDto;
 import com.roommate.roommate.user.dto.request.SignInRequestDto;
 import com.roommate.roommate.user.dto.request.SignUpRequestDto;
 import com.roommate.roommate.user.dto.request.UpdateUserRequestDto;
 import com.roommate.roommate.user.dto.response.UserInfoResponseDto;
+import com.roommate.roommate.user.dto.response.UserTokenResponseDto;
 import com.roommate.roommate.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -83,19 +84,19 @@ public class UserController {
     })
 
     @PostMapping("/login")
-    public ResponseEntity<DefaultResponseDto> login(@RequestBody @Valid SignInRequestDto signInRequesetDto){
+    public ResponseEntity<DefaultResponseDto> login(@RequestBody @Valid SignInRequestDto signInRequesetDto) {
         log.info("[login] 회원 로그인 정보 전달");
 
         String token = userService.login(signInRequesetDto);
-
-        return ResponseEntity.status(201)
+        /*return ResponseEntity.ok(token);*/
+        UserTokenResponseDto response = new UserTokenResponseDto(token);
+        return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("USER_LOGIN")
                         .responseMessage("회원 로그인 완료")
-                        .data(token)
+                        .data(response)
                         .build());
     }
-
     @ApiOperation(value = "원하는 룸메이트 작성")
     @ApiResponses(value = {
             @ApiResponse(
@@ -110,13 +111,13 @@ public class UserController {
                     description = "SERVER_ERROR"),
     })
 
-    @PostMapping("/detailRoommate")
-    public ResponseEntity<DefaultResponseDto> detailRoommate(
-            @RequestBody @Valid CreateDetailRoommateRequestDto createDetailRoommateRequestDto,
+    @PostMapping("/writeDetailRoommate")
+    public ResponseEntity<DefaultResponseDto> writeDetailRoommate(
+            @RequestBody @Valid DetailRoommateRequestDto detailRoommateRequestDto,
             HttpServletRequest servletRequest){
 
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.detailRoommate(createDetailRoommateRequestDto, uid);
+        User user = userService.detailRoommate(detailRoommateRequestDto, uid);
 
         UserInfoResponseDto response = new UserInfoResponseDto(user);
 
@@ -124,6 +125,72 @@ public class UserController {
                 .body(DefaultResponseDto.builder()
                         .responseCode("DETAIL_ROOMMATE_REGISTER")
                         .responseMessage("원하는 룸메이트 정보 등록 완료")
+                        .data(response)
+                        .build());
+    }
+
+    @ApiOperation(value = "원하는 룸메이트 정보 변경")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "DETAIL_ROOMMATE",
+                    content = @Content(schema = @Schema(implementation = UserInfoResponseDto.class))),
+            @ApiResponse(responseCode = "401",
+                    description = "UNAUTHORIZED_USER"),
+            @ApiResponse(responseCode = "404",
+                    description = "USER_NOT_FOUND"),
+            @ApiResponse(responseCode = "500",
+                    description = "SERVER_ERROR"),
+    })
+    @PutMapping("/updateDetailRoommate")
+    public ResponseEntity<DefaultResponseDto<Object>> updateDetailRoommate(
+            HttpServletRequest servletRequest,
+            @RequestBody @Valid DetailRoommateRequestDto detailRoommateRequestDto
+    ) {
+
+
+        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        User user = userService.updateDetailRoommate(detailRoommateRequestDto, uid);
+
+
+
+        UserInfoResponseDto response = new UserInfoResponseDto(user);
+
+        return ResponseEntity.status(200)
+                .body(DefaultResponseDto.builder()
+                        .responseCode("USER_UPDATED")
+                        .responseMessage("USER 정보 변경 완료")
+                        .data(response)
+                        .build());
+    }
+
+    @ApiOperation(value = "마이페이지 조회")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "USER_FOUND",
+                    content = @Content(schema = @Schema(implementation = UserInfoResponseDto.class))),
+            @ApiResponse(responseCode = "401",
+                    description = "UNAUTHORIZED_USER"),
+            @ApiResponse(responseCode = "404",
+                    description = "USER_NOT_FOUND"),
+            @ApiResponse(responseCode = "500",
+                    description = "SERVER_ERROR"),
+    })
+    @GetMapping("/mypage")
+    public ResponseEntity<DefaultResponseDto<Object>> myPage(
+            HttpServletRequest servletRequest
+    ) {
+        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+
+        User user = userService.findByUid(uid);
+
+        UserInfoResponseDto response = new UserInfoResponseDto(user);
+
+        return ResponseEntity.status(200)
+                .body(DefaultResponseDto.builder()
+                        .responseCode("USER_FOUND")
+                        .responseMessage("User 단건 조회 완료")
                         .data(response)
                         .build());
     }
@@ -141,13 +208,12 @@ public class UserController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @GetMapping("/user")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<DefaultResponseDto<Object>> findOneUser(
-            HttpServletRequest servletRequest
+            @PathVariable("userId") Long userId
     ) {
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
 
-        User user = userService.findByUid(uid);
+        User user = userService.findById(userId);
 
         UserInfoResponseDto response = new UserInfoResponseDto(user);
 
@@ -195,6 +261,7 @@ public class UserController {
                         .data(response)
                         .build());
     }
+
 
     @DeleteMapping("/user")
     public ResponseEntity<DefaultResponseDto<Object>> deleteUser(

@@ -1,12 +1,12 @@
 package com.roommate.roommate.post.repository;
 
-import com.roommate.roommate.post.domain.LikedPhoto;
+import com.roommate.roommate.post.domain.LikedPost;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PostLikedRepository extends JpaRepository<LikedPhoto, Long> {
-    List<LikedPhoto> findByUserIdAndIsDeletedIsFalse(Long userId);
-    LikedPhoto findByIdAndUserId(Long postLikedId, Long userId);
-    LikedPhoto findByUserIdAndPostIdAndIsDeletedIsFalse(Long userId, Long postId);
+public interface PostLikedRepository extends JpaRepository<LikedPost, Long> {
+    List<LikedPost> findByUserIdAndIsDeletedIsFalse(Long userId);
+    LikedPost findByIdAndUserId(Long postLikedId, Long userId);
+    LikedPost findByUserIdAndPostIdAndIsDeletedIsFalse(Long userId, Long postId);
 }

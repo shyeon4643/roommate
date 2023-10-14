@@ -24,7 +24,7 @@ function BoardTable({postData}){
                         <tr key={response.postId} onClick={() => movepage(response)}>
                             <td>{index + 1}</td>
                             <td>{response.title}</td>
-                            <td>{response.writer}</td>
+                            <td>{response.writer==null?"알수없음" : response.writer}</td>
                             <td>{response.updateAt}</td>
                             <td>{response.viewCount}</td>
                         </tr>

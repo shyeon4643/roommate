@@ -16,5 +16,6 @@ public class SignUpRequestDto {
     private String name;
     private String nickname;
     private String phoneNum;
+    private String mbti;
 
 }

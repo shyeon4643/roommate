@@ -11,7 +11,7 @@ import com.roommate.roommate.user.domain.enums.Gender;
 import com.roommate.roommate.user.domain.enums.LifeCycle;
 import com.roommate.roommate.user.domain.enums.Pet;
 import com.roommate.roommate.user.domain.enums.Smoking;
-import com.roommate.roommate.user.dto.request.CreateDetailRoommateRequestDto;
+import com.roommate.roommate.user.dto.request.DetailRoommateRequestDto;
 import com.roommate.roommate.user.dto.request.SignInRequestDto;
 import com.roommate.roommate.user.dto.request.SignUpRequestDto;
 import com.roommate.roommate.user.repository.UserRepository;
@@ -45,6 +45,7 @@ public class UserService {
                 .uid(request.getUid())
                 .nickname(request.getNickname())
                 .phoneNum(request.getPhoneNum())
+                .mbti(request.getMbti())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .email(request.getEmail())
                 .build();
@@ -71,18 +72,18 @@ public class UserService {
     }
 
     @Transactional
-    public User detailRoommate(CreateDetailRoommateRequestDto createDetailRoommateRequestDto, String uid){
+    public User detailRoommate(DetailRoommateRequestDto detailRoommateRequestDto, String uid){
         try {
             User user = userRepository.findByUid(uid);
             DetailRoommate detailRoommate = DetailRoommate.builder()
-                    .pet(Pet.valueOf(createDetailRoommateRequestDto.getPet()))
-                    .wishRoommate(createDetailRoommateRequestDto.getWishRoommate())
-                    .area(PostArea.valueOf(createDetailRoommateRequestDto.getArea()))
-                    .category(PostCategory.valueOf(createDetailRoommateRequestDto.getCategory()))
-                    .fee(createDetailRoommateRequestDto.getFee())
-                    .gender(Gender.valueOf(createDetailRoommateRequestDto.getGender()))
-                    .lifeCycle(LifeCycle.valueOf(createDetailRoommateRequestDto.getLifeCycle()))
-                    .smoking(Smoking.valueOf(createDetailRoommateRequestDto.getSmoking()))
+                    .pet(Pet.valueOf(detailRoommateRequestDto.getPet()))
+                    .wishRoommate(detailRoommateRequestDto.getWishRoommate())
+                    .area(PostArea.valueOf(detailRoommateRequestDto.getArea()))
+                    .category(PostCategory.valueOf(detailRoommateRequestDto.getCategory()))
+                    .fee(detailRoommateRequestDto.getFee())
+                    .gender(Gender.valueOf(detailRoommateRequestDto.getGender()))
+                    .lifeCycle(LifeCycle.valueOf(detailRoommateRequestDto.getLifeCycle()))
+                    .smoking(Smoking.valueOf(detailRoommateRequestDto.getSmoking()))
                     .build();
             user.setDetailRoommate(detailRoommate);
             userRepository.save(user);
@@ -91,6 +92,23 @@ public class UserService {
             e.printStackTrace();
             throw new CustomException(SERVER_ERROR);
         }
+    }
+
+    @Transactional
+    public User updateDetailRoommate(DetailRoommateRequestDto detailRoommateRequestDto, String uid){
+        User user = findByUid(uid);
+        user.getDetailRoommate().update(
+                LifeCycle.valueOf(detailRoommateRequestDto.getLifeCycle()),
+                Smoking.valueOf(detailRoommateRequestDto.getSmoking()),
+                Gender.valueOf(detailRoommateRequestDto.getGender()),
+                Pet.valueOf(detailRoommateRequestDto.getPet()),
+                detailRoommateRequestDto.getFee(),
+                detailRoommateRequestDto.getWishRoommate(),
+                PostCategory.valueOf(detailRoommateRequestDto.getCategory()),
+                PostArea.valueOf(detailRoommateRequestDto.getArea())
+        );
+        userRepository.save(user);
+        return user;
     }
 
     @Transactional
