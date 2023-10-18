@@ -85,7 +85,7 @@ function DetailPost(){
                 <p>{selectedPost.body}</p>
             </div>
             <div className="detailPost_body_footer">
-                <Comment comments={selectedPost.comments}/>
+                <Comment comments={selectedPost.comments} user={user}/>
             </div>
         </div>
     )

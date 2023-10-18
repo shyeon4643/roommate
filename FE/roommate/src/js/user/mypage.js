@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../css/mypage.css";
 import Sidebar from "../layout/sidebar";
 import "../layout/sidebar.js";
@@ -9,6 +9,7 @@ import DetailRoommate from "./detailRoommate";
 function MyPage(){
 
     const [myPage, setMyPage] = useState("");
+    const navigate = useNavigate();
 
     useEffect(()=>{
         try{
@@ -25,6 +26,22 @@ function MyPage(){
             console.error("데이터를 가져오는 중 에러가 발생했습니다.", error);
         }
     },[]);
+
+    const updateDetailRoommate = () =>{
+        navigate("/updateDetailRoommate", {
+            state: {
+               category : myPage.category,
+               area : myPage.area,
+               lifeCycle : myPage.lifeCycle,
+               pet : myPage.pet,
+               smoking : myPage.smoking,
+               gender : myPage.gender,
+               wishRoommate : myPage.wishRoommate,
+               fee : myPage.fee,
+               message: "수정 완료",
+            },
+        });
+    }
 
     return(
         <div className="mypage_wrapper">
@@ -78,11 +95,12 @@ function MyPage(){
                     </tr>
                     </table>
                     </div>
-                    <Link className="detailRoommateInfo" to={{
-                        pathname: `/updateDetailRoommate`,
-                        state: myPage,
-                    }}> 내가 원하는 룸메이트 정보 수정하러 가기
-                    </Link>
+                    <button
+                        className="detailRoommateInfo"
+                    onClick={updateDetailRoommate}
+                    type="button">
+                        내가 원하는 룸메이트 정보 수정하러 가기
+                    </button>
                 </div>
         </div>
         </div>

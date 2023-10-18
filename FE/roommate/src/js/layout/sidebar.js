@@ -10,13 +10,13 @@ function Sidebar(){
         axios({
             headers: {
                 "Content-Type": "application/json",
-                'JWT': localStorage.getItem('JWT'),
+                'JWT': localStorage.getItem("JWT"),
             },
             method : "DELETE",
             url : "/user",
         }).then((response) =>{
             console.log(response.data.data);
-            localStorage.removeItem('JWT');
+            localStorage.removeItem("JWT");
             window.location.href = `/`;
         })
     }catch(error){

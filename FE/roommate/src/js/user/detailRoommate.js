@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import axios from "axios";
 import "../../css/writeDetailRoommate.css";
 
@@ -24,6 +24,7 @@ function DetailRoommate(){
             setCategory(data.category);
             setPet(data.pet);
             setSmoking(data.smoking);
+            setFee(data.fee);
             setWishRoommate(data.wishRoommate);
             setLifeCycle(data.lifeCycle);
             wrtieBtn.style.display = "none";
@@ -64,8 +65,7 @@ function DetailRoommate(){
         }
     }
 
-    const handleUpdateDetailRoommate = async(e) =>{
-        e.preventDefault();
+    const handleUpdateDetailRoommate = async() =>{
         try{
             const data = {
                 area,
