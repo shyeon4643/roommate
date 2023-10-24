@@ -49,7 +49,6 @@ function DetailPost(){
         });
     };
     const deletePost = () => {
-        const accessToken = getCookieValue("accessToken");
         axios({
             headers: {
                 'JWT': localStorage.getItem('JWT'),

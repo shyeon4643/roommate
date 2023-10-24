@@ -9,10 +9,11 @@ import Sidebar from "./js/layout/sidebar";
 import BoardCharter from "./js/post/boardCharter";
 import BoardMonthly from "./js/post/boardMonthly";
 import BoardTable from "./js/post/boardTable";
+import CommentTable from "./js/post/commentTable";
 import Comment from "./js/post/comment";
 import DetailPost from "./js/post/detailPost";
 import MyComments from "./js/post/myComments";
-import MyPosts from "./js/post/myPosts";
+import MyPost from "./js/post/myPost";
 import WritePost from "./js/post/writePost";
 import MyPage from "./js/user/mypage";
 import DetailRoommate from "./js/user/detailRoommate";
@@ -36,10 +37,11 @@ function App() {
         <Route path="/updatePost" element={<WritePost />} />
         <Route path="/monthly/posts" element={<BoardMonthly />} />
         <Route path="/charter/posts" element={<BoardCharter />} />
-        <Route path="/user/posts" element={<MyPosts />}/>
+        <Route path="/user/posts" element={<MyPost />}/>
         <Route path="/post/:category/:postId" element={<DetailPost />} />
         <Route path="/user/comments" element={<MyComments />} />
         <Route path="/sidebar" element={<Sidebar />} />
+        <Route path="/commentTable" element={<CommentTable />} />
           </Routes>
         </div>
         <Footer />

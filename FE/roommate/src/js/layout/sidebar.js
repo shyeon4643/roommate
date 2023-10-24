@@ -5,6 +5,24 @@ import "../../css/sidebar.css";
 
 function Sidebar(){
 
+    const myPost = async () =>{
+        try{
+            axios({
+                headers: {
+                    'JWT': localStorage.getItem('JWT'),
+                },
+                method: "GET",
+                url: `/user/post`,
+            }).then((response) =>{
+                console.log(response.data.data);
+                window.location.href = `/post/${response.data.data.category}/${response.data.data.postId}`;
+            });
+        }catch(error){
+            console.error("게시물 데이터를 가져오는 중 에러가 발생했습니다.", error);
+        }
+    }
+
+
     const deleteUser = async() =>{
         try{
         axios({
@@ -28,9 +46,10 @@ function Sidebar(){
             <div className="sidebar">
                 <ul className="sidebar_ul">
                 <li className="sidebar_li">
-                    <Link to="/user/posts" className="sidebar_li_link">
-                        <h3>내가 쓴 글</h3>
-                    </Link>
+                    <button type= "button"
+                            onClick={myPost}>
+                        <h3>내가 쓴 게시글</h3>
+                    </button>
                 </li>
                 <li className="sidebar_li">
                     <Link to="/user/comments" className="sidebar_li_link">

@@ -3,6 +3,13 @@ import { Link } from "react-router-dom";
 import "../../css/boardTable.css";
 
 function BoardTable({postData}){
+    if (postData === null || postData === undefined) {
+        return <div>적상한 글이 없습니다.</div>;
+    }
+    if(!Array.isArray(postData)){
+        postData=[];
+    }
+
     const movepage = (response) => {
         window.location.href = `/post/${response.category}/${response.postId}`;
     };
@@ -20,7 +27,7 @@ function BoardTable({postData}){
                     </tr>
                     </thead>
                     <tbody className="board-table-body">
-                    {postData&&postData.map((response, index) => (
+                    {postData && postData.map((response, index) => (
                         <tr key={response.postId} onClick={() => movepage(response)}>
                             <td>{index + 1}</td>
                             <td>{response.title}</td>
@@ -36,7 +43,7 @@ function BoardTable({postData}){
                 </Link>
             </div>
         </div>
-    )
+    );
 }
 
 export default BoardTable;

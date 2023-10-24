@@ -7,8 +7,14 @@ function Comment({comments,user}){
 
 const [newCommentText, setNewCommentText] = useState("");
 const [editCommentText, setEditCommentText] = useState("");
+const [editCommentId, setEditCommentId] = useState(null);
 const [showCommentButton, setShowCommentButton] = useState(true);
 const {category, postId} = useParams();
+
+const handleEdit = (response) => {
+        setEditCommentId(response.commentId);
+        setEditCommentText(response.body);
+    };
 
 const handleNewComment = async () =>{
     try{
@@ -34,18 +40,27 @@ const handleNewComment = async () =>{
     }
 
  };
+
+    const handleCancelEdit = () => {
+        setEditCommentId(null);
+        setEditCommentText("");
+    };
     const canEditOrDelete = (comment) => {
         if (user === comment.writerUser) {
             return true;
         }
         return false;
     };
- const handleEditComment = async(response)=>{
+ const handleEditComment = async(commentId)=>{
     try{
         await axios({
+            headers: {
+                'Content-Type': 'application/json',
+                'JWT': localStorage.getItem('JWT'),
+            },
             method : "PUT",
-            url : `/post/${category}/${postId}/comment/${response.commentId}`,
-            data : { comment : data}
+            url : `/post/${category}/${postId}/comment/${commentId}`,
+            data : { body : editCommentText}
         }).then((response) => {
             setEditCommentText("");
             window.location.reload();
@@ -59,9 +74,13 @@ const handleNewComment = async () =>{
     try{
         const data = editCommentText;
         await axios({
+            headers: {
+                'Content-Type': 'application/json',
+                'JWT': localStorage.getItem('JWT'),
+            },
             method : "DELETE",
             url : `/post/${category}/${postId}/comment/${response.commentId}`,
-            data : { comment : data}
+            data : { body : data}
         }).then((response) => {
             window.location.reload();
         });
@@ -90,25 +109,37 @@ const handleNewComment = async () =>{
             </div>
             <div className="comment_list_container">
                 <ul className="comment_list">
-                    {comments&&comments.map((response, index) => (
+                    {comments && comments.map((response, index) => (
                         <li key={response.commentId}>
-                        <div className="comment_data">
-                            <p>{index+1}</p>
-                            <p>{response.writer}</p>
-                            <p>{response.body}</p>
-                            <p>{response.updateAt}</p>
-                        </div>
-                            {canEditOrDelete(response) && (
-                                <div>
-                                    <button
-                                        typy="button"
-                                        onClick={()=>handleEditComment(response)}>수정</button>
-                                    <button
-                                        type="button"
-                                        onClick={()=>handleDeleteComment(response)}>삭제</button>
+                            <div className="comment_data">
+                                <p>{index + 1}</p>
+                                <p>{response.writer}</p>
+                                {editCommentId === response.commentId ? (
+                                    <textarea
+                                        value={editCommentText}
+                                        onChange={(e) => setEditCommentText(e.target.value)}
+                                    />
+                                ) : (
+                                    <p>{response.body}</p>
+                                )}
+                                <p>{response.updateAt}</p>
+                            </div>
+                            {editCommentId === response.commentId ? (
+                                <div className="comment_actions">
+                                    <button onClick={() => handleEditComment(response.commentId)}>저장</button>
+                                    <button onClick={handleCancelEdit}>취소</button>
+                                </div>
+                            ) : (
+                                <div className="comment_actions">
+                                    {canEditOrDelete(response) && (
+                                        <div>
+                                            <button type="button" onClick={() => handleEdit(response)}>수정</button>
+                                            <button type="button" onClick={() => handleDeleteComment(response)}>삭제</button>
+                                        </div>
+                                    )}
                                 </div>
                             )}
-                    </li>
+                        </li>
                     ))}
                 </ul>
             </div>

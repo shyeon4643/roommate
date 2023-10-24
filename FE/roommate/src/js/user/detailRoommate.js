@@ -33,7 +33,7 @@ function DetailRoommate(){
             wrtieBtn.style.display = "block";
             updateBtn.style.display = "none";
         }
-    }, []);
+    }, [data]);
 
     const handleWriteDetailRoommate = async(e) =>{
         e.preventDefault();

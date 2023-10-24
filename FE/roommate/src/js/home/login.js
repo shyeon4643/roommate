@@ -20,7 +20,11 @@ function Login(){
             }).then((response) => {
                 console.log(response.data);
                 localStorage.setItem("JWT", response.data.data.token);
-                window.location.href = "/writeDetailRoommate";
+                if(response.data.data.isInfo===false) {
+                    window.location.href = "/writeDetailRoommate";
+                }else {
+                    window.location.href = "/";
+                }
             })
         }catch(error){
             console.log("로그인 중 에러 발생 : ", error);

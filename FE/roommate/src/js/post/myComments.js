@@ -1,28 +1,30 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import "../../css/board.css";
-import BoardTable from "./boardTable";
+import CommentTable from "./commentTable";
 
 function MyComments(){
-    const [postData, setPostData] = useState();
-    const category ="monthly";
+    const [commentData, setCommentData] = useState();
 
     useEffect(()=>{
         try{
             axios({
+                headers: {
+                    'JWT': localStorage.getItem('JWT'),
+                },
                 method: "GET",
-                url: `/user/comments`
+                url: `/user/comments`,
             }).then((response) =>{
-                setPostData(response.data);
+                setCommentData(response.data.data);
             });
         }catch(error){
             console.error("게시물 데이터를 가져오는 중 에러가 발생했습니다.", error);
         }
-    },[category])
+    },[])
     return(
         <div>
             <h1 className="categoryName">내가 쓴 댓글</h1>
-            <BoardTable postData={postData} />
+            <CommentTable commentData={commentData} />
         </div>
     )
 }
