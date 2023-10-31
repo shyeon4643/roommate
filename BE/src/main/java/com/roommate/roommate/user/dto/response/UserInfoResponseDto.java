@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@ApiModel(value = "Post 기본 응답")
+@ApiModel(value = "User 기본 응답")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -43,7 +43,7 @@ public class UserInfoResponseDto {
         this.category=user.getDetailRoommate().getCategory();
         this.area=user.getDetailRoommate().getArea();
         this.fee=user.getDetailRoommate().getFee();
-        this.gender=user.getDetailRoommate().getGender();
+        this.gender=user.getDetailRoommate().getRoommateGender();
         this.pet=user.getDetailRoommate().getPet();
         this.smoking=user.getDetailRoommate().getSmoking();
         this.wishRoommate=user.getDetailRoommate().getWishRoommate();

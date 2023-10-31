@@ -8,7 +8,7 @@ import com.roommate.roommate.user.dto.request.SignInRequestDto;
 import com.roommate.roommate.user.dto.request.SignUpRequestDto;
 import com.roommate.roommate.user.dto.request.UpdateUserRequestDto;
 import com.roommate.roommate.user.dto.response.UserInfoResponseDto;
-import com.roommate.roommate.user.dto.response.UserTokenResponseDto;
+import com.roommate.roommate.user.dto.response.UserLoginResponseDto;
 import com.roommate.roommate.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -87,9 +87,8 @@ public class UserController {
     public ResponseEntity<DefaultResponseDto> login(@RequestBody @Valid SignInRequestDto signInRequesetDto) {
         log.info("[login] 회원 로그인 정보 전달");
 
-        String token = userService.login(signInRequesetDto);
-        /*return ResponseEntity.ok(token);*/
-        UserTokenResponseDto response = new UserTokenResponseDto(token);
+        User user = userService.login(signInRequesetDto);
+        UserLoginResponseDto response = new UserLoginResponseDto(user);
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("USER_LOGIN")

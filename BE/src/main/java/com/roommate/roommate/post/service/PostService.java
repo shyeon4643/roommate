@@ -2,14 +2,21 @@ package com.roommate.roommate.post.service;
 
 import com.roommate.roommate.post.domain.*;
 import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
+import com.roommate.roommate.post.dto.request.SearchPostDto;
 import com.roommate.roommate.post.repository.PostLikedRepository;
 import com.roommate.roommate.post.repository.PostPhotoRepository;
 import com.roommate.roommate.post.repository.PostRepository;
+import com.roommate.roommate.user.domain.Mbti;
 import com.roommate.roommate.user.domain.User;
+import com.roommate.roommate.user.repository.MbtiRepository;
 import com.roommate.roommate.user.repository.UserRepository;
 import com.roommate.roommate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.roommate.roommate.exception.CustomException;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +39,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostLikedRepository postLikedRepository;
     private final PostPhotoRepository postPhotoRepository;
+    private final MbtiRepository mbtiRepository;
 
     /*
      * 게시글 등록
@@ -95,9 +103,8 @@ public class PostService {
      * 유저가 쓴 게시글 조회
      * 500(SERVER_ERROR)
      * */
-    public Post findPostByUid(String uid){
+    public Post findUserPost(User user){
         try{
-            User user = userRepository.findByUid(uid);
             Post post = postRepository.findByUserIdAndIsDeletedIsFalse(user.getId());
 
             return post;
@@ -158,16 +165,26 @@ public class PostService {
         }
     }
 
-    public List<LikedPost> findAllLikedPostsByUser(String uid){
+    public List<Post> findAllLikedPostsByUser(String uid){
         List<Post> posts = new ArrayList<>();
         try {
             User user= userService.findByUid(uid);
             List<LikedPost> postLikes = postLikedRepository.findByUserIdAndIsDeletedIsFalse(user.getId());
+            for(LikedPost likedPost : postLikes){
+                posts.add(likedPost.getPost());
+            }
 
-
-            return postLikes;
+            return posts;
         } catch (RuntimeException e) {
             e.printStackTrace();
+            throw new CustomException(SERVER_ERROR);
+        }
+    }
+
+    public LikedPost isLike(User user, Post post){
+        try{
+            return postLikedRepository.findByUserIdAndPostId(user.getId(), post.getId());
+        }catch(RuntimeException e){
             throw new CustomException(SERVER_ERROR);
         }
     }
@@ -177,13 +194,20 @@ public class PostService {
         try {
             User user = userService.findByUid(uid);
             Post post = postRepository.findById(postId).get();
-            LikedPost likedPost = LikedPost.builder()
-                    .post(post)
-                    .user(user)
-                    .build();
+            if(postLikedRepository.findByUserIdAndPostId(user.getId(),postId)==null) {
+                LikedPost likedPost = LikedPost.builder()
+                        .post(post)
+                        .user(user)
+                        .build();
 
-            postLikedRepository.save(likedPost);
-            return likedPost;
+                postLikedRepository.save(likedPost);
+                return likedPost;
+            }else{
+                LikedPost likedPost = postLikedRepository.findByUserIdAndPostId(user.getId(), post.getId());
+                likedPost.save();
+                return likedPost;
+            }
+
         } catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(SERVER_ERROR);
@@ -227,7 +251,29 @@ public class PostService {
 
         }
     }
+    public Page<Post> searchPost(SearchPostDto searchPostDto, Pageable pageable)
+    {
+        int page = (pageable.getPageNumber()==0)?0:(pageable.getPageNumber()-1);
+        PageRequest pageRequest = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "id"));
+        return postRepository.findByTitleContainingAndAreaContaining(searchPostDto.getKeyword(),searchPostDto.getKeyword(),pageRequest);
 
+    }
 
-
+    public List<Post> mbtiPosts(User user) {
+        List<User> sameGender = userRepository.findAllByGender(user.getGender()); // 성별 필터
+        Mbti mbti = mbtiRepository.findByMbti(user.getMbti());
+        List<Post> mbtiPosts = new ArrayList<>();
+        for (User sameGenderUser : sameGender) {
+            if (sameGenderUser.getMbti().equals(mbti.getFirstMbti()) ||
+                    sameGenderUser.getMbti().equals(mbti.getSecondMbti()) || sameGenderUser.getMbti()
+                    .equals(mbti.getThirdMbti()) || sameGenderUser.getMbti().equals(mbti.getFourthMbti())) {
+                for(int i=0;i<sameGenderUser.getPosts().size();i++){
+                    if(sameGenderUser.getPosts().get(i).getIsDeleted()==false) {
+                        mbtiPosts.add(sameGenderUser.getPosts().get(i));
+                    }
+                }
+            }
+        }
+        return mbtiPosts;
+    }
 }

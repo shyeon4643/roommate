@@ -32,6 +32,8 @@ public class PostInfoResponseDto {
     private int likeCount;
     private Long currentUser;
     private Long writerUser;
+    private boolean isLike;
+    private Long likedId;
 
     public PostInfoResponseDto(Post post, User user){
         this.postId=post.getId();
@@ -39,6 +41,65 @@ public class PostInfoResponseDto {
         this.body=post.getBody();
         this.area=post.getArea();
         this.fee=post.getFee();
+        if(post.getPostPhotos()!=null){
+            List<PostPhoto> photos = post.getPostPhotos();
+            for(PostPhoto photo : photos){
+                this.photos.add(photo);
+            }
+        }
+        if(post.getComments()!=null){
+            List<Comment> comments = post.getComments();
+            for(Comment comment : comments){
+                this.comments.add(new CommentInfoResponseDto(comment));
+            }
+        }
+        this.updateAt=post.getUpdatedAt();
+        this.category=post.getCategory();
+        this.writer=post.getUser().getNickname();
+        this.viewCount=post.getViewCount();
+        this.likeCount=post.getLikeCount();
+        this.currentUser=user.getId();
+        this.writerUser=post.getUser().getId();
+    }
+
+    public PostInfoResponseDto(Post post){
+        this.postId=post.getId();
+        this.title=post.getTitle();
+        this.body=post.getBody();
+        this.area=post.getArea();
+        this.fee=post.getFee();
+        if(post.getPostPhotos()!=null){
+            List<PostPhoto> photos = post.getPostPhotos();
+            for(PostPhoto photo : photos){
+                this.photos.add(photo);
+            }
+        }
+        if(post.getComments()!=null){
+            List<Comment> comments = post.getComments();
+            for(Comment comment : comments){
+                this.comments.add(new CommentInfoResponseDto(comment));
+            }
+        }
+        this.updateAt=post.getUpdatedAt();
+        this.category=post.getCategory();
+        this.writer=post.getUser().getNickname();
+        this.viewCount=post.getViewCount();
+        this.likeCount=post.getLikeCount();
+        this.writerUser=post.getUser().getId();
+    }
+
+    public PostInfoResponseDto(Post post, User user, LikedPost likedPost){
+        this.postId=post.getId();
+        this.title=post.getTitle();
+        this.body=post.getBody();
+        this.area=post.getArea();
+        this.fee=post.getFee();
+        if(likedPost==null){
+            this.isLike=true;
+        }else{
+            this.isLike=likedPost.getIsDeleted();
+            this.likedId=likedPost.getId();
+        }
         if(post.getPostPhotos()!=null){
             List<PostPhoto> photos = post.getPostPhotos();
             for(PostPhoto photo : photos){

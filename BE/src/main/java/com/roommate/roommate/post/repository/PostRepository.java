@@ -4,6 +4,8 @@ package com.roommate.roommate.post.repository;
 import com.roommate.roommate.post.domain.Post;
 import com.roommate.roommate.post.domain.PostArea;
 import com.roommate.roommate.post.domain.PostCategory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,4 +16,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Post findByUserIdAndIsDeletedIsFalse(Long userId);
     Post findByIdAndIsDeletedIsFalse(Long postId);
     Post findByIdAndUserId(Long postId, Long userId);
+    Page<Post> findByTitleContainingAndAreaContaining(String keyword, String area, PageRequest pageRequest);
 }

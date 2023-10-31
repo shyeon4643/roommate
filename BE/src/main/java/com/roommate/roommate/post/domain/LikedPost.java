@@ -39,6 +39,9 @@ public class LikedPost extends BaseEntity {
         user.getLikes().add(this);
     }
 
+    public void save(){
+        this.setIsDeleted(false);
+        post.savedLikeCount(getIsDeleted());}
 
     public void delete(){
         this.setIsDeleted(true);

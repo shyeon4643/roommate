@@ -28,7 +28,7 @@ import java.util.List;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenProvider jwtTokenProvider;
     @Override
-    protected void configure(HttpSecurity http) throws Exception{
+    protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()//사이트 간 요청 위조
                 .sessionManagement()
@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 )
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login","/join","/").permitAll()
+                .antMatchers("/login", "/join", "/").permitAll()
                 .antMatchers("/user/**").hasRole("USER")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .and()
@@ -48,6 +48,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
     }
-
-
 }

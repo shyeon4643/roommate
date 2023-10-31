@@ -96,7 +96,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/user/Desktop/song/coding/Spring/roommate&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/user/Desktop/song/coding/algorithm&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -220,6 +220,18 @@
       <workItem from="1697174064575" duration="36452000" />
       <workItem from="1697277967069" duration="7493000" />
       <workItem from="1697313602062" duration="4000" />
+      <workItem from="1697361130047" duration="506000" />
+      <workItem from="1697646176798" duration="7552000" />
+      <workItem from="1697697174171" duration="610000" />
+      <workItem from="1698032615090" duration="2977000" />
+      <workItem from="1698036610207" duration="1132000" />
+      <workItem from="1698074536432" duration="1994000" />
+      <workItem from="1698150147683" duration="10537000" />
+      <workItem from="1698169429619" duration="601000" />
+      <workItem from="1698219246003" duration="48000" />
+      <workItem from="1698335419026" duration="3444000" />
+      <workItem from="1698563015770" duration="9037000" />
+      <workItem from="1698729149292" duration="10973000" />
     </task>
     <task id="LOCAL-00001" summary="Feat : 유효성 체크 &amp; 예외처리 제외 구현 완료">
       <created>1692943386382</created>
@@ -290,8 +302,18 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/post/controller/PostController.java</url>
-          <line>54</line>
+          <line>59</line>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/post/service/PostService.java</url>
+          <line>268</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/BE/src/main/java/com/roommate/roommate/post/service/PostService.java</url>
+          <line>274</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/FE/roommate/src/js/post/writePost.js</url>

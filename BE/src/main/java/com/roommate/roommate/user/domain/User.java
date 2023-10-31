@@ -5,6 +5,7 @@ import com.roomate.roomate.common.BaseEntity;
 import com.roommate.roommate.post.domain.Comment;
 import com.roommate.roommate.post.domain.Post;
 import com.roommate.roommate.post.domain.LikedPost;
+import com.roommate.roommate.user.domain.enums.Gender;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,6 +35,8 @@ public class User extends BaseEntity implements UserDetails {
     private String nickname;
     private Character role;
     private String token;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Embedded
     private DetailRoommate detailRoommate;
@@ -106,6 +109,8 @@ public class User extends BaseEntity implements UserDetails {
         this.role=null;
         this.password=null;
         this.token=null;
+        this.name=null;
+        this.setUpdatedAt(null);
         this.setDetailRoommate(null);
         this.setIsDeleted(true);
     }

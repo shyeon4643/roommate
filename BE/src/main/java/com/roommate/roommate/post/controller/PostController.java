@@ -5,6 +5,7 @@ import com.roommate.roommate.config.security.JwtTokenProvider;
 import com.roommate.roommate.post.domain.Post;
 import com.roommate.roommate.post.domain.LikedPost;
 import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
+import com.roommate.roommate.post.dto.request.SearchPostDto;
 import com.roommate.roommate.post.dto.response.LikedInfoResponseDto;
 import com.roommate.roommate.post.dto.response.PostInfoResponseDto;
 import com.roommate.roommate.post.repository.PostRepository;
@@ -19,6 +20,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,7 +59,7 @@ public class PostController {
             throws Exception{
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
         User user = userService.findByUid(uid);
-        if(postService.findPostByUid(uid)!=null) {
+        if(postService.findUserPost(user)!=null) {
             return ResponseEntity.status(401)
                     .body(DefaultResponseDto.builder()
                             .responseCode("ALREADY_HAVE_POST")
@@ -89,11 +94,11 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @GetMapping("/user/posts")
+    @GetMapping("/user/post")
     public ResponseEntity<DefaultResponseDto> findAllPostsByUser(HttpServletRequest servletRequest){
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
         User user = userService.findByUid(uid);
-        Post post = postService.findPostByUid(uid);
+        Post post = postService.findUserPost(user);
 
         PostInfoResponseDto response = new PostInfoResponseDto(post, user);
 
@@ -150,16 +155,13 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @GetMapping("/posts/{area}")
-    public ResponseEntity<DefaultResponseDto> findAllPostsByArea(@PathVariable("area")String area,
-                                                                 HttpServletRequest servletRequest){
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.findByUid(uid);
+    @PostMapping("/searchPosts")
+    public ResponseEntity<DefaultResponseDto> searchPost(@PageableDefault Pageable pageable, SearchPostDto searchPostDto){
 
-        List<Post> posts = postService.findAllPostsByArea(area);
+        Page<Post> posts = postService.searchPost(searchPostDto,pageable);
 
         List<PostInfoResponseDto> response = posts.stream().map(post
-                -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
+                -> new PostInfoResponseDto(post)).collect(Collectors.toList());
 
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
@@ -190,7 +192,9 @@ public class PostController {
         User user = userService.findByUid(uid);
 
         Post post = postService.findOnePost(postId);
-        PostInfoResponseDto response = new PostInfoResponseDto(post,user);
+
+        LikedPost likedPost = postService.isLike(user,post);
+        PostInfoResponseDto response = new PostInfoResponseDto(post,user,likedPost);
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("POST_FOUND")
@@ -279,14 +283,14 @@ public class PostController {
     public ResponseEntity<DefaultResponseDto> findAllLikedPostsByUser(HttpServletRequest servletRequest) {
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
         User user = userService.findByUid(uid);
-        List<LikedPost> likes = postService.findAllLikedPostsByUser(uid);
+        List<Post> posts = postService.findAllLikedPostsByUser(uid);
 
-        List<LikedInfoResponseDto> response = likes.stream().map(like
-                -> new LikedInfoResponseDto(like,user)).collect(Collectors.toList());
+        List<PostInfoResponseDto> response = posts.stream().map(post
+                -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("LIKED_POST_FOUND")
-                        .responseMessage("내가 쓴 게시글 조회 완료")
+                        .responseMessage("좋아요한 게시글 다건 조회 완료")
                         .data(response)
                         .build());
     }
@@ -332,11 +336,11 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @DeleteMapping("/post/{category}/{postId}/like/{likeId}")
+    @PutMapping("/post/{category}/{postId}/like/{likeId}")
     public ResponseEntity<DefaultResponseDto> deletedLike(@PathVariable("postId") Long postId,
                                                           @PathVariable("likeId") Long likeId,
                                                           HttpServletRequest servletRequest) {
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("token"));
+            String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
             LikedPost likedPost = postService.deletedLike(likeId, uid);
 
             LikedInfoResponseDto response = new LikedInfoResponseDto(likedPost);
@@ -350,5 +354,35 @@ public class PostController {
     }
 
 
+    @ApiOperation(value = "MBTI 추천")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "FIND_MBTI_POSTS",
+                    content = @Content(schema = @Schema(implementation = LikedInfoResponseDto.class))),
+            @ApiResponse(responseCode = "401",
+                    description = "UNAUTHORIZED_MEMBER"),
+            @ApiResponse(responseCode = "404",
+                    description = "MBTI_POSTS_NOT_FOUND"),
+            @ApiResponse(responseCode = "500",
+                    description = "SERVER_ERROR"),
+    })
+    @GetMapping("/mbtiPosts")
+    public ResponseEntity<DefaultResponseDto> recommendMbtiPosts(HttpServletRequest servletRequest) {
+        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+
+        User user = userService.findByUid(uid);
+        List<Post> posts = postService.mbtiPosts(user);
+
+        List<PostInfoResponseDto> response = posts.stream().map(post
+                -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
+        return ResponseEntity.status(200)
+                .body(DefaultResponseDto.builder()
+                        .responseCode("LIKE_WORK")
+                        .responseMessage("좋아요 등록/취소")
+                        .data(response)
+                        .build());
+
+    }
 
 }

@@ -59,7 +59,7 @@ public class UserService {
      * 500(SERVER_ERROR)
      */
     @Transactional
-    public String login(SignInRequestDto signInRequestDto){
+    public User login(SignInRequestDto signInRequestDto){
         User user = userRepository.findByUidAndIsDeletedIsFalse(signInRequestDto.getUid()).get();
         if(!passwordEncoder.matches(signInRequestDto.getPassword(),user.getPassword())){
             throw new RuntimeException();
@@ -67,7 +67,7 @@ public class UserService {
         String token = jwtTokenProvider.createToken(String.valueOf(user.getUid()), Role.convertEnum(user.getRole()));
         user.setToken(token);
         log.info("[Login Token] token : {} ",token);
-        return token;
+        return user;
 
     }
 
@@ -81,7 +81,7 @@ public class UserService {
                     .area(PostArea.valueOf(detailRoommateRequestDto.getArea()))
                     .category(PostCategory.valueOf(detailRoommateRequestDto.getCategory()))
                     .fee(detailRoommateRequestDto.getFee())
-                    .gender(Gender.valueOf(detailRoommateRequestDto.getGender()))
+                    .roommateGender(Gender.valueOf(detailRoommateRequestDto.getGender()))
                     .lifeCycle(LifeCycle.valueOf(detailRoommateRequestDto.getLifeCycle()))
                     .smoking(Smoking.valueOf(detailRoommateRequestDto.getSmoking()))
                     .build();

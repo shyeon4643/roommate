@@ -8,5 +8,5 @@ import java.util.List;
 public interface PostLikedRepository extends JpaRepository<LikedPost, Long> {
     List<LikedPost> findByUserIdAndIsDeletedIsFalse(Long userId);
     LikedPost findByIdAndUserId(Long postLikedId, Long userId);
-    LikedPost findByUserIdAndPostIdAndIsDeletedIsFalse(Long userId, Long postId);
+    LikedPost findByUserIdAndPostId(Long userId, Long postId);
 }

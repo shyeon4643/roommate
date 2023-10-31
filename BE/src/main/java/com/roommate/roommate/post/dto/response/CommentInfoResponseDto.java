@@ -23,6 +23,7 @@ public class CommentInfoResponseDto {
     private Long postId;
     private String writer;
     private String body;
+    private Long writerUser;
     private PostCategory category;
     private boolean commentDeleted;
     private LocalDateTime updateAt;
@@ -33,6 +34,7 @@ public class CommentInfoResponseDto {
         this.commentDeleted=comment.getIsDeleted();
         this.category=comment.getPost().getCategory();
         this.writer=comment.getUser().getNickname();
+        this.writerUser=comment.getUser().getId();
         this.updateAt=comment.getUpdatedAt();
         this.body=comment.getBody();
     }

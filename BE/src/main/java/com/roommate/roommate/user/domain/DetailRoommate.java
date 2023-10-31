@@ -23,7 +23,7 @@ public class DetailRoommate {
     @Enumerated(EnumType.STRING)
     private Smoking smoking;
     @Enumerated(EnumType.STRING)
-    private Gender gender;
+    private Gender roommateGender;
     @Enumerated(EnumType.STRING)
     private Pet pet;
     private Integer fee;
@@ -43,7 +43,7 @@ public class DetailRoommate {
                        PostArea area){
         this.lifeCycle=lifeCycle;
         this.smoking=smoking;
-        this.gender=gender;
+        this.roommateGender =gender;
         this.pet=pet;
         this.fee=fee;
         this.wishRoommate=wishRoommate;
