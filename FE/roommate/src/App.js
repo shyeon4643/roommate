@@ -17,6 +17,8 @@ import MyPost from "./js/post/myPost";
 import WritePost from "./js/post/writePost";
 import MyPage from "./js/user/mypage";
 import DetailRoommate from "./js/user/detailRoommate";
+import BoardSearch from "./js/post/boardSearch";
+import BoardLikedPosts from "./js/post/boardLikedPosts";
 
 function App() {
   return (
@@ -37,9 +39,12 @@ function App() {
         <Route path="/updatePost" element={<WritePost />} />
         <Route path="/monthly/posts" element={<BoardMonthly />} />
         <Route path="/charter/posts" element={<BoardCharter />} />
+        <Route path="/charter/posts" element={<BoardCharter />} />
         <Route path="/user/posts" element={<MyPost />}/>
+        <Route path="/user/posts/likes" element={<BoardLikedPosts />} />
         <Route path="/post/:category/:postId" element={<DetailPost />} />
         <Route path="/user/comments" element={<MyComments />} />
+        <Route path="/searchPosts" element={<BoardSearch />} />
         <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/commentTable" element={<CommentTable />} />
           </Routes>

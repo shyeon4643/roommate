@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import "../../css/detailPost.css";
 import Comment from "./comment";
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 function DetailPost(){
     const { category, postId } = useParams();
@@ -60,15 +62,52 @@ function DetailPost(){
         });
     };
 
+    const isLike = () => {
+        axios({
+            headers: {
+                'JWT': localStorage.getItem('JWT'),
+            },
+            method: "PUT",
+            url: `/post/${category}/${postId}/like`,
+        }).then((result) => {
+            window.location.href = `/${category}/posts`;
+        });
+    };
+
+    const isntLike = () => {
+        axios({
+            headers: {
+                'JWT': localStorage.getItem('JWT'),
+            },
+            method: "Put",
+            url: `/post/${category}/${postId}/like/${selectedPost.likedId}`,
+        }).then((result) => {
+            window.location.href = `/${category}/posts`;
+        });
+    };
+
+    const handleLikeClick = () => {
+        if (selectedPost.likeCount === 0) {
+            isLike();
+        } else {
+            isntLike();
+        }
+    };
+
     return(
         <div className="detailPost_container">
             <div className="detailPost_header">
                 <h1>{category === 'charter' ? '전세' : '월세'}</h1>
             </div>
             <div className="detailPost_body_header">
-                <h2>{selectedPost.title}</h2>
+                <h2 id="detailPost_title">{selectedPost.title}</h2>
                 <p>추천수: {selectedPost.likeCount}</p>
                 <p>조회수: {selectedPost.viewCount}</p>
+                {selectedPost.like == false? (
+                    <FaHeart className="heart-icon-filled" onClick={handleLikeClick} />
+                ) : (
+                    <FaRegHeart className="heart-icon-empty" onClick={handleLikeClick} />
+                )}
                 {canEditOrDelete() && (
                     <div>
                         <button
