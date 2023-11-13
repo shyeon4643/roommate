@@ -1,3 +1,64 @@
 #detailPost_title{
     color:black;
+    text-align: center;
+    font-size: 50px;
+}
+
+.detailPost_header{
+    padding-left: 10%;
+}
+
+.detailPost_count{
+    display: flex;
+}
+
+.detailPost_count p, .heart-icon{
+    font-size: 20px;
+    font-weight: bold;
+    padding-right: 10px;
+    
+}
+
+.heart-icon{
+    padding-top: 70%;
+}
+
+.detailPost_count_heart{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid gray;
+}
+
+.detailPost_body_header,
+.detailPost_body_body,
+.detailPost_body_footer{
+    width: 50%;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.detailPost_edit_delete_button{
+    border-bottom: 1px solid gray;
+    padding-bottom: 3%;
+    padding-left: 90%;
+}
+
+.detailPost_edit_delete_button div{
+    display: flex;
+}
+
+
+.detailPost_edit_delete_button div button{
+    padding : 8%;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5%;
+    margin-left: 3%;
+    background-color: rgb(194, 190, 190);
+}
+
+.detailPost_body_body p{
+    padding-top: 2%;
+    font-size: 30px;
 }

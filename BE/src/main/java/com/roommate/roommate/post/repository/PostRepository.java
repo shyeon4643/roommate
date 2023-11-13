@@ -16,5 +16,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Post findByUserIdAndIsDeletedIsFalse(Long userId);
     Post findByIdAndIsDeletedIsFalse(Long postId);
     Post findByIdAndUserId(Long postId, Long userId);
-    Page<Post> findByTitleContainingAndAreaContaining(String keyword, String area, PageRequest pageRequest);
+    Page<Post> findByTitleContainingOrAreaContaining(String keyword, PostArea area, PageRequest pageRequest);
 }

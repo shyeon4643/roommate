@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from "react";
-import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import "../../css/home.css";
 import { SearchOutlined } from '@ant-design/icons';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../../css/home.css";
 
 function Home(){
     const[mbtiPosts, setMbtiPosts] = useState("");
     const[keyword, setKeyword] = useState("");
+    const[postData, setPostData] = useState([]);
     const navigate = useNavigate();
     useEffect(() => {
         try {
@@ -38,6 +39,8 @@ function Home(){
                 url : "/searchPosts",
                 data : data,
             }).then((response) =>{
+                console.log(response.data);
+                setPostData(response.data.data);
                 navigate('/searchPosts', {
                     state: { postData: response.data.data, keyword: keyword },
                 });
@@ -51,13 +54,15 @@ function Home(){
             <div className="home">
             <div className="search">
                 <h2>어느 지역을 찾으세요?</h2>
+                <div className="home_search">
                 <input
                     type="text"
                     id="search_input"
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
                 />
-                <SearchOutlined style={{ fontSize: '15px', color: 'black' }} onClick={handleSearch} />
+                <SearchOutlined  className="home_search_icon" style={{ fontSize: '35px', color: 'black' }} onClick={handleSearch} />
+                </div>
             </div>
             </div>
             <div className="post">
@@ -68,6 +73,7 @@ function Home(){
                             {response.image &&(
                                 <img src={image} alt="게시물 이미지" className="post_image"/>
                                 )}
+                            <p>{response.title}</p>
                             <p>{response.writer}</p>
                         </div>
                     </li>

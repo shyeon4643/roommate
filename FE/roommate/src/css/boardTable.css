@@ -1,13 +1,17 @@
 .board-table-container{
     width:100%;
     margin: 0 auto;
+    text-align:center
 }
 
 .board-table{
     padding-top:2%;
     font-size: 20px;
-    width:50%;
+    width:80%;
     margin: 0 auto;
+    border:1px solid black;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 .board-write-button{

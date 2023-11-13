@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import "../../css/comment.css";
 
 
 function Comment({comments,user}){
@@ -112,18 +113,21 @@ const handleNewComment = async () =>{
                     {comments && comments.map((response, index) => (
                         <li key={response.commentId}>
                             <div className="comment_data">
-                                <p>{index + 1}</p>
-                                <p>{response.writer}</p>
+                                <div className="comment_writer_date">
+                                <p className="comment_writer">{response.writer}</p>
+                                <p >{response.updateAt}</p>
+                                </div>
+                                <div className="comment_text_button">
                                 {editCommentId === response.commentId ? (
                                     <textarea
+                                        className="editComment_textarea"
                                         value={editCommentText}
                                         onChange={(e) => setEditCommentText(e.target.value)}
                                     />
                                 ) : (
-                                    <p>{response.body}</p>
+                                    <p className="comment_body">{response.body}</p>
                                 )}
-                                <p>{response.updateAt}</p>
-                            </div>
+
                             {editCommentId === response.commentId ? (
                                 <div className="comment_actions">
                                     <button onClick={() => handleEditComment(response.commentId)}>저장</button>
@@ -139,6 +143,8 @@ const handleNewComment = async () =>{
                                     )}
                                 </div>
                             )}
+                            </div>
+                            </div>
                         </li>
                     ))}
                 </ul>

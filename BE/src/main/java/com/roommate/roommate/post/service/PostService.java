@@ -255,7 +255,7 @@ public class PostService {
     {
         int page = (pageable.getPageNumber()==0)?0:(pageable.getPageNumber()-1);
         PageRequest pageRequest = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "id"));
-        return postRepository.findByTitleContainingAndAreaContaining(searchPostDto.getKeyword(),searchPostDto.getKeyword(),pageRequest);
+        return postRepository.findByTitleContainingOrAreaContaining(searchPostDto.getKeyword(),PostArea.valueOf(searchPostDto.getKeyword()),pageRequest);
 
     }
 

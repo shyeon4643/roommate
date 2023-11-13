@@ -1,0 +1,50 @@
+.comment_input{
+    width : 90%;
+    height: 50px;
+    border : 1px solid black ;
+}
+.comment-submit-button{
+    height: 60px; 
+    border : none;
+    background-color: rgb(194, 190, 190);
+    font-weight: bold;
+    border-radius: 5%;
+}
+
+
+.comment_list li{
+    width : 100%;
+    list-style: none;
+    border-bottom: 1px solid gray;
+    margin-right: 0;
+}
+
+.comment_writer_date,
+.comment_text_button{
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment_text_button button{
+    border:none;
+    width : 50%;
+    height: 20%;
+    background-color : white;
+    font-size: 15px;
+    font-weight: bold;
+    padding-top: 30%;
+}
+
+.comment_writer{
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.comment_body{
+    font-size: 18px;
+}
+
+.editComment_textarea{
+    border : none;
+    width : 90%;
+}

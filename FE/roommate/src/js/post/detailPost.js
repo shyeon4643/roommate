@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { useNavigate, useParams } from "react-router-dom";
 import "../../css/detailPost.css";
 import Comment from "./comment";
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 function DetailPost(){
     const { category, postId } = useParams();
@@ -99,16 +99,11 @@ function DetailPost(){
             <div className="detailPost_header">
                 <h1>{category === 'charter' ? '전세' : '월세'}</h1>
             </div>
+            <div className="detailPost_body">
             <div className="detailPost_body_header">
-                <h2 id="detailPost_title">{selectedPost.title}</h2>
-                <p>추천수: {selectedPost.likeCount}</p>
-                <p>조회수: {selectedPost.viewCount}</p>
-                {selectedPost.like == false? (
-                    <FaHeart className="heart-icon-filled" onClick={handleLikeClick} />
-                ) : (
-                    <FaRegHeart className="heart-icon-empty" onClick={handleLikeClick} />
-                )}
-                {canEditOrDelete() && (
+                <h1 id="detailPost_title">{selectedPost.title}</h1>
+                <div className="detailPost_edit_delete_button">
+            {canEditOrDelete() && (
                     <div>
                         <button
                         typy="button"
@@ -118,12 +113,27 @@ function DetailPost(){
                         onClick={deletePost}>삭제</button>
                     </div>
                 )}
+                </div>
+                <div className="detailPost_count_heart">
+                <div className="detailPost_count">
+                <p>추천수: {selectedPost.likeCount}</p>
+                <p>조회수: {selectedPost.viewCount}</p>
+                </div>
+                <div className="detailPost_heart">
+                {selectedPost.like == false? (
+                    <FaHeart className="heart-icon" onClick={handleLikeClick} />
+                ) : (
+                    <FaRegHeart className="heart-icon" onClick={handleLikeClick} />
+                )}
+                </div>
+                </div>
             </div>
             <div className="detailPost_body_body">
                 <p>{selectedPost.body}</p>
             </div>
             <div className="detailPost_body_footer">
                 <Comment comments={selectedPost.comments} user={user}/>
+            </div>
             </div>
         </div>
     )

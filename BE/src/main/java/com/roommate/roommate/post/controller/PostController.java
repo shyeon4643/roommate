@@ -8,7 +8,6 @@ import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
 import com.roommate.roommate.post.dto.request.SearchPostDto;
 import com.roommate.roommate.post.dto.response.LikedInfoResponseDto;
 import com.roommate.roommate.post.dto.response.PostInfoResponseDto;
-import com.roommate.roommate.post.repository.PostRepository;
 import com.roommate.roommate.post.service.PostService;
 import com.roommate.roommate.user.domain.User;
 import com.roommate.roommate.user.service.UserService;
@@ -21,7 +20,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -160,8 +158,9 @@ public class PostController {
 
         Page<Post> posts = postService.searchPost(searchPostDto,pageable);
 
-        List<PostInfoResponseDto> response = posts.stream().map(post
-                -> new PostInfoResponseDto(post)).collect(Collectors.toList());
+        List<PostInfoResponseDto> response = posts.getContent().stream()
+                .map(post -> new PostInfoResponseDto(post))
+                .collect(Collectors.toList());
 
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
