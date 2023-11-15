@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from "react";
 import axios from "axios";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import BoardTable from "../post/boardTable";
 import "../../css/sidebar.css";
 
 function Sidebar(){
@@ -52,18 +51,17 @@ function Sidebar(){
                 <li className="sidebar_li">
                     <button type= "button"
                             onClick={myPost}>
-                        <h3>내가 쓴 게시글</h3>
+                        <h3>게시글</h3>
                     </button>
                 </li>
                 <li className="sidebar_li">
                     <Link to="/user/comments" className="sidebar_li_link">
-                        <h3>내가 쓴 댓글</h3>
+                        <h3>댓글</h3>
                     </Link>
                 </li>
-                    <li>
+                    <li className="sidebar_li">
                         <Link to="/user/posts/likes" className="sidebar_li_link">
-                            <h3>좋아요한 게시글</h3>
-                            <h3>내가 쓴 댓글</h3>
+                            <h3>좋아요</h3>
                         </Link>
                     </li>
                 <li className="sidebar_li">

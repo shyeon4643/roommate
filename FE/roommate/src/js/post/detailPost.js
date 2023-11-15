@@ -129,13 +129,18 @@ function DetailPost(){
                 </div>
             </div>
             <div className="detailPost_body_body">
-                <p>{selectedPost.body}</p>
-            </div>
+                {selectedPost.path && selectedPost.path.map((path, index) => (
+                <img key={index} src={`/static/photos/postPhoto/${path}`} alt={`Post Photo ${index}`} />
+
+  ))}
+  <p>{selectedPost.body}</p>
+        </div>
+    
+        </div>
             <div className="detailPost_body_footer">
                 <Comment comments={selectedPost.comments} user={user}/>
             </div>
             </div>
-        </div>
     )
 }
 

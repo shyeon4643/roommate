@@ -24,5 +24,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowCredentials(true)
                 .allowedOrigins("http://localhost:3000","http://localhost:8080");
     }
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/photos/postPhoto/**")
+                .addResourceLocations("file:C:/Users/user/Desktop/song/coding/Spring/roommate/BE/src/main/resources/static/photos/postPhoto/");
+    }
 
 }

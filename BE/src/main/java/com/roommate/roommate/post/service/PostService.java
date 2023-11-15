@@ -233,7 +233,7 @@ public class PostService {
     @Transactional
     public void savePhoto(Post post, List<MultipartFile> files) throws Exception {
         if (files.size() != 0) {
-            String projectPath = System.getProperty("user.dir") + "\\\\BE\\\\src\\\\main\\\\resources\\\\static\\\\photos\\\\postPhoto";
+            String projectPath = System.getProperty("user.dir") + "\\\\src\\\\main\\\\resources\\\\static\\\\photos\\\\postPhoto";
             for (MultipartFile file : files) {
                 String filename = file.getOriginalFilename();
                 String extension = filename.substring(filename.lastIndexOf("."));

@@ -34,6 +34,7 @@ public class PostInfoResponseDto {
     private Long writerUser;
     private boolean isLike;
     private Long likedId;
+    private List<String> path = new ArrayList<>();
 
     public PostInfoResponseDto(Post post, User user){
         this.postId=post.getId();
@@ -60,6 +61,12 @@ public class PostInfoResponseDto {
         this.likeCount=post.getLikeCount();
         this.currentUser=user.getId();
         this.writerUser=post.getUser().getId();
+        if(post.getPostPhotos()!=null){
+            List<PostPhoto> postPhotos = post.getPostPhotos();
+            for(PostPhoto postPhoto : postPhotos){
+                this.path.add(postPhoto.getPhotoUrl());
+            }
+        }
     }
 
     public PostInfoResponseDto(Post post){
@@ -86,6 +93,12 @@ public class PostInfoResponseDto {
         this.viewCount=post.getViewCount();
         this.likeCount=post.getLikeCount();
         this.writerUser=post.getUser().getId();
+        if(post.getPostPhotos()!=null){
+            List<PostPhoto> postPhotos = post.getPostPhotos();
+            for(PostPhoto postPhoto : postPhotos){
+                this.path.add(postPhoto.getPhotoUrl());
+            }
+        }
     }
 
     public PostInfoResponseDto(Post post, User user, LikedPost likedPost){
@@ -119,5 +132,11 @@ public class PostInfoResponseDto {
         this.likeCount=post.getLikeCount();
         this.currentUser=user.getId();
         this.writerUser=post.getUser().getId();
+        if(post.getPostPhotos()!=null){
+            List<PostPhoto> postPhotos = post.getPostPhotos();
+            for(PostPhoto postPhoto : postPhotos){
+                this.path.add(postPhoto.getPhotoUrl());
+            }
+        }
     }
 }

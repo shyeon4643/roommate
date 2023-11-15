@@ -12,6 +12,7 @@ function Join(){
     const[mbti, setMbti] = useState("");
     const[nickname, setNickname] = useState("");
     const[phoneNum, setPhoneNum] = useState("");
+    const[gender, setGender] = useState("");
     
 const handleJoin=()=>{
     try{
@@ -25,6 +26,7 @@ const handleJoin=()=>{
             nickname : nickname,
             phoneNum : phoneNum,
             mbti : mbti,
+            gender : gender
         }
 
     axios({
@@ -77,6 +79,16 @@ const handleJoin=()=>{
                             placeholder="비밀번호"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}/>
+                            </td>
+                            </tr>
+                            <tr>
+                                <td className="join_field_name">성별</td>
+                                <td>
+                                    <input type="text"
+                                className="join_input"
+                            placeholder="성별"
+                            value={gender}
+                            onChange={(e) => setGender(e.target.value)}/>
                             </td>
                             </tr>
                             <tr>

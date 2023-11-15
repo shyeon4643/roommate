@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../../css/writePost.css";
 
@@ -34,6 +34,11 @@ function WritePost(){
         }
     }, []);
 
+    const handleFileChange = (e) => {
+        const selectedFiles = e.target.files;
+        setFiles(selectedFiles);
+      };
+
     const handleNewPost = async(e) =>{
         e.preventDefault();
         try{
@@ -42,8 +47,10 @@ function WritePost(){
             formData.append("area", area);
             formData.append("fee", fee);
             formData.append("body", body);
-            if(files){
-                formData.append("files", files);
+            if(files!=null){
+                for (let i = 0; i < files.length; i++) {
+                    formData.append("files", files[i]);
+                }
             }
             axios({
                 headers: {
@@ -143,14 +150,13 @@ function WritePost(){
                 </div>
                 <div className="writePost_input_middle2">
                 <input
-                type="file"
-                id="writePost_input_attachments"
-                name="attachments"
-                className="writePost_input"
-                accept="image/*,video/*"
-                onChange={(e) => setFiles(e.target.value)}
-                value={files||''}
-            />
+                    type="file"
+                    id="writePost_input_attachments"
+                    name="attachments"
+                    className="writePost_input"
+                    accept="image/*,video/*"
+                    onChange={handleFileChange}
+/>
             <input
                 type="text"
                 id="writePost_input_fee"
