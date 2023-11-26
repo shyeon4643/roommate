@@ -14,6 +14,7 @@ import com.roommate.roommate.user.domain.enums.Smoking;
 import com.roommate.roommate.user.dto.request.DetailRoommateRequestDto;
 import com.roommate.roommate.user.dto.request.SignInRequestDto;
 import com.roommate.roommate.user.dto.request.SignUpRequestDto;
+import com.roommate.roommate.user.dto.response.AccountTokenInfoDto;
 import com.roommate.roommate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,8 +75,8 @@ public class UserService {
         if(!passwordEncoder.matches(signInRequestDto.getPassword(),user.getPassword())){
             throw new RuntimeException();
         }
-        String token = jwtTokenProvider.createToken(String.valueOf(user.getUid()), Role.convertEnum(user.getRole()));
-        user.setToken(token);
+        createToken(user);
+
         return user;
 
     }
@@ -166,5 +167,14 @@ public class UserService {
 
     public User findByUid(String uid){
         return userRepository.findByUid(uid);
+    }
+
+    public AccountTokenInfoDto createToken(User user){
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getId(),Role.ROLE_USER.toString());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId(),Role.ROLE_USER.toString());
+
+        user.setToken(refreshToken);
+        userRepository.save(user);
+        return  new AccountTokenInfoDto(accessToken, refreshToken);
     }
 }

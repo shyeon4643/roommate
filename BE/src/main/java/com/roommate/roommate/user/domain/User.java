@@ -43,6 +43,8 @@ public class User extends BaseEntity implements UserDetails {
     @Embedded
     private DetailRoommate detailRoommate;
 
+    private Long kakaoId;
+
     @OneToMany(mappedBy = "user")
     @BatchSize(size = 1000)
     private List<Post> posts = new ArrayList<>();
