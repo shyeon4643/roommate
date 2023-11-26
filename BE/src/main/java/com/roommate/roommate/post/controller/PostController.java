@@ -57,14 +57,6 @@ public class PostController {
             throws Exception{
         String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
         User user = userService.findByUid(uid);
-        if(postService.findUserPost(user)!=null) {
-            return ResponseEntity.status(401)
-                    .body(DefaultResponseDto.builder()
-                            .responseCode("ALREADY_HAVE_POST")
-                            .responseMessage("게시글이 이미 있습니다.")
-                            .data(null)
-                            .build());
-        }else{
             Post post = postService.savePost(createPostRequestDto, uid);
             PostInfoResponseDto response = new PostInfoResponseDto(post,user);
             return ResponseEntity.status(200)
@@ -73,7 +65,6 @@ public class PostController {
                             .responseMessage("게시글 등록 완료")
                             .data(response)
                             .build());
-        }
 
     }
 

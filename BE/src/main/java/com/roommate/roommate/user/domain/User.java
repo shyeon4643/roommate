@@ -7,6 +7,7 @@ import com.roommate.roommate.post.domain.Post;
 import com.roommate.roommate.post.domain.LikedPost;
 import com.roommate.roommate.user.domain.enums.Gender;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
+@BatchSize(size = 100)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -42,11 +44,14 @@ public class User extends BaseEntity implements UserDetails {
     private DetailRoommate detailRoommate;
 
     @OneToMany(mappedBy = "user")
+    @BatchSize(size = 1000)
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @BatchSize(size = 1000)
     private List<LikedPost> likes = new ArrayList<>();
     @OneToMany(mappedBy = "user")
+    @BatchSize(size = 1000)
     private List<Comment> comments = new ArrayList<>();
 
     public List<LikedPost> getLikedPosts() {

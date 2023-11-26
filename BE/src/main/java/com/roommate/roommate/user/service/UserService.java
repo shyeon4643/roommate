@@ -21,7 +21,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.roommate.roommate.exception.ExceptionCode.SERVER_ERROR;
+import java.util.List;
+
+import static com.roommate.roommate.exception.ExceptionCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,20 +41,28 @@ public class UserService {
      */
     @Transactional
     public User join(SignUpRequestDto request){
-        User user = User.builder()
-                .name(request.getName())
-                .birth(request.getBirth())
-                .uid(request.getUid())
-                .nickname(request.getNickname())
-                .phoneNum(request.getPhoneNum())
-                .mbti(request.getMbti())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .email(request.getEmail())
-                .build();
+        if(userRepository.existsByUid(request.getUid())) {
+            throw new CustomException(DUPLICATE_ID);
+        }
+        if(userRepository.existsByEmail(request.getEmail())) {
+            throw new CustomException(DUPLICATE_EMAIL);
+        }
+            User user = User.builder()
+                    .name(request.getName())
+                    .birth(request.getBirth())
+                    .uid(request.getUid())
+                    .nickname(request.getNickname())
+                    .phoneNum(request.getPhoneNum())
+                    .mbti(request.getMbti())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .email(request.getEmail())
+                    .build();
 
-        userRepository.save(user);
-        return user;
-    }
+            userRepository.save(user);
+            return user;
+
+        }
+
 
     /**
      * 회원 로그인
@@ -66,7 +76,6 @@ public class UserService {
         }
         String token = jwtTokenProvider.createToken(String.valueOf(user.getUid()), Role.convertEnum(user.getRole()));
         user.setToken(token);
-        log.info("[Login Token] token : {} ",token);
         return user;
 
     }

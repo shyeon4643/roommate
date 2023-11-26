@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.roommate.roommate.exception.ExceptionCode.DUPLICATE_POST;
 import static com.roommate.roommate.exception.ExceptionCode.SERVER_ERROR;
 
 @Service
@@ -49,12 +50,14 @@ public class PostService {
     public Post savePost(CreatePostRequestDto createPostRequestDto, String uid) throws Exception {
         try {
             User user =  userService.findByUid(uid);
-
+            if(postRepository.findByUserId(user.getId())!=null) {
+                throw new CustomException(DUPLICATE_POST);
+            }
             Post post = Post.builder()
                     .title(createPostRequestDto.getTitle())
                     .body(createPostRequestDto.getBody())
-                    .area(PostArea.valueOf(createPostRequestDto.getArea()))
-                    .category(PostCategory.valueOf(createPostRequestDto.getCategory()))
+                    .area(createPostRequestDto.getArea())
+                    .category(createPostRequestDto.getCategory())
                     .fee(createPostRequestDto.getFee())
                     .user(user)
                     .build();
@@ -75,7 +78,7 @@ public class PostService {
      * */
     public List<Post> findAllPostsByCategory(String category){
         try{
-            List<Post> posts = postRepository.findByCategoryAndIsDeletedIsFalse(PostCategory.valueOf(category));
+            List<Post> posts = postRepository.findByCategoryAndIsDeletedIsFalse(category);
 
             return posts;
         }catch (RuntimeException e) {
@@ -90,7 +93,7 @@ public class PostService {
      * */
     public List<Post> findAllPostsByArea(String area){
         try{
-            List<Post> posts = postRepository.findByAreaAndIsDeletedIsFalse(PostArea.valueOf(area));
+            List<Post> posts = postRepository.findByAreaAndIsDeletedIsFalse(area);
 
             return posts;
         }catch (RuntimeException e) {
@@ -233,7 +236,7 @@ public class PostService {
     @Transactional
     public void savePhoto(Post post, List<MultipartFile> files) throws Exception {
         if (files.size() != 0) {
-            String projectPath = System.getProperty("user.dir") + "\\\\src\\\\main\\\\resources\\\\static\\\\photos\\\\postPhoto";
+            String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/photos/postPhoto";
             for (MultipartFile file : files) {
                 String filename = file.getOriginalFilename();
                 String extension = filename.substring(filename.lastIndexOf("."));
@@ -263,17 +266,21 @@ public class PostService {
         List<User> sameGender = userRepository.findAllByGender(user.getGender()); // 성별 필터
         Mbti mbti = mbtiRepository.findByMbti(user.getMbti());
         List<Post> mbtiPosts = new ArrayList<>();
-        for (User sameGenderUser : sameGender) {
-            if (sameGenderUser.getMbti().equals(mbti.getFirstMbti()) ||
-                    sameGenderUser.getMbti().equals(mbti.getSecondMbti()) || sameGenderUser.getMbti()
-                    .equals(mbti.getThirdMbti()) || sameGenderUser.getMbti().equals(mbti.getFourthMbti())) {
-                for(int i=0;i<sameGenderUser.getPosts().size();i++){
-                    if(sameGenderUser.getPosts().get(i).getIsDeleted()==false) {
-                        mbtiPosts.add(sameGenderUser.getPosts().get(i));
+        if(!sameGender.isEmpty()) {
+            for (User sameGenderUser : sameGender) {
+                if (sameGenderUser.getMbti().equals(mbti.getFirstMbti()) ||
+                        sameGenderUser.getMbti().equals(mbti.getSecondMbti()) || sameGenderUser.getMbti()
+                        .equals(mbti.getThirdMbti()) || sameGenderUser.getMbti().equals(mbti.getFourthMbti())) {
+                    for (int i = 0; i < sameGenderUser.getPosts().size(); i++) {
+                        if (sameGenderUser.getPosts().get(i).getIsDeleted() == false) {
+                            mbtiPosts.add(sameGenderUser.getPosts().get(i));
+                        }
                     }
                 }
             }
+            return mbtiPosts;
+        }else{
+            return postRepository.findByAreaAndIsDeletedIsFalse(user.getDetailRoommate().getArea().getValue());
         }
-        return mbtiPosts;
     }
 }

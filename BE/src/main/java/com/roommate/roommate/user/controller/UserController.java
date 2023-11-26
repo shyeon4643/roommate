@@ -47,26 +47,14 @@ public class UserController {
     })
     @PostMapping("/join")
     public ResponseEntity<DefaultResponseDto> join(@RequestBody @Valid SignUpRequestDto signUpRequesetDto){
-        log.info("[Join] 회원 가입 정보 전달");
-        if(userService.findByUid(signUpRequesetDto.getUid())==null){
         User user = userService.join(signUpRequesetDto);
 
-        UserInfoResponseDto response = new UserInfoResponseDto(user);
 
         return ResponseEntity.status(201)
                 .body(DefaultResponseDto.builder()
                         .responseCode("USER_REGISTERED")
                         .responseMessage("회원 가입 완료")
-                        .data(response)
                         .build());
-        }else{
-            return ResponseEntity.status(404)
-                    .body(DefaultResponseDto.builder()
-                            .responseCode("DENIED_ID")
-                            .responseMessage("이미 사용중인 아이디입니다.")
-                            .data(signUpRequesetDto.getUid())
-                            .build());
-        }
     }
 
     @ApiOperation(value = "회원 로그인")
@@ -85,7 +73,6 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<DefaultResponseDto> login(@RequestBody @Valid SignInRequestDto signInRequesetDto) {
-        log.info("[login] 회원 로그인 정보 전달");
 
         User user = userService.login(signInRequesetDto);
         UserLoginResponseDto response = new UserLoginResponseDto(user);

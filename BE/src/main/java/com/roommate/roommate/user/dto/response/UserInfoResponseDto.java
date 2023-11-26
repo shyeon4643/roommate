@@ -49,4 +49,5 @@ public class UserInfoResponseDto {
         this.wishRoommate=user.getDetailRoommate().getWishRoommate();
     }
 
+
 }

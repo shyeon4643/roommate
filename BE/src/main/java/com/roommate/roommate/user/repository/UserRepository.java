@@ -5,12 +5,22 @@ import com.roommate.roommate.user.domain.User;
 import com.roommate.roommate.user.domain.enums.Gender;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUid(String uid);
-    Optional<User> findByUidAndIsDeletedIsFalse(String uid);
-    List<User> findAllByGender(Gender gender);
+
+    @Query("SELECT u FROM User u JOIN u.posts p JOIN u.comments c WHERE u.uid = :uid AND u.isDeleted = false")
+    Optional<User> findByUidAndIsDeletedIsFalse(@Param("uid")String uid);
+    @Query("SELECT u FROM User u " +
+            "JOIN FETCH u.posts " +
+            "WHERE u.gender = :gender")
+    List<User> findAllByGender(@Param("gender") Gender gender);
+
+    boolean existsByUid(String uid);
+    boolean existsByEmail(String Email);
 }
