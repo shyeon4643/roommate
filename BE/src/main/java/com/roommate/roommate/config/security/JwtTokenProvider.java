@@ -40,9 +40,7 @@ public class JwtTokenProvider {
 
     @PostConstruct
     protected void init(){
-        //secretKey를 Base64로 인코딩
-        secretKey = Encoders.BASE64.encode(key.getEncoded());   // secretKey를 Base64 형식으로 인코딩
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
     public String createToken(Long userId, String role, String type, Long time){
@@ -54,7 +52,7 @@ public class JwtTokenProvider {
                 .setSubject(userId.toString())
                 .claim("role", role)
                 .claim("type", type)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(validity)
                 .compact();
     }
@@ -73,15 +71,19 @@ public class JwtTokenProvider {
         //실제 DB에 저장되어 있는 회원 객체를 끌고와 인증처리를 진행
         UserDetails userDetails = userDetailService.loadUserByUsername(this.getUsername(token));
 
-        //시큐리티에서 AuthenticationToken을 만들어서 반환
-        return new UsernamePasswordAuthenticationToken(userDetails,"",userDetails.getAuthorities());
+        if (userDetails != null) {
+            //시큐리티에서 AuthenticationToken을 만들어서 반환
+            return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        } else {
+            throw new CustomException(null,USER_NOT_FOUND);
+        }
     }
 
     //Id를 얻기위해 실제로 토큰을 디코딩
     public String getUsername(String token){
 
         //지정된 SecretKey를 통해 서명된 JWT를 해석하여 subject를 끌고와 리턴하여 이를 통해 인증 객체 가져온다.
-        String info = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        String info = Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody().getSubject();
 
         return info;
     }
@@ -100,13 +102,16 @@ public class JwtTokenProvider {
             //토큰을 디코딩하여 만료시간을 끌고와 현재시간과 비교해 확인
             return true;
         }catch (SignatureException e) {
-            throw new CustomException(JWT_CHARACTER_INVALID);
+            log.error("SignatureException occurred: {}", e.getMessage());
+            throw new CustomException(e,JWT_CHARACTER_INVALID);
         } catch (ExpiredJwtException e) {
-            throw new CustomException(EXPRIRED_TOKEN);
+            throw new CustomException(e,EXPRIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            throw new CustomException(UNSUPPORTED_TOKEN);
+            throw new CustomException(e,UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
-            throw new CustomException(INCORRECT_TOKEN);
+            throw new CustomException(e,INCORRECT_TOKEN);
+        }catch(Exception e){
+            return false;
         }
 
     }

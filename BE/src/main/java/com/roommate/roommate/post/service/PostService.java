@@ -47,11 +47,10 @@ public class PostService {
      * 500(SERVER_ERROR)
      * */
     @Transactional
-    public Post savePost(CreatePostRequestDto createPostRequestDto, String uid) throws Exception {
+    public Post savePost(CreatePostRequestDto createPostRequestDto, User user) throws Exception {
         try {
-            User user =  userService.findByUid(uid);
             if(postRepository.findByUserId(user.getId())!=null) {
-                throw new CustomException(DUPLICATE_POST);
+                throw new CustomException(null,DUPLICATE_POST);
             }
             Post post = Post.builder()
                     .title(createPostRequestDto.getTitle())
@@ -68,7 +67,7 @@ public class PostService {
             return post;
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
 
     }
@@ -83,7 +82,7 @@ public class PostService {
             return posts;
         }catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -98,7 +97,7 @@ public class PostService {
             return posts;
         }catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -113,7 +112,7 @@ public class PostService {
             return post;
         }catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -128,7 +127,7 @@ public class PostService {
             return post;
         }catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -137,16 +136,15 @@ public class PostService {
      * 500(SERVER_ERROR)
      * */
     @Transactional
-    public Post updatePost(Long postId, CreatePostRequestDto createPostRequestDto, String uid){
+    public Post updatePost(Long postId, CreatePostRequestDto createPostRequestDto, User user){
         try{
-            User user = userService.findByUid(uid);
             Post post = postRepository.findByIdAndUserId(postId, user.getId());
             post.update(createPostRequestDto);
 
             return post;
         }catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -155,23 +153,21 @@ public class PostService {
      * 500(SERVER_ERROR)
      * */
     @Transactional
-    public Post deletePost(Long postId, String uid){
+    public Post deletePost(Long postId, User user){
         try{
-            User user = userService.findByUid(uid);
             Post post = postRepository.findByIdAndUserId(postId, user.getId());
             post.delete();
 
             return post;
         }catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
-    public List<Post> findAllLikedPostsByUser(String uid){
+    public List<Post> findAllLikedPostsByUser(User user){
         List<Post> posts = new ArrayList<>();
         try {
-            User user= userService.findByUid(uid);
             List<LikedPost> postLikes = postLikedRepository.findByUserIdAndIsDeletedIsFalse(user.getId());
             for(LikedPost likedPost : postLikes){
                 posts.add(likedPost.getPost());
@@ -180,7 +176,7 @@ public class PostService {
             return posts;
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -188,14 +184,14 @@ public class PostService {
         try{
             return postLikedRepository.findByUserIdAndPostId(user.getId(), post.getId());
         }catch(RuntimeException e){
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
     @Transactional
-    public LikedPost saveLike(Long postId, String uid) {
+    public LikedPost saveLike(Long postId, Long id) {
         try {
-            User user = userService.findByUid(uid);
+            User user = userService.findById(id);
             Post post = postRepository.findById(postId).get();
             if(postLikedRepository.findByUserIdAndPostId(user.getId(),postId)==null) {
                 LikedPost likedPost = LikedPost.builder()
@@ -213,22 +209,22 @@ public class PostService {
 
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
 
     }
 
     @Transactional
-    public LikedPost deletedLike(Long likeId, String uid) {
+    public LikedPost deletedLike(Long likeId, Long id) {
         try {
-            User user = userService.findByUid(uid);
+            User user = userService.findById(id);
             LikedPost likedPost = postLikedRepository.findByIdAndUserId(likeId,user.getId());
             likedPost.delete();
 
             return likedPost;
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
 
     }
@@ -236,7 +232,7 @@ public class PostService {
     @Transactional
     public void savePhoto(Post post, List<MultipartFile> files) throws Exception {
         if (files.size() != 0) {
-            String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/photos/postPhoto";
+            String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/photos/postPhotos";
             for (MultipartFile file : files) {
                 String filename = file.getOriginalFilename();
                 String extension = filename.substring(filename.lastIndexOf("."));
@@ -254,11 +250,12 @@ public class PostService {
 
         }
     }
-    public Page<Post> searchPost(SearchPostDto searchPostDto, Pageable pageable)
+    public Page<Post> searchPost(String keyword, Pageable pageable)
     {
         int page = (pageable.getPageNumber()==0)?0:(pageable.getPageNumber()-1);
         PageRequest pageRequest = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "id"));
-        return postRepository.findByTitleContainingOrAreaContaining(searchPostDto.getKeyword(),PostArea.valueOf(searchPostDto.getKeyword()),pageRequest);
+        return postRepository.findByTitleContainingOrAreaContaining(keyword,
+                PostArea.valueOf(keyword),pageRequest);
 
     }
 
@@ -281,6 +278,15 @@ public class PostService {
             return mbtiPosts;
         }else{
             return postRepository.findByAreaAndIsDeletedIsFalse(user.getDetailRoommate().getArea().getValue());
+        }
+}
+
+public List<Post> findPostsByRecent(){
+        try {
+            return postRepository.findAllByOrderByCreatedAtDescAndIsDeletedIsFalse();
+        }catch (RuntimeException e){
+            e.getStackTrace();
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 }

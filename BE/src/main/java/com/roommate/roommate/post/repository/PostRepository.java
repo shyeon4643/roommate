@@ -30,7 +30,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 
     Post findByUserIdAndIsDeletedIsFalse(Long userId);
-    Post findByIdAndIsDeletedIsFalse(Long postId);
+
+    @Query("SELECT p from Post p where p.isDeleted = false ORDER BY p.createdAt DESC")
+    List<Post> findAllByOrderByCreatedAtDescAndIsDeletedIsFalse();
 
     Post findByUserId(Long userId);
     Post findByIdAndUserId(Long postId, Long userId);

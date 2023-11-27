@@ -3,12 +3,7 @@ import { Link } from "react-router-dom";
 import "../../css/boardTable.css";
 
 function BoardTable({postData}){
-    if (postData === null || postData === undefined) {
-        return <div>적상한 글이 없습니다.</div>;
-    }
-    if(!Array.isArray(postData)){
-        postData=[];
-    }
+    const posts = postData || [];
 
     const movepage = (response) => {
         window.location.href = `/post/${response.category}/${response.postId}`;

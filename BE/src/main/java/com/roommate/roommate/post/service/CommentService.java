@@ -31,9 +31,9 @@ public class CommentService {
      */
     @Transactional
     public Comment saveComment(Long postId, CreateCommentRequestDto createCommentRequestDto,
-                               String uid){
+                               Long id){
         try{
-            User user = userService.findByUid(uid);
+            User user = userService.findById(id);
             Post post = postRepository.findById(postId).get();
             Comment comment = Comment.builder()
                     .body(createCommentRequestDto.getBody())
@@ -45,7 +45,7 @@ public class CommentService {
             return comment;
         }catch(RuntimeException e){
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -54,16 +54,16 @@ public class CommentService {
      * 500(SERVER_ERROR)
      * */
     @Transactional
-    public Comment updateComment(String uid, Long commentId, CreateCommentRequestDto createCommentRequestDto){
+    public Comment updateComment(Long id, Long commentId, CreateCommentRequestDto createCommentRequestDto){
         try{
-            User user = userService.findByUid(uid);
+            User user = userService.findById(id);
             Comment comment = commentRepository.findByIdAndUserId(commentId,user.getId());
             comment.update(createCommentRequestDto.getBody());
 
             return comment;
         }catch(RuntimeException e){
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -72,14 +72,14 @@ public class CommentService {
      * 500(SERVER_ERROR)
      * */
     @Transactional(readOnly = true)
-    public List<Comment> findAllCommentByUser(String uid){
+    public List<Comment> findAllCommentByUser(Long id){
         try{
-            User user = userService.findByUid(uid);
+            User user = userService.findById(id);
             List<Comment> comments = commentRepository.findByUserIdAndIsDeletedIsFalse(user.getId());
             return comments;
         }catch(RuntimeException e){
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -88,15 +88,15 @@ public class CommentService {
      * 500(SERVER_ERROR)
      * */
     @Transactional
-    public Comment deleteComment(Long commentId, String uid){
+    public Comment deleteComment(Long commentId, Long id){
         try{
-            User user = userService.findByUid(uid);
+            User user = userService.findById(id);
             Comment comment = commentRepository.findByIdAndUserIdAndIsDeletedIsFalse(commentId,user.getId());
             comment.delete();
             return comment;
         }catch(RuntimeException e){
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 

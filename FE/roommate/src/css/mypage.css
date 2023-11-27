@@ -12,13 +12,21 @@
 
 .mypage_inform{
     display: flex;
-    margin-top: 10%;
-    justify-content: space-around;
+    margin: 8% 0% 8% 15%;
+    
+}
+
+#wish_roommate_field{
+    border: solid 1px black;
+    width : 100%;
+    padding: 5%;
+    font-size: 14px;
 }
 
 .profile_field{
     font-size: 20px;
     font-weight: bold;
+    margin-top: 8%;
 }
 
 .mypage_roommateInfo_name{
@@ -26,11 +34,22 @@
     font-weight: bold;
 }
 
+.detailRoommate_field{
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
 .mypage_roommateInfo_table{
     width: 100%;
     padding: 10%;
     margin-left: 10%;
 }
+
+.mypage_roommateInfo_table td {
+    border-bottom: 1px solid #000;
+    border-right: 1px solid #000;
+  }
 
 .detailRoommateInfo{
     font-size: 18px;
@@ -50,4 +69,13 @@
 
 .mypage_roommateInfo_table td{
     font-weight: bold;
+}
+
+.profile_image img{
+    width : 180px;
+    height: 130%;
+}
+
+.profile_image{
+    margin-right: 15%;
 }

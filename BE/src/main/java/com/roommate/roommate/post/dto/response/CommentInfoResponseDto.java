@@ -24,7 +24,7 @@ public class CommentInfoResponseDto {
     private String writer;
     private String body;
     private Long writerUser;
-    private PostCategory category;
+    private String  category;
     private boolean commentDeleted;
     private LocalDateTime updateAt;
 

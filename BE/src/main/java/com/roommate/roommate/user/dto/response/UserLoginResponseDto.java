@@ -15,8 +15,8 @@ public class UserLoginResponseDto {
     private String token;
     private boolean isInfo;
 
-    public UserLoginResponseDto(User user) {
-        this.token = user.getToken();
+    public UserLoginResponseDto(User user, AccountTokenInfoDto accountTokenInfoDto) {
+        this.token = accountTokenInfoDto.getAccessToken();
         if (user.getDetailRoommate() != null) {
             this.isInfo = true;
         } else {

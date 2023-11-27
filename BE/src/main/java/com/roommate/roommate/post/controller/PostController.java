@@ -55,9 +55,9 @@ public class PostController {
     public ResponseEntity<DefaultResponseDto> savePost(HttpServletRequest servletRequest,
                                                        CreatePostRequestDto createPostRequestDto)
             throws Exception{
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.findByUid(uid);
-            Post post = postService.savePost(createPostRequestDto, uid);
+            Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+            User user = userService.findById(id);
+            Post post = postService.savePost(createPostRequestDto, user);
             PostInfoResponseDto response = new PostInfoResponseDto(post,user);
             return ResponseEntity.status(200)
                     .body(DefaultResponseDto.builder()
@@ -85,8 +85,8 @@ public class PostController {
     })
     @GetMapping("/user/post")
     public ResponseEntity<DefaultResponseDto> findAllPostsByUser(HttpServletRequest servletRequest){
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.findByUid(uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        User user = userService.findById(id);
         Post post = postService.findUserPost(user);
 
         PostInfoResponseDto response = new PostInfoResponseDto(post, user);
@@ -116,8 +116,8 @@ public class PostController {
     @GetMapping("/{category}/posts")
     public ResponseEntity<DefaultResponseDto> findAllPostsByCategory(@PathVariable("category")String category,
                                                                      HttpServletRequest servletRequest){
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.findByUid(uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        User user = userService.findById(id);
         List<Post> posts = postService.findAllPostsByCategory(category);
 
         List<PostInfoResponseDto> response = posts.stream().map(post
@@ -144,10 +144,11 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PostMapping("/searchPosts")
-    public ResponseEntity<DefaultResponseDto> searchPost(@PageableDefault Pageable pageable, SearchPostDto searchPostDto){
+    @GetMapping("/searchPosts")
+    public ResponseEntity<DefaultResponseDto> searchPost(@PageableDefault Pageable pageable,
+                                                         @RequestParam ("keyword")String keyword){
 
-        Page<Post> posts = postService.searchPost(searchPostDto,pageable);
+        Page<Post> posts = postService.searchPost(keyword,pageable);
 
         List<PostInfoResponseDto> response = posts.getContent().stream()
                 .map(post -> new PostInfoResponseDto(post))
@@ -178,8 +179,8 @@ public class PostController {
     @GetMapping("/post/{category}/{postId}")
     public ResponseEntity<DefaultResponseDto> findOnePost(@PathVariable("postId") Long postId,
                                                           HttpServletRequest servletRequest){
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.findByUid(uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        User user = userService.findById(id);
 
         Post post = postService.findOnePost(postId);
 
@@ -210,9 +211,9 @@ public class PostController {
     public ResponseEntity<DefaultResponseDto> updatePost(@PathVariable("postId") Long postId,
                                                          @RequestBody CreatePostRequestDto createPostRequestDto,
                                                          HttpServletRequest servletRequest){
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.findByUid(uid);
-        Post post = postService.updatePost(postId, createPostRequestDto, uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        User user = userService.findById(id);
+        Post post = postService.updatePost(postId, createPostRequestDto, user);
 
         PostInfoResponseDto response = new PostInfoResponseDto(post,user);
         return ResponseEntity.status(200)
@@ -242,9 +243,9 @@ public class PostController {
     @DeleteMapping("/post/{category}/{postId}")
     public ResponseEntity<DefaultResponseDto> deletePost(@PathVariable("postId") Long postId,
                                                          HttpServletRequest servletRequest){
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.findByUid(uid);
-        Post post = postService.deletePost(postId,uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        User user = userService.findById(id);
+        Post post = postService.deletePost(postId,user);
 
         PostInfoResponseDto response = new PostInfoResponseDto(post,user);
         return ResponseEntity.status(200)
@@ -271,9 +272,9 @@ public class PostController {
     })
     @GetMapping("/user/posts/likes")
     public ResponseEntity<DefaultResponseDto> findAllLikedPostsByUser(HttpServletRequest servletRequest) {
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.findByUid(uid);
-        List<Post> posts = postService.findAllLikedPostsByUser(uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        User user = userService.findById(id);
+        List<Post> posts = postService.findAllLikedPostsByUser(user);
 
         List<PostInfoResponseDto> response = posts.stream().map(post
                 -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
@@ -301,8 +302,8 @@ public class PostController {
     @PutMapping("/post/{category}/{postId}/like")
     public ResponseEntity<DefaultResponseDto> saveLike(@PathVariable("postId") Long postId,
                                                        HttpServletRequest servletRequest) {
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        LikedPost likedPost = postService.saveLike(postId,uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        LikedPost likedPost = postService.saveLike(postId,id);
 
         LikedInfoResponseDto response = new LikedInfoResponseDto(likedPost);
         return ResponseEntity.status(200)
@@ -330,8 +331,8 @@ public class PostController {
     public ResponseEntity<DefaultResponseDto> deletedLike(@PathVariable("postId") Long postId,
                                                           @PathVariable("likeId") Long likeId,
                                                           HttpServletRequest servletRequest) {
-            String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-            LikedPost likedPost = postService.deletedLike(likeId, uid);
+            Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+            LikedPost likedPost = postService.deletedLike(likeId, id);
 
             LikedInfoResponseDto response = new LikedInfoResponseDto(likedPost);
             return ResponseEntity.status(200)
@@ -348,7 +349,7 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "FIND_MBTI_POSTS",
+                    description = "FIND_POSTS",
                     content = @Content(schema = @Schema(implementation = LikedInfoResponseDto.class))),
             @ApiResponse(responseCode = "401",
                     description = "UNAUTHORIZED_MEMBER"),
@@ -359,20 +360,33 @@ public class PostController {
     })
     @GetMapping("/mbtiPosts")
     public ResponseEntity<DefaultResponseDto> recommendMbtiPosts(HttpServletRequest servletRequest) {
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        String jwtHeader = servletRequest.getHeader("JWT");
+        List<Post> posts;
+        if(jwtHeader != null && !jwtHeader.isEmpty()){
+            Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+            User user = userService.findById(id);
+            posts = postService.mbtiPosts(user);
 
-        User user = userService.findByUid(uid);
-        List<Post> posts = postService.mbtiPosts(user);
+            List<PostInfoResponseDto> response = posts.stream().map(post
+                    -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
+            return ResponseEntity.status(200)
+                    .body(DefaultResponseDto.builder()
+                            .responseCode("FIND_POSTS")
+                            .responseMessage("게시물 조회 완료")
+                            .data(response)
+                            .build());
+        }else {
+            posts = postService.findPostsByRecent();
 
-        List<PostInfoResponseDto> response = posts.stream().map(post
-                -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
-        return ResponseEntity.status(200)
-                .body(DefaultResponseDto.builder()
-                        .responseCode("LIKE_WORK")
-                        .responseMessage("좋아요 등록/취소")
-                        .data(response)
-                        .build());
-
+            List<PostInfoResponseDto> response = posts.stream().map(post
+                    -> new PostInfoResponseDto(post)).collect(Collectors.toList());
+            return ResponseEntity.status(200)
+                    .body(DefaultResponseDto.builder()
+                            .responseCode("FIND_POSTS")
+                            .responseMessage("게시물 조회 완료")
+                            .data(response)
+                            .build());
+        }
     }
 
 }

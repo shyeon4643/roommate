@@ -5,11 +5,12 @@ import { useNavigate } from "react-router-dom";
 import "../../css/home.css";
 
 function Home(){
-    const[mbtiPosts, setMbtiPosts] = useState("");
+    const[mbtiPosts, setMbtiPosts] = useState([]);
     const[keyword, setKeyword] = useState("");
     const[postData, setPostData] = useState([]);
     const navigate = useNavigate();
     useEffect(() => {
+        const jwtToken = localStorage.getItem('JWT');
         try {
             axios({
                 method: "GET",
@@ -35,9 +36,9 @@ function Home(){
                 headers: {
                     'JWT': localStorage.getItem('JWT'),
                 },
-                method:"POST",
+                method:"GET",
                 url : "/searchPosts",
-                data : data,
+                params : data,
             }).then((response) =>{
                 console.log(response.data);
                 setPostData(response.data.data);
@@ -67,14 +68,15 @@ function Home(){
             </div>
             <div className="post">
                 <div className="mbti_posts">
-                    {mbtiPosts && mbtiPosts.map((response)=>(
-                    <li>
+                    {mbtiPosts && mbtiPosts.map((response, index)=>(
+                    <li key={index}>
                         <div className="mbti_post">
-                            {response.image &&(
-                                <img src={image} alt="게시물 이미지" className="post_image"/>
-                                )}
-                            <p>{response.title}</p>
-                            <p>{response.writer}</p>
+                            {response.path && response.path.map((path, pathIndex)=>(
+                                <img key={pathIndex} src={`/static/photos/postPhotos/${path}`} alt="게시물 이미지" className="post_image"/>
+                                ))}
+            
+                            <p className='mbti_posts_title'>{response.title}</p>
+                            <p className='mbti_posts_writer'>{response.writer}</p>
                         </div>
                     </li>
                     ))}

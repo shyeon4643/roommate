@@ -130,7 +130,7 @@ function DetailPost(){
             </div>
             <div className="detailPost_body_body">
                 {selectedPost.path && selectedPost.path.map((path, index) => (
-                <img key={index} src={`/static/photos/postPhoto/${path}`} alt={`Post Photo ${index}`} />
+                <img key={index} src={`/static/photos/postPhotos/${path}`} alt={`Post Photo ${index}`} />
 
   ))}
   <p>{selectedPost.body}</p>

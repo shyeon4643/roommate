@@ -7,6 +7,7 @@ import com.roommate.roommate.user.dto.request.DetailRoommateRequestDto;
 import com.roommate.roommate.user.dto.request.SignInRequestDto;
 import com.roommate.roommate.user.dto.request.SignUpRequestDto;
 import com.roommate.roommate.user.dto.request.UpdateUserRequestDto;
+import com.roommate.roommate.user.dto.response.AccountTokenInfoDto;
 import com.roommate.roommate.user.dto.response.UserInfoResponseDto;
 import com.roommate.roommate.user.dto.response.UserLoginResponseDto;
 import com.roommate.roommate.user.service.UserService;
@@ -75,7 +76,8 @@ public class UserController {
     public ResponseEntity<DefaultResponseDto> login(@RequestBody @Valid SignInRequestDto signInRequesetDto) {
 
         User user = userService.login(signInRequesetDto);
-        UserLoginResponseDto response = new UserLoginResponseDto(user);
+        AccountTokenInfoDto accountTokenInfoDto = userService.createToken(user);
+        UserLoginResponseDto response = new UserLoginResponseDto(user, accountTokenInfoDto);
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("USER_LOGIN")
@@ -102,7 +104,7 @@ public class UserController {
             @RequestBody @Valid DetailRoommateRequestDto detailRoommateRequestDto,
             HttpServletRequest servletRequest){
 
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        Long uid = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
         User user = userService.detailRoommate(detailRoommateRequestDto, uid);
 
         UserInfoResponseDto response = new UserInfoResponseDto(user);
@@ -135,8 +137,8 @@ public class UserController {
     ) {
 
 
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.updateDetailRoommate(detailRoommateRequestDto, uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        User user = userService.updateDetailRoommate(detailRoommateRequestDto, id);
 
 
 
@@ -167,9 +169,9 @@ public class UserController {
     public ResponseEntity<DefaultResponseDto<Object>> myPage(
             HttpServletRequest servletRequest
     ) {
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
 
-        User user = userService.findByUid(uid);
+        User user = userService.findById(id);
 
         UserInfoResponseDto response = new UserInfoResponseDto(user);
 
@@ -231,8 +233,8 @@ public class UserController {
     ) {
 
 
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.findByUid(uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        User user = userService.findById(id);
 
         userService.updatePassword(user, updateUserRequestDto.getPassword());
         userService.updateEmail(user, updateUserRequestDto.getEmail());
@@ -255,8 +257,8 @@ public class UserController {
     ) {
 
 
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        User user = userService.findByUid(uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        User user = userService.findById(id);
 
         userService.deleteUser(user);
 

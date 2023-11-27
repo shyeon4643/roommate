@@ -42,7 +42,6 @@ public class KakaoService {
         }
         user.setKakaoId(kakaoUserInfo.getId());
 
-        userService.createToken(user);
 
         userRepository.save(user);
         return user;

@@ -18,9 +18,9 @@ function Login(){
                 url : "/login",
                 data:data,
             }).then((response) => {
-                console.log(response.data);
+                console.log(response.data.data);
                 localStorage.setItem("JWT", response.data.data.token);
-                if(response.data.data.isInfo===false) {
+                if(response.data.data.info===false) {
                     window.location.href = "/writeDetailRoommate";
                 }else {
                     window.location.href = "/";
@@ -44,7 +44,7 @@ function Login(){
                 placeholder="ID"
                 value={uid}
                 onChange={(e) => setUid(e.target.value)}/>
-                <input type="text"
+                <input type="password"
                 className="login_input"
                 placeholder="PASSWORD"
                 value={password}

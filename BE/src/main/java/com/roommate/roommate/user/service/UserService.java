@@ -22,7 +22,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 import static com.roommate.roommate.exception.ExceptionCode.*;
 
@@ -43,10 +45,10 @@ public class UserService {
     @Transactional
     public User join(SignUpRequestDto request){
         if(userRepository.existsByUid(request.getUid())) {
-            throw new CustomException(DUPLICATE_ID);
+            throw new CustomException(null,DUPLICATE_ID);
         }
         if(userRepository.existsByEmail(request.getEmail())) {
-            throw new CustomException(DUPLICATE_EMAIL);
+            throw new CustomException(null,DUPLICATE_EMAIL);
         }
             User user = User.builder()
                     .name(request.getName())
@@ -57,6 +59,7 @@ public class UserService {
                     .mbti(request.getMbti())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .email(request.getEmail())
+                    .gender(request.getGender())
                     .build();
 
             userRepository.save(user);
@@ -71,20 +74,24 @@ public class UserService {
      */
     @Transactional
     public User login(SignInRequestDto signInRequestDto){
-        User user = userRepository.findByUidAndIsDeletedIsFalse(signInRequestDto.getUid()).get();
-        if(!passwordEncoder.matches(signInRequestDto.getPassword(),user.getPassword())){
-            throw new RuntimeException();
+        try {
+            User user = userRepository.findByUidAndIsDeletedIsFalse(signInRequestDto.getUid());
+
+            if (!passwordEncoder.matches(signInRequestDto.getPassword(), user.getPassword())) {
+                throw new CustomException(null,INCORRECT_PASSWORD_REQUIRED);
+            }
+
+            return user;
+        }catch(RuntimeException e){
+            e.printStackTrace();
+            throw new CustomException(e,SERVER_ERROR);
         }
-        createToken(user);
-
-        return user;
-
     }
 
     @Transactional
-    public User detailRoommate(DetailRoommateRequestDto detailRoommateRequestDto, String uid){
+    public User detailRoommate(DetailRoommateRequestDto detailRoommateRequestDto, Long id){
         try {
-            User user = userRepository.findByUid(uid);
+            User user = findById(id);
             DetailRoommate detailRoommate = DetailRoommate.builder()
                     .pet(Pet.valueOf(detailRoommateRequestDto.getPet()))
                     .wishRoommate(detailRoommateRequestDto.getWishRoommate())
@@ -100,13 +107,13 @@ public class UserService {
             return user;
         }catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
     @Transactional
-    public User updateDetailRoommate(DetailRoommateRequestDto detailRoommateRequestDto, String uid){
-        User user = findByUid(uid);
+    public User updateDetailRoommate(DetailRoommateRequestDto detailRoommateRequestDto, Long id){
+        User user = findById(id);
         user.getDetailRoommate().update(
                 LifeCycle.valueOf(detailRoommateRequestDto.getLifeCycle()),
                 Smoking.valueOf(detailRoommateRequestDto.getSmoking()),
@@ -127,7 +134,7 @@ public class UserService {
         user.updatePassword(passwordEncoder.encode(password));
     } catch (RuntimeException e) {
         e.printStackTrace();
-        throw new CustomException(SERVER_ERROR);
+        throw new CustomException(e,SERVER_ERROR);
     }
 }
 
@@ -137,7 +144,7 @@ public class UserService {
             user.updateEmail(email);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -147,7 +154,7 @@ public class UserService {
             user.updateNickname(nickname);
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -157,7 +164,7 @@ public class UserService {
             user.delete();
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new CustomException(SERVER_ERROR);
+            throw new CustomException(e,SERVER_ERROR);
         }
     }
 
@@ -165,10 +172,7 @@ public class UserService {
         return userRepository.findById(id).get();
     }
 
-    public User findByUid(String uid){
-        return userRepository.findByUid(uid);
-    }
-
+    @Transactional
     public AccountTokenInfoDto createToken(User user){
         String accessToken = jwtTokenProvider.generateAccessToken(user.getId(),Role.ROLE_USER.toString());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId(),Role.ROLE_USER.toString());

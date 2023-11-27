@@ -5,6 +5,7 @@ import "../../css/mypage.css";
 import Sidebar from "../layout/sidebar";
 import "../layout/sidebar.js";
 import DetailRoommate from "./detailRoommate";
+import myImage from '../../photo.jpeg';
 
 function MyPage(){
 
@@ -52,12 +53,14 @@ function MyPage(){
                 </div>
             <div className="mypage_inform">
                 <div className="profile_image">
-                <img src={myPage.imageUrl} alt="프로필 이미지" className="mypage_image" />
+                <img src={myImage} alt="My Image" />
                 </div>
                 <div className="profile_inform">
                 <p className="profile_field">이름 : {myPage.name}</p>
                 <p className="profile_field">닉네임 : {myPage.nickname}</p>
                 <p className="profile_field">이메일 : {myPage.email}</p>
+                <p className="profile_field">이런 사람을 원해요</p>
+                <p className="profile_field" id="wish_roommate_field">{myPage.wishRoommate}</p>
                 </div>
                 </div>
                 <div className="mypage_roommateInfo">
@@ -68,7 +71,7 @@ function MyPage(){
                         <td className="detailRoommate_field">
                             {myPage.lifeCycle}
                         </td>
-                        <td className="mypage_roommateInfo_name">반려동물</td>
+                        <td className="mypage_roommateInfo_name"> 반려동물</td>
                         <td className="detailRoommate_field">
                             {myPage.pet}
                         </td>
@@ -88,10 +91,7 @@ function MyPage(){
                         <td className="detailRoommate_field">
                             {myPage.fee}
                         </td>
-                        <td className="mypage_roommateInfo_name">원하는 룸메이트 상세설명</td>
-                        <td className="detailRoommate_field">
-                            {myPage.wishRoommate}
-                        </td>
+                    
                     </tr>
                     </table>
                     </div>

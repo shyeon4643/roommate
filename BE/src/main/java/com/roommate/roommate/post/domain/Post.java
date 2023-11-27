@@ -22,10 +22,8 @@ public class Post extends BaseEntity {
     private Long id;
     private String title;
     private String body;
-    @Enumerated(EnumType.STRING)
-    private PostArea area;
-    @Enumerated(EnumType.STRING)
-    private PostCategory category;
+    private String area;
+    private String category;
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
@@ -36,17 +34,17 @@ public class Post extends BaseEntity {
 
     @OneToMany(mappedBy = "post")
     private List<LikedPost> likes = new ArrayList<>();
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private List<PostPhoto> postPhotos = new ArrayList<>();
 
     public void update(CreatePostRequestDto createPostRequestDto){
         this.title= createPostRequestDto.getTitle();
         this.body= createPostRequestDto.getBody();
-        this.area=PostArea.valueOf(createPostRequestDto.getArea());
-        this.category=PostCategory.valueOf(createPostRequestDto.getCategory());
+        this.area=createPostRequestDto.getArea();
+        this.category=createPostRequestDto.getCategory();
     }
 
     public void delete(){
@@ -54,7 +52,7 @@ public class Post extends BaseEntity {
     }
 
     @Builder
-    public Post(String title, String body, int fee, PostCategory category, PostArea area, User user){
+    public Post(String title, String body, int fee, String category, String area, User user){
         this.title=title;
         this.body=body;
         this.category=category;

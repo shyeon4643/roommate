@@ -47,8 +47,8 @@ public class CommentController {
     public ResponseEntity<DefaultResponseDto> saveComment(@PathVariable("postId") Long postId,
                                                           @RequestBody CreateCommentRequestDto createCommentRequestDto,
                                                           HttpServletRequest servletRequest) throws Exception{
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        Comment comment = commentService.saveComment(postId, createCommentRequestDto,uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        Comment comment = commentService.saveComment(postId, createCommentRequestDto,id);
 
         CommentInfoResponseDto response = new CommentInfoResponseDto(comment);
         return ResponseEntity.status(200)
@@ -76,8 +76,8 @@ public class CommentController {
     public ResponseEntity<DefaultResponseDto> updateComment(@RequestBody CreateCommentRequestDto createCommentRequestDto,
                                                             @PathVariable("commentId") Long commentId,
                                                             HttpServletRequest servletRequest){
-            String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-            Comment comment = commentService.updateComment(uid,commentId, createCommentRequestDto);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+            Comment comment = commentService.updateComment(id,commentId, createCommentRequestDto);
 
             CommentInfoResponseDto response = new CommentInfoResponseDto(comment);
             return ResponseEntity.status(200)
@@ -105,8 +105,8 @@ public class CommentController {
     })
     @GetMapping("/user/comments")
     public ResponseEntity<DefaultResponseDto> findAllCommentsByUser(HttpServletRequest servletRequest) {
-        String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
-        List<Comment> comments = commentService.findAllCommentByUser(uid);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+        List<Comment> comments = commentService.findAllCommentByUser(id);
 
         List<CommentInfoResponseDto> response = comments.stream().map(comment
                 -> new CommentInfoResponseDto(comment)).collect(Collectors.toList());
@@ -135,9 +135,9 @@ public class CommentController {
     @DeleteMapping("/post/{category}/{postId}/comment/{commentId}")
     public ResponseEntity<DefaultResponseDto> deleteComment(@PathVariable("commentId") Long commentId,
                                                             HttpServletRequest servletRequest) {
-            String uid = jwtTokenProvider.getUsername(servletRequest.getHeader("JWT"));
+            Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
 
-            Comment comment = commentService.deleteComment(commentId,uid);
+            Comment comment = commentService.deleteComment(commentId,id);
 
 
             CommentInfoResponseDto response = new CommentInfoResponseDto(comment);

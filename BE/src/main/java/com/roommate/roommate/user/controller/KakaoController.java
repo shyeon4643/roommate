@@ -7,6 +7,7 @@ import com.roommate.roommate.user.dto.response.AccountTokenInfoDto;
 import com.roommate.roommate.user.dto.response.UserLoginResponseDto;
 import com.roommate.roommate.user.service.KakaoService;
 import com.roommate.roommate.user.dto.request.SignUpRequestDto;
+import com.roommate.roommate.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class KakaoController {
 
     private final KakaoService kakaoService;
+    private final UserService userService;
 
 
     @ApiOperation(value="로그인")
@@ -26,8 +28,8 @@ public class KakaoController {
                                                                @RequestBody SignUpRequestDto signUpRequestDto){
 
         User user = kakaoService.loginOrJoin(code, signUpRequestDto);
-
-        UserLoginResponseDto response = new UserLoginResponseDto(user);
+        AccountTokenInfoDto accountTokenInfoDto = userService.createToken(user);
+        UserLoginResponseDto response = new UserLoginResponseDto(user,accountTokenInfoDto);
 
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()

@@ -21,9 +21,9 @@ public enum Role {
         try {
             return Role.valueOf(role);
         } catch (IllegalArgumentException e) {
-            throw new CustomException(ROLE_CHARACTER_INVALID);
+            throw new CustomException(null,ROLE_CHARACTER_INVALID);
         } catch (NullPointerException e) {
-            throw new CustomException(FIELD_REQUIRED);
+            throw new CustomException(null,FIELD_REQUIRED);
         }
     }
 
@@ -40,7 +40,7 @@ public enum Role {
                 role = String.valueOf(ROLE_ADMIN);
                 break;
             default:
-                throw new CustomException(SERVER_ERROR);
+                throw new CustomException(null,SERVER_ERROR);
         }
         return role;
     }

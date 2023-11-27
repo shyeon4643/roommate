@@ -74,7 +74,7 @@ const handleJoin=()=>{
                             <tr>
                                 <td className="join_field_name">비밀번호</td>
                                 <td>
-                                    <input type="text"
+                                    <input type="password"
                                 className="join_input"
                             placeholder="비밀번호"
                             value={password}

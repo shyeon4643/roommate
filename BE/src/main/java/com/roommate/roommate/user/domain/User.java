@@ -45,14 +45,14 @@ public class User extends BaseEntity implements UserDetails {
 
     private Long kakaoId;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @BatchSize(size = 1000)
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @BatchSize(size = 1000)
     private List<LikedPost> likes = new ArrayList<>();
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     @BatchSize(size = 1000)
     private List<Comment> comments = new ArrayList<>();
 
@@ -80,7 +80,8 @@ public class User extends BaseEntity implements UserDetails {
                 String email,
                 Date birth,
                 String mbti,
-                String nickname){
+                String nickname,
+                Gender gender){
         this.uid=uid;
         this.password=password;
         this.name=name;
@@ -90,6 +91,7 @@ public class User extends BaseEntity implements UserDetails {
         this.nickname=nickname;
         this.mbti=mbti;
         this.role='U';
+        this.gender=gender;
         this.setDetailRoommate(null);
         this.setIsDeleted(false);
     }
@@ -155,6 +157,7 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isEnabled(){
         return true;
     }
+
 }
 
 

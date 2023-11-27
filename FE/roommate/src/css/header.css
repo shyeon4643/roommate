@@ -21,3 +21,7 @@ li{
     text-decoration:none;
     color: white;
 }
+.header button{
+    border: none;
+    background-color:#be458d;
+}

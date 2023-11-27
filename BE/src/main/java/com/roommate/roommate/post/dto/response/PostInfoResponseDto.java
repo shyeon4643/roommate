@@ -21,12 +21,12 @@ public class PostInfoResponseDto {
     private Long postId;
     private String title;
     private String body;
-    private PostArea area;
+    private String area;
     private Integer fee;
     private List<PostPhoto> photos = new ArrayList<>();
     private List<CommentInfoResponseDto> comments = new ArrayList<>();
     private LocalDateTime updateAt;
-    private PostCategory category;
+    private String category;
     private String writer;
     private int viewCount;
     private int likeCount;
