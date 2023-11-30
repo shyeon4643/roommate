@@ -23,8 +23,4 @@ public interface RequestKakaoClient {
             @RequestParam("client_secret") String clientSecret
     );
 
- /*   @GetMapping("/v1/user/access_token_info")
-    KakaoInfoDto.KakaoUserIdInfoDto getUserInfo(
-            @RequestHeader("Authorization") String authorization
-    );*/
 }

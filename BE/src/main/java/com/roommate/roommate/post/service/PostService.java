@@ -1,8 +1,10 @@
 package com.roommate.roommate.post.service;
 
+import com.roommate.roommate.common.SliceResponse;
 import com.roommate.roommate.post.domain.*;
 import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
 import com.roommate.roommate.post.dto.request.SearchPostDto;
+import com.roommate.roommate.post.dto.response.PostInfoResponseDto;
 import com.roommate.roommate.post.repository.PostLikedRepository;
 import com.roommate.roommate.post.repository.PostPhotoRepository;
 import com.roommate.roommate.post.repository.PostRepository;
@@ -13,10 +15,7 @@ import com.roommate.roommate.user.repository.UserRepository;
 import com.roommate.roommate.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import com.roommate.roommate.exception.CustomException;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,9 +74,9 @@ public class PostService {
      * 카테고리별 게시글 조회
      * 500(SERVER_ERROR)
      * */
-    public List<Post> findAllPostsByCategory(String category){
+    public Page<Post> findAllPostsByCategory(String category, Pageable pageable){
         try{
-            List<Post> posts = postRepository.findByCategoryAndIsDeletedIsFalse(category);
+            Page<Post> posts = postRepository.findByCategoryAndIsDeletedIsFalse(category, pageable);
 
             return posts;
         }catch (RuntimeException e) {
@@ -253,37 +252,37 @@ public class PostService {
     public Page<Post> searchPost(String keyword, Pageable pageable)
     {
         int page = (pageable.getPageNumber()==0)?0:(pageable.getPageNumber()-1);
-        PageRequest pageRequest = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "id"));
-        return postRepository.findByTitleContainingOrAreaContaining(keyword,
-                PostArea.valueOf(keyword),pageRequest);
+        return postRepository.findByTitleContainingOrAreaContaining(keyword,pageable);
 
     }
 
-    public List<Post> mbtiPosts(User user) {
+    public Slice<Post> homePosts(User user, Pageable pageable) {
         List<User> sameGender = userRepository.findAllByGender(user.getGender()); // 성별 필터
         Mbti mbti = mbtiRepository.findByMbti(user.getMbti());
-        List<Post> mbtiPosts = new ArrayList<>();
-        if(!sameGender.isEmpty()) {
+        List<Post> posts = new ArrayList<>();
+        if(!sameGender.isEmpty()||sameGender.size()>=5) {
             for (User sameGenderUser : sameGender) {
                 if (sameGenderUser.getMbti().equals(mbti.getFirstMbti()) ||
                         sameGenderUser.getMbti().equals(mbti.getSecondMbti()) || sameGenderUser.getMbti()
                         .equals(mbti.getThirdMbti()) || sameGenderUser.getMbti().equals(mbti.getFourthMbti())) {
                     for (int i = 0; i < sameGenderUser.getPosts().size(); i++) {
                         if (sameGenderUser.getPosts().get(i).getIsDeleted() == false) {
-                            mbtiPosts.add(sameGenderUser.getPosts().get(i));
+                            posts.add(sameGenderUser.getPosts().get(i));
                         }
                     }
                 }
             }
-            return mbtiPosts;
+            int start = (int) pageable.getOffset();
+            int end = (start + pageable.getPageSize()) > posts.size() ? posts.size() : (start + pageable.getPageSize());
+            return new SliceImpl<>(posts.subList(start, end), pageable, posts.size() > end);
         }else{
-            return postRepository.findByAreaAndIsDeletedIsFalse(user.getDetailRoommate().getArea().getValue());
+            return findPostsByRecent(pageable);
         }
 }
 
-public List<Post> findPostsByRecent(){
+public Slice<Post> findPostsByRecent(Pageable pageable){
         try {
-            return postRepository.findAllByOrderByCreatedAtDescAndIsDeletedIsFalse();
+            return postRepository.findAllByOrderByCreatedAtDescAndIsDeletedIsFalse(pageable);
         }catch (RuntimeException e){
             e.getStackTrace();
             throw new CustomException(e,SERVER_ERROR);

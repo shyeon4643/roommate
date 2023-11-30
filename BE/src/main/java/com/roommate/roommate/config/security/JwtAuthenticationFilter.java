@@ -24,7 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest servletRequest, HttpServletResponse servletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
         // 헤더에서 토큰 받아오기
-        String token = jwtTokenProvider.resolveToken(servletRequest); //username과 password로 토큰 생성
+        String token = jwtTokenProvider.resolveToken(servletRequest);
 
         // 토큰이 유효하다면
         if(token !=null && jwtTokenProvider.validateToken(token)){

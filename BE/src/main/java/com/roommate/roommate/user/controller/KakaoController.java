@@ -13,20 +13,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/kakao")
 public class KakaoController {
 
     private final KakaoService kakaoService;
     private final UserService userService;
 
 
-    @ApiOperation(value="로그인")
-    @PostMapping("/loginOrsignUp")
-    public ResponseEntity<DefaultResponseDto<Object>> getToken(@RequestParam("code") String code,
+    @ApiOperation(value="카카오 로그인 및 회원가입")
+    @PostMapping("/oauth/kakao/redirect")
+    public ResponseEntity<DefaultResponseDto<Object>> loginOrJoin(HttpServletRequest request,
                                                                @RequestBody SignUpRequestDto signUpRequestDto){
 
+        String code = request.getParameter("code");
         User user = kakaoService.loginOrJoin(code, signUpRequestDto);
         AccountTokenInfoDto accountTokenInfoDto = userService.createToken(user);
         UserLoginResponseDto response = new UserLoginResponseDto(user,accountTokenInfoDto);

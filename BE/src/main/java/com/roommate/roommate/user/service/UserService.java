@@ -69,6 +69,34 @@ public class UserService {
 
 
     /**
+     * 회원 가입
+     * 500(SERVER_ERROR)
+     */
+    @Transactional
+    public User kakaoJoin(SignUpRequestDto request){
+        if(userRepository.existsByUid(request.getUid())) {
+            throw new CustomException(null,DUPLICATE_ID);
+        }
+        if(userRepository.existsByEmail(request.getEmail())) {
+            throw new CustomException(null,DUPLICATE_EMAIL);
+        }
+        User user = User.builder()
+                .name(request.getName())
+                .birth(request.getBirth())
+                .uid(request.getUid())
+                .nickname(request.getNickname())
+                .phoneNum(request.getPhoneNum())
+                .mbti(request.getMbti())
+                .email(request.getEmail())
+                .gender(request.getGender())
+                .build();
+
+        userRepository.save(user);
+        return user;
+
+    }
+
+    /**
      * 회원 로그인
      * 500(SERVER_ERROR)
      */

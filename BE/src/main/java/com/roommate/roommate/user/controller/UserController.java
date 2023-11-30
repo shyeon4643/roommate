@@ -99,7 +99,7 @@ public class UserController {
                     description = "SERVER_ERROR"),
     })
 
-    @PostMapping("/writeDetailRoommate")
+    @PostMapping("/detailRoommate")
     public ResponseEntity<DefaultResponseDto> writeDetailRoommate(
             @RequestBody @Valid DetailRoommateRequestDto detailRoommateRequestDto,
             HttpServletRequest servletRequest){
@@ -130,7 +130,7 @@ public class UserController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PutMapping("/updateDetailRoommate")
+    @PatchMapping("/detailRoommate")
     public ResponseEntity<DefaultResponseDto<Object>> updateDetailRoommate(
             HttpServletRequest servletRequest,
             @RequestBody @Valid DetailRoommateRequestDto detailRoommateRequestDto
@@ -226,7 +226,7 @@ public class UserController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PutMapping("/user")
+    @PatchMapping("/user")
     public ResponseEntity<DefaultResponseDto<Object>> updateUser(
             HttpServletRequest servletRequest,
             @RequestBody @Valid UpdateUserRequestDto updateUserRequestDto

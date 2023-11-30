@@ -4,6 +4,11 @@ import "../../css/join.css";
 
 function Join(){
 
+    const code = new URL(window.location.href).searchParams.get("code");
+    const restApiKey = '10965eecbd4e1c23538795681c05f934';
+    const redirectUri = 'http://localhost:3000/oauth/kakao/redirect';
+    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${redirectUri}&response_type=code&`
+
     const[name, setName] = useState("");
     const[uid, setUid] = useState("");
     const[password, setPassword] = useState("");
@@ -42,6 +47,29 @@ const handleJoin=()=>{
     }
     
 }
+
+const getKakaoCode = () =>{
+    
+    const data = {
+            uid : uid,
+            password : password,
+            name:name,
+            birth : birth,
+            email : email,
+            nickname : nickname,
+            phoneNum : phoneNum,
+            mbti : mbti,
+            gender : gender
+    }
+
+    const restApiKey = '10965eecbd4e1c23538795681c05f934';
+    const redirectUri = 'http://localhost:3000/oauth/kakao/redirect';
+    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${redirectUri}&response_type=code&`
+
+    window.location.href=kakaoUrl;
+}
+
+
 
 
     return (
@@ -163,9 +191,16 @@ const handleJoin=()=>{
                             </tbody>
                     </table>
                     <button
-                    className="join-submit-button"
+                    className="join_submit_button"
                     type="button"
                     onClick={handleJoin}
+                >
+                    회원가입
+                </button>
+                <button
+                    className="kakao_join_submit_button"
+                    type="button"
+                    onClick={getKakaoCode}
                 >
                     회원가입
                 </button>

@@ -5,7 +5,7 @@ import "../../css/mypage.css";
 import Sidebar from "../layout/sidebar";
 import "../layout/sidebar.js";
 import DetailRoommate from "./detailRoommate";
-import myImage from '../../photo.jpeg';
+import myImage from '../../photo.png';
 
 function MyPage(){
 

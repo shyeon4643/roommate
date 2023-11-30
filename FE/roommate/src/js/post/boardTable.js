@@ -6,7 +6,7 @@ function BoardTable({postData}){
     const posts = postData || [];
 
     const movepage = (response) => {
-        window.location.href = `/post/${response.category}/${response.postId}`;
+        window.location.href = `/posts/${response.category}/${response.postId}`;
     };
     return(
         <div>
@@ -18,7 +18,7 @@ function BoardTable({postData}){
                         <th>제목</th>
                         <th>작성자</th>
                         <th>날짜</th>
-                        <th>조회수</th>
+                        <th>좋아요</th>
                     </tr>
                     </thead>
                     <tbody className="board-table-body">
@@ -28,7 +28,7 @@ function BoardTable({postData}){
                             <td>{response.title}</td>
                             <td>{response.writer==null?"알수없음" : response.writer}</td>
                             <td>{response.updateAt}</td>
-                            <td>{response.viewCount}</td>
+                            <td>{response.likeCount}</td>
                         </tr>
                     ))}
                     </tbody>

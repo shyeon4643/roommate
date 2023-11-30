@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "../../css/home.css";
 
 function Home(){
-    const[mbtiPosts, setMbtiPosts] = useState([]);
+    const[homePosts, setHomePosts] = useState([]);
     const[keyword, setKeyword] = useState("");
     const[postData, setPostData] = useState([]);
     const navigate = useNavigate();
@@ -14,13 +14,17 @@ function Home(){
         try {
             axios({
                 method: "GET",
-                url: `/mbtiPosts`,
+                url: `/home/posts`,
                 headers: {
                     'JWT': localStorage.getItem('JWT'),
                 },
+                params:{
+                    page : 0,
+                    size :5
+                },
             }).then((response) => {
-                console.log(response.data.data);
-                setMbtiPosts(response.data.data);
+                console.log(response.data.data.data);
+                setHomePosts(response.data.data.data);
             });
         } catch (error) {
             console.log("게시글 불러오는 중에 오류 : ", error);
@@ -37,7 +41,7 @@ function Home(){
                     'JWT': localStorage.getItem('JWT'),
                 },
                 method:"GET",
-                url : "/searchPosts",
+                url : "/search",
                 params : data,
             }).then((response) =>{
                 console.log(response.data);
@@ -68,7 +72,7 @@ function Home(){
             </div>
             <div className="post">
                 <div className="mbti_posts">
-                    {mbtiPosts && mbtiPosts.map((response, index)=>(
+                    {homePosts && homePosts.map((response, index)=>(
                     <li key={index}>
                         <div className="mbti_post">
                             {response.path && response.path.map((path, pathIndex)=>(

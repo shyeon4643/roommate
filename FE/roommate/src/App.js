@@ -19,6 +19,7 @@ import MyPage from "./js/user/mypage";
 import DetailRoommate from "./js/user/detailRoommate";
 import BoardSearch from "./js/post/boardSearch";
 import BoardLikedPosts from "./js/post/boardLikedPosts";
+import KakaoRedirectComponent from "./js/home/KakaoRedirectComponent";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Join />} />
+        <Route path="oauth/kakao/redirect" element={<KakaoRedirectComponent />} />
         <Route path="/updateDetailRoommate" element={<DetailRoommate />} />
         <Route path="/writeDetailRoommate" element={<DetailRoommate />} />
         <Route path="/writePost" element={<WritePost />} />
@@ -42,7 +44,7 @@ function App() {
         <Route path="/charter/posts" element={<BoardCharter />} />
         <Route path="/user/posts" element={<MyPost />}/>
         <Route path="/user/posts/likes" element={<BoardLikedPosts />} />
-        <Route path="/post/:category/:postId" element={<DetailPost />} />
+        <Route path="/posts/:category/:postId" element={<DetailPost />} />
         <Route path="/user/comments" element={<MyComments />} />
         <Route path="/searchPosts" element={<BoardSearch />} />
         <Route path="/sidebar" element={<Sidebar />} />

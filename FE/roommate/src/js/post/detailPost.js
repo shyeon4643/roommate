@@ -15,7 +15,7 @@ function DetailPost(){
         try {
             axios({
                 method: "GET",
-                url: `/post/${category}/${postId}`,
+                url: `/posts/${category}/${postId}`,
                 headers: {
                     'JWT': localStorage.getItem('JWT'),
                 },
@@ -79,7 +79,7 @@ function DetailPost(){
             headers: {
                 'JWT': localStorage.getItem('JWT'),
             },
-            method: "Put",
+            method: "PUT",
             url: `/post/${category}/${postId}/like/${selectedPost.likedId}`,
         }).then((result) => {
             window.location.href = `/${category}/posts`;
@@ -87,7 +87,7 @@ function DetailPost(){
     };
 
     const handleLikeClick = () => {
-        if (selectedPost.likeCount === 0) {
+        if (selectedPost.likedId === null) {
             isLike();
         } else {
             isntLike();
@@ -116,8 +116,7 @@ function DetailPost(){
                 </div>
                 <div className="detailPost_count_heart">
                 <div className="detailPost_count">
-                <p>추천수: {selectedPost.likeCount}</p>
-                <p>조회수: {selectedPost.viewCount}</p>
+                <p>좋아요 : {selectedPost.likeCount}</p>
                 </div>
                 <div className="detailPost_heart">
                 {selectedPost.like == false? (

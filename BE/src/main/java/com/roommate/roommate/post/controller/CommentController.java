@@ -43,7 +43,7 @@ public class CommentController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PostMapping(value="/post/{category}/{postId}/comment")
+    @PostMapping(value="/post/{postId}/comment")
     public ResponseEntity<DefaultResponseDto> saveComment(@PathVariable("postId") Long postId,
                                                           @RequestBody CreateCommentRequestDto createCommentRequestDto,
                                                           HttpServletRequest servletRequest) throws Exception{
@@ -72,7 +72,7 @@ public class CommentController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PutMapping(value="/post/{category}/{postId}/comment/{commentId}")
+    @PatchMapping(value="/post/{postId}/comment/{commentId}")
     public ResponseEntity<DefaultResponseDto> updateComment(@RequestBody CreateCommentRequestDto createCommentRequestDto,
                                                             @PathVariable("commentId") Long commentId,
                                                             HttpServletRequest servletRequest){
@@ -132,7 +132,7 @@ public class CommentController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @DeleteMapping("/post/{category}/{postId}/comment/{commentId}")
+    @DeleteMapping("/post/{postId}/comment/{commentId}")
     public ResponseEntity<DefaultResponseDto> deleteComment(@PathVariable("commentId") Long commentId,
                                                             HttpServletRequest servletRequest) {
             Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));

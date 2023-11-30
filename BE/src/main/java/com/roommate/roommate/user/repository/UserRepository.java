@@ -11,13 +11,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUid(String uid);
+    User findByIdAndIsDeletedIsFalse(Long id);
 
-    @Query("SELECT u FROM User u WHERE u.uid = :uid AND u.isDeleted = false")
-    User findByUidAndIsDeletedIsFalse(@Param("uid")String uid);
+    User findByUidAndIsDeletedIsFalse(String uid);
     @EntityGraph(attributePaths = "posts")
     @Query("SELECT u FROM User u WHERE u.gender = :gender")
     List<User> findAllByGender(@Param("gender") Gender gender);
@@ -25,5 +25,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUid(String uid);
     boolean existsByEmail(String Email);
 
-    Optional<User> findByKakaoId(Long kakaoId);
+    User findByKakaoId(Long kakaoId);
 }

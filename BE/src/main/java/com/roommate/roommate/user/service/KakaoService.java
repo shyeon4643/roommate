@@ -35,12 +35,12 @@ public class KakaoService {
         KakaoInfoDto.KakaoUserIdInfoDto kakaoUserInfo = requestKakaoUserInfoClient.getUserInfo("Bearer "+
                 kakaoInfoDto.getAccessToken());
 
-        User user = userRepository.findByKakaoId(kakaoUserInfo.getId()).orElse(null);
+        User user = userRepository.findByKakaoId(kakaoUserInfo.getId());
 
         if(user == null){
-            user = userService.join(request);
+            user = userService.kakaoJoin(request);
         }
-        user.setKakaoId(kakaoUserInfo.getId());
+            user.setKakaoId(kakaoUserInfo.getId());
 
 
         userRepository.save(user);

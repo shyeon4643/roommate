@@ -22,9 +22,11 @@ public class Post extends BaseEntity {
     private Long id;
     private String title;
     private String body;
-    private String area;
-    private String category;
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
+    private PostCategory category;
+    @Enumerated(EnumType.STRING)
+    private PostArea area;
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;
 
@@ -43,8 +45,8 @@ public class Post extends BaseEntity {
     public void update(CreatePostRequestDto createPostRequestDto){
         this.title= createPostRequestDto.getTitle();
         this.body= createPostRequestDto.getBody();
-        this.area=createPostRequestDto.getArea();
-        this.category=createPostRequestDto.getCategory();
+        this.area=PostArea.valueOf(createPostRequestDto.getArea());
+        this.category=PostCategory.valueOf(createPostRequestDto.getCategory());
     }
 
     public void delete(){
@@ -55,8 +57,8 @@ public class Post extends BaseEntity {
     public Post(String title, String body, int fee, String category, String area, User user){
         this.title=title;
         this.body=body;
-        this.category=category;
-        this.area=area;
+        this.category=PostCategory.valueOf(category);
+        this.area=PostArea.valueOf(area);
         this.fee=fee;
         this.user=user;
         this.setIsDeleted(false);

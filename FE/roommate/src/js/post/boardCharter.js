@@ -14,10 +14,10 @@ function BoardCharter(){
                     'JWT': localStorage.getItem('JWT'),
                 },
                 method: "GET",
-                url: `/${category}/posts`
+                url: `/posts/${category}`
             }).then((response) =>{
-                console.log(response.data.data);
-                setPostData(response.data.data);
+                console.log(response.data.data.data);
+                setPostData(response.data.data.data);
             });
         }catch(error){
             console.error("게시물 데이터를 가져오는 중 에러가 발생했습니다.", error);

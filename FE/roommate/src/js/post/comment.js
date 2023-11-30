@@ -28,7 +28,7 @@ const handleNewComment = async () =>{
              'JWT': localStorage.getItem('JWT'),
          },
          method: "POST",
-         url : `/post/${category}/${postId}/comment`,
+         url : `/post/${postId}/comment`,
          data : data,
      }).then((response) => {
          console.log("댓글 등록 완료:", response);
@@ -59,8 +59,8 @@ const handleNewComment = async () =>{
                 'Content-Type': 'application/json',
                 'JWT': localStorage.getItem('JWT'),
             },
-            method : "PUT",
-            url : `/post/${category}/${postId}/comment/${commentId}`,
+            method : "PATCH",
+            url : `/post/${postId}/comment/${commentId}`,
             data : { body : editCommentText}
         }).then((response) => {
             setEditCommentText("");
@@ -80,7 +80,7 @@ const handleNewComment = async () =>{
                 'JWT': localStorage.getItem('JWT'),
             },
             method : "DELETE",
-            url : `/post/${category}/${postId}/comment/${response.commentId}`,
+            url : `/post/${postId}/comment/${response.commentId}`,
             data : { body : data}
         }).then((response) => {
             window.location.reload();

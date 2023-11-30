@@ -1,11 +1,12 @@
 package com.roommate.roommate.post.controller;
 
 import com.roommate.roommate.common.DefaultResponseDto;
+import com.roommate.roommate.common.PageResponse;
+import com.roommate.roommate.common.SliceResponse;
 import com.roommate.roommate.config.security.JwtTokenProvider;
 import com.roommate.roommate.post.domain.Post;
 import com.roommate.roommate.post.domain.LikedPost;
 import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
-import com.roommate.roommate.post.dto.request.SearchPostDto;
 import com.roommate.roommate.post.dto.response.LikedInfoResponseDto;
 import com.roommate.roommate.post.dto.response.PostInfoResponseDto;
 import com.roommate.roommate.post.service.PostService;
@@ -20,7 +21,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +54,7 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PostMapping(value="/writePost",consumes = "multipart/form-data")
+    @PostMapping(value="/post",consumes = "multipart/form-data")
     public ResponseEntity<DefaultResponseDto> savePost(HttpServletRequest servletRequest,
                                                        CreatePostRequestDto createPostRequestDto)
             throws Exception{
@@ -113,15 +116,18 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @GetMapping("/{category}/posts")
+    @GetMapping("/posts/{category}")
     public ResponseEntity<DefaultResponseDto> findAllPostsByCategory(@PathVariable("category")String category,
-                                                                     HttpServletRequest servletRequest){
+                                                                     HttpServletRequest servletRequest,
+                                                                     Pageable pageable){
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
         User user = userService.findById(id);
-        List<Post> posts = postService.findAllPostsByCategory(category);
+        Page<Post> posts = postService.findAllPostsByCategory(category, pageable);
 
-        List<PostInfoResponseDto> response = posts.stream().map(post
-                -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
+        PageResponse<PostInfoResponseDto> response = new PageResponse<>(new PageImpl<>(posts.getContent().stream().map(post
+                -> new PostInfoResponseDto(post,user)).collect(Collectors.toList()),
+                posts.getPageable(),
+                posts.getTotalElements()));
 
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
@@ -131,7 +137,7 @@ public class PostController {
                         .build());
     }
 
-    @ApiOperation(value="지역별 게시글 조회")
+    @ApiOperation(value="게시글 검색")
     @ApiResponses(value ={
             @ApiResponse(
                     responseCode = "200",
@@ -144,7 +150,7 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @GetMapping("/searchPosts")
+    @GetMapping("/search")
     public ResponseEntity<DefaultResponseDto> searchPost(@PageableDefault Pageable pageable,
                                                          @RequestParam ("keyword")String keyword){
 
@@ -176,7 +182,7 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @GetMapping("/post/{category}/{postId}")
+    @GetMapping("/posts/{category}/{postId}")
     public ResponseEntity<DefaultResponseDto> findOnePost(@PathVariable("postId") Long postId,
                                                           HttpServletRequest servletRequest){
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
@@ -207,7 +213,7 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PutMapping("/post/{category}/{postId}")
+    @PatchMapping("/posts/{category}/{postId}")
     public ResponseEntity<DefaultResponseDto> updatePost(@PathVariable("postId") Long postId,
                                                          @RequestBody CreatePostRequestDto createPostRequestDto,
                                                          HttpServletRequest servletRequest){
@@ -240,7 +246,7 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @DeleteMapping("/post/{category}/{postId}")
+    @DeleteMapping("/posts/{category}/{postId}")
     public ResponseEntity<DefaultResponseDto> deletePost(@PathVariable("postId") Long postId,
                                                          HttpServletRequest servletRequest){
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
@@ -299,7 +305,7 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PutMapping("/post/{category}/{postId}/like")
+    @PatchMapping("/{category}/posts/{postId}/like")
     public ResponseEntity<DefaultResponseDto> saveLike(@PathVariable("postId") Long postId,
                                                        HttpServletRequest servletRequest) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
@@ -327,7 +333,7 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PutMapping("/post/{category}/{postId}/like/{likeId}")
+    @PatchMapping("/{category}/posts/{postId}/like/{likeId}")
     public ResponseEntity<DefaultResponseDto> deletedLike(@PathVariable("postId") Long postId,
                                                           @PathVariable("likeId") Long likeId,
                                                           HttpServletRequest servletRequest) {
@@ -345,7 +351,7 @@ public class PostController {
     }
 
 
-    @ApiOperation(value = "MBTI 추천")
+    @ApiOperation(value = "홈 게시물")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -358,17 +364,18 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @GetMapping("/mbtiPosts")
-    public ResponseEntity<DefaultResponseDto> recommendMbtiPosts(HttpServletRequest servletRequest) {
+    @GetMapping("/home/posts")
+    public ResponseEntity<DefaultResponseDto> homePosts(HttpServletRequest servletRequest, Pageable pageable) {
         String jwtHeader = servletRequest.getHeader("JWT");
-        List<Post> posts;
+        Slice<Post> posts;
         if(jwtHeader != null && !jwtHeader.isEmpty()){
             Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
             User user = userService.findById(id);
-            posts = postService.mbtiPosts(user);
+            posts = postService.homePosts(user, pageable);
 
-            List<PostInfoResponseDto> response = posts.stream().map(post
-                    -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
+            SliceResponse<PostInfoResponseDto> response = new SliceResponse(posts.map(post
+                    -> new PostInfoResponseDto(post)));
+
             return ResponseEntity.status(200)
                     .body(DefaultResponseDto.builder()
                             .responseCode("FIND_POSTS")
@@ -376,10 +383,10 @@ public class PostController {
                             .data(response)
                             .build());
         }else {
-            posts = postService.findPostsByRecent();
+            posts = postService.findPostsByRecent(pageable);
 
-            List<PostInfoResponseDto> response = posts.stream().map(post
-                    -> new PostInfoResponseDto(post)).collect(Collectors.toList());
+            SliceResponse<PostInfoResponseDto> response = new SliceResponse(posts.map(post
+                    -> new PostInfoResponseDto(post)));
             return ResponseEntity.status(200)
                     .body(DefaultResponseDto.builder()
                             .responseCode("FIND_POSTS")

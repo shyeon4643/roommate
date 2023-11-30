@@ -58,11 +58,11 @@ function WritePost(){
                     'JWT': localStorage.getItem('JWT'),
                   },
                 method : "POST",
-                url : "/writePost",
+                url : "/post",
                 data : formData
             }).then((response) =>{
                 console.log(response.data.data);
-                window.location.href = `/post/${category}/${response.data.data.postId}`;
+                window.location.href = `/posts/${category}/${response.data.data.postId}`;
             })
         }catch(error){
             console.log("글 등록 중 에러 발생  : ", error);
@@ -80,12 +80,12 @@ function WritePost(){
                 formData.append("files", files);
             }
             axios({
-                method : "PUT",
-                url : `/post/${category}/${postId}`,
+                method : "PATCH",
+                url : `/posts/${category}/${postId}`,
                 data : formData,
 
             }).then((response) => {
-                window.location.href = `/post/${category}/${postId}`;
+                window.location.href = `/posts/${category}/${postId}`;
             })
         }catch(error){
             console.log("게시글 수정 중에 에러 발생 : ", error);

@@ -54,7 +54,7 @@ function DetailRoommate(){
                     'JWT': localStorage.getItem('JWT'),
                 },
                 method : "POST",
-                url : "/writeDetailRoommate",
+                url : "/detailRoommate",
                 data : data,
             }).then((response) =>{
                 console.log(response.data.data);
@@ -82,8 +82,8 @@ function DetailRoommate(){
                     'Content-Type': 'application/json',
                     'JWT': localStorage.getItem('JWT'),
                 },
-                method : "PUT",
-                url : "/updateDetailRoommate",
+                method : "PATCH",
+                url : "/detailRoommate",
                 data : data,
             }).then((response) =>{
                 console.log(response.data.data);
