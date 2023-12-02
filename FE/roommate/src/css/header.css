@@ -13,7 +13,7 @@ body{
     display: flex;
 }
 
-li{
+#header_header_list li{
     width:100px;
 }
 
@@ -24,4 +24,24 @@ li{
 .header button{
     border: none;
     background-color:#be458d;
+}
+
+.header_link h1{
+
+margin-left: 10%;
+
+    }
+
+#board_title{
+    font-size: 150%;
+    font-weight: bold;
+}
+
+#board_body{
+    font-size: 100%;
+}
+
+#haeder_logout{
+    background-color:#be458d;
+    margin-top: 3%;
 }

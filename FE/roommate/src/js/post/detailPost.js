@@ -4,6 +4,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { useNavigate, useParams } from "react-router-dom";
 import "../../css/detailPost.css";
 import Comment from "./comment";
+import myImage from '../../photo.png';
 
 function DetailPost(){
     const { category, postId } = useParams();
@@ -67,8 +68,8 @@ function DetailPost(){
             headers: {
                 'JWT': localStorage.getItem('JWT'),
             },
-            method: "PUT",
-            url: `/post/${category}/${postId}/like`,
+            method: "PATCH",
+            url: `/posts/${category}/${postId}/like`,
         }).then((result) => {
             window.location.href = `/${category}/posts`;
         });
@@ -79,8 +80,8 @@ function DetailPost(){
             headers: {
                 'JWT': localStorage.getItem('JWT'),
             },
-            method: "PUT",
-            url: `/post/${category}/${postId}/like/${selectedPost.likedId}`,
+            method: "PATCH",
+            url: `/posts/${category}/${postId}/like/${selectedPost.likedId}`,
         }).then((result) => {
             window.location.href = `/${category}/posts`;
         });
@@ -103,8 +104,12 @@ function DetailPost(){
             <div className="detailPost_body_header">
                 <h1 id="detailPost_title">{selectedPost.title}</h1>
                 <div className="detailPost_edit_delete_button">
+                    <div className="detailPost_edit_img_writer">
+                    <img src={myImage} alt="My Image" className="detailPost_img"/>
+                    {selectedPost.writer}
+                    </div>
             {canEditOrDelete() && (
-                    <div>
+                    <div className="detailPost_post_button">
                         <button
                         typy="button"
                         onClick={postUpdate}>수정</button>

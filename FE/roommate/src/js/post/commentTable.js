@@ -29,7 +29,7 @@ function CommentTable({ commentData }) {
                             <tr key={response.id} onClick={() => movePage(response)}>
                                 <td>{index + 1}</td>
                                 <td>{response.body}</td>
-                                <td>{response.updateAt}</td>
+                                <td>{response.updateAt[0]}년 {response.updateAt[1]}월 {response.updateAt[2]}일</td>
                             </tr>
                         ))}
                     </tbody>

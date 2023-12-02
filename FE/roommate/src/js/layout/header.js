@@ -31,7 +31,7 @@ const  Header=()=>{
                                 <Link to="/mypage" className="header_link"><h4>마이페이지</h4></Link>
                             </li>
                             <li>
-                            <button onClick={logout} className="header_link"><h4>로그아웃</h4></button>
+                            <button onClick={logout} className="header_link" id="haeder_logout"><h4>로그아웃</h4></button>
                             </li>
                         </>
                     ) : (

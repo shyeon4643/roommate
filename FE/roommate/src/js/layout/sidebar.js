@@ -16,7 +16,7 @@ function Sidebar(){
                 url: `/user/post`,
             }).then((response) =>{
                 console.log(response.data.data);
-                window.location.href = `/post/${response.data.data.category}/${response.data.data.postId}`;
+                window.location.href = `/posts/${response.data.data.category}/${response.data.data.postId}`;
             });
         }catch(error){
             console.error("게시물 데이터를 가져오는 중 에러가 발생했습니다.", error);

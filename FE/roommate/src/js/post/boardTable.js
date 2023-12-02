@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../../css/boardTable.css";
+import { FaHeart } from 'react-icons/fa';
 
 function BoardTable({postData}){
     const posts = postData || [];
@@ -10,32 +11,37 @@ function BoardTable({postData}){
     };
     return(
         <div>
-            <div className="board-table-container">
-                <table className="board-table">
-                    <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>제목</th>
-                        <th>작성자</th>
-                        <th>날짜</th>
-                        <th>좋아요</th>
-                    </tr>
-                    </thead>
-                    <tbody className="board-table-body">
-                    {postData && postData.map((response, index) => (
-                        <tr key={response.postId} onClick={() => movepage(response)}>
-                            <td>{index + 1}</td>
-                            <td>{response.title}</td>
-                            <td>{response.writer==null?"알수없음" : response.writer}</td>
-                            <td>{response.updateAt}</td>
-                            <td>{response.likeCount}</td>
-                        </tr>
+            <div className="board_table_container">
+                <ul className="board_wrapper">
+                    {postData && postData.map((response) => (
+                        <div className="board_table" key={response.postId} onClick={() => movepage(response)}>
+                            <div className="board_table_img">
+                                <img src={`/static/photos/postPhotos/${response.path}`} alt="게시물 이미지" className="post_image"/>
+                            </div>
+                            <div className="board_table_inform">
+                            <li id="board_title">{response.title}</li>
+                            <li id="board_body">{response.body}</li>
+                            <li id="board_write">{response.writer==null?"알수없음" : response.writer}</li>
+                            <li id="board_likeCount">
+                                <FaHeart id="heart_icon"/>
+                                {response.likeCount}</li>
+                            </div>
+                        </div>
                     ))}
-                    </tbody>
-                </table>
-                <Link to="/writePost" className="board-write-button">
+                </ul>
+            </div>
+            <div className="board_table_footer">
+            <Link to="/writePost" className="board_write_button">
                     글쓰기
                 </Link>
+            <div className="board_table_button">
+            <button className="styled_button previous_button">
+                Previous
+            </button>
+            <button className="styled_button next_button">
+                Next
+            </button>
+            </div>
             </div>
         </div>
     );

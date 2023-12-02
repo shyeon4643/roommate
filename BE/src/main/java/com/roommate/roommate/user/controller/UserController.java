@@ -48,7 +48,7 @@ public class UserController {
     })
     @PostMapping("/join")
     public ResponseEntity<DefaultResponseDto> join(@RequestBody @Valid SignUpRequestDto signUpRequesetDto){
-        User user = userService.join(signUpRequesetDto);
+        userService.join(signUpRequesetDto);
 
 
         return ResponseEntity.status(201)

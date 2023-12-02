@@ -305,7 +305,7 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PatchMapping("/{category}/posts/{postId}/like")
+    @PatchMapping("/posts/{category}/{postId}/like")
     public ResponseEntity<DefaultResponseDto> saveLike(@PathVariable("postId") Long postId,
                                                        HttpServletRequest servletRequest) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
@@ -333,7 +333,7 @@ public class PostController {
             @ApiResponse(responseCode = "500",
                     description = "SERVER_ERROR"),
     })
-    @PatchMapping("/{category}/posts/{postId}/like/{likeId}")
+    @PatchMapping("/posts/{category}/{postId}/like/{likeId}")
     public ResponseEntity<DefaultResponseDto> deletedLike(@PathVariable("postId") Long postId,
                                                           @PathVariable("likeId") Long likeId,
                                                           HttpServletRequest servletRequest) {

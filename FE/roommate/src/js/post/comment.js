@@ -115,7 +115,7 @@ const handleNewComment = async () =>{
                             <div className="comment_data">
                                 <div className="comment_writer_date">
                                 <p className="comment_writer">{response.writer}</p>
-                                <p >{response.updateAt}</p>
+                                <p >{response.updateAt[0]}년 {response.updateAt[1]}월 {response.updateAt[2]}일</p>
                                 </div>
                                 <div className="comment_text_button">
                                 {editCommentId === response.commentId ? (

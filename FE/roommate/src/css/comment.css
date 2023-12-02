@@ -1,21 +1,29 @@
 .comment_input{
-    width : 90%;
+    width : 91%;
     height: 50px;
-    border : 1px solid black ;
+    border: none;
+    margin-right: 1.5%;
+    box-shadow: 3px 3px 5px 0 #d6d6d6;
 }
 .comment-submit-button{
+    width: 7%;
     height: 60px; 
     border : none;
-    background-color: rgb(194, 190, 190);
     font-weight: bold;
     border-radius: 5%;
+    padding-left: 0;
+    padding-right: 0;
 }
 
+.comment_list{
+    padding: 0;
+}
 
 .comment_list li{
+    padding: 0.5%;
     width : 100%;
     list-style: none;
-    border-bottom: 1px solid gray;
+    box-shadow: 3px 3px 5px 0 #d6d6d6;
     margin-right: 0;
 }
 

@@ -5,7 +5,15 @@
 }
 
 .detailPost_header{
-    padding-left: 10%;
+    margin-left: 20%;
+}
+
+.detailPost_img{
+    width:5%;
+    border: 1px solid black;
+    border-radius: 50%;
+    padding: 1%;
+    margin-right: 2%;
 }
 
 .detailPost_count{
@@ -38,24 +46,26 @@
 }
 
 .detailPost_edit_delete_button{
+    display: flex;
     border-bottom: 1px solid gray;
     padding-bottom: 3%;
-    padding-left: 90%;
+    justify-content: space-between;
 }
 
-.detailPost_edit_delete_button div{
+.detailPost_edit_img_writer{
+    align-items: center;
     display: flex;
 }
 
 
-.detailPost_edit_delete_button div button{
-    padding : 8%;
+.detailPost_edit_delete_button button{
+    padding : 4%;
     font-size: 14px;
     font-weight: bold;
     border: none;
     border-radius: 5%;
     margin-left: 3%;
-    background-color: rgb(194, 190, 190);
+
 }
 
 .detailPost_body_body p{
@@ -68,4 +78,35 @@
     padding-top: 3%;
     width : 80%;
     height: 20%;
+    margin:0 auto;
 }
+
+.detailPost_post_button{
+    display: flex;
+    width: 8%;
+}
+
+.styled_button{
+    border: none;
+    width:8%;
+    height: 10%;
+    margin-left:1%;
+}
+
+.board_table_button{
+    display: flex;
+    justify-content: center;
+}
+
+.board_table_footer {
+    position: fixed;
+    width: 100%;
+    bottom:10%;
+    background-color: #fff;
+    padding: 10px; 
+    z-index: 0;
+  }
+  
+  .board_table_container {
+    margin-bottom: 60px; 
+  }

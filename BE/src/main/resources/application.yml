@@ -3,9 +3,9 @@ spring:
     secret : dfklahdfklajdfklajdflajdflkjadklfjalskdfjlkasdjflkadjflkasdhgjkdahgkjadhflkajdfaldjflkadsjglkaghakdhg
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/roommate?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/roommate?useSSL=false&allowPublicKeyRetrieval=true
     username: root
-    password: hyeon4643!!@
+    password: Qwer123!
 
   jpa:
     hibernate:
@@ -13,11 +13,35 @@ spring:
       use-new-id-generator-mappings: false
     properties:
       hibernate:
-        show_sql: false
+        show_sql: true
         format_sql: true
         highlight_sql: true
         use_sql_comments: true
+        default_batch_fetch_size: 1000
+    open-in-view: true
 
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+cloud:
+  aws:
+    credentuaks:
+      accessKey:
+      secretKey:
+    s3:
+      bucket:
+    region:
+      static:
+
+oauth2:
+  kakao:
+    clientId: ${Client-id}
+    redirectUri: ${redirectUri}
+    clientSecret: ${clientSecret}

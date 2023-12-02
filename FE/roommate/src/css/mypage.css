@@ -1,81 +1,56 @@
-.mypage_wrapper{
-    width:100%;
-}
-
-.mypage_container{
-    width:50%;
+.mypage_wrapper {
     margin: 0 auto;
-    border : solid 1px black;
-    padding-right : 5%;
-    margin-top: 2%;
-}
-
-.mypage_inform{
+  }
+  
+  .mypage_container {
     display: flex;
-    margin: 8% 0% 8% 15%;
-    
-}
-
-#wish_roommate_field{
-    border: solid 1px black;
-    width : 100%;
-    padding: 5%;
-    font-size: 14px;
-}
-
-.profile_field{
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 8%;
-}
-
-.mypage_roommateInfo_name{
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.detailRoommate_field{
-    font-size: 18px;
-    font-weight: bold;
+  }
+  .mypage_img {
     text-align: center;
-}
-
-.mypage_roommateInfo_table{
-    width: 100%;
-    padding: 10%;
-    margin-left: 10%;
-}
-
-.mypage_roommateInfo_table td {
-    border-bottom: 1px solid #000;
-    border-right: 1px solid #000;
+  }
+  .mypage_img img {
+    width: 60%;
+    border: 1px solid black;
+    border-radius: 50%;
+  }
+  
+  .mypage_ul {
+    list-style: none;
+    width: 250%;
+  }
+  
+  .mypage_li button {
+    background-color: white;
+    border: none;
+    padding: 10px 0px 10px 20px;
+  }
+  
+  .mypage_li {
+    width: 130%;
+    box-shadow: 5px 5px 10px 0 #f9e2e2;
+    margin: 10px 0;
+    border-radius: 10px;
+  }
+  
+  .mypage_profile {
+    width: 25%;
+    background-color: rgb(247, 220, 224);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
-.detailRoommateInfo{
-    font-size: 18px;
+  .mypage_button_title{
+    font-size: 20px;
     font-weight: bold;
-    text-decoration: none;
-    padding : 2%;
-    margin : 0% 0% 10% 35%;
-    float: center;
-    border-radius: 10px;
-    color:black;
-    background-color: #e2c2dd;
-}
+    text-align: left;
+  }
 
-.mypage_name{
-    margin-left: 50%;
-}
+  .mypage_button_description{
+    font-size: 15px;
+  }
 
-.mypage_roommateInfo_table td{
-    font-weight: bold;
-}
-
-.profile_image img{
-    width : 180px;
-    height: 130%;
-}
-
-.profile_image{
-    margin-right: 15%;
-}
+  .mypage_user_inform p{
+    font-size: 130%;
+  }

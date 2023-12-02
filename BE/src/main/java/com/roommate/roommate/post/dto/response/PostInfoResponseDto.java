@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class PostInfoResponseDto {
     private Integer fee;
     private List<PostPhoto> photos = new ArrayList<>();
     private List<CommentInfoResponseDto> comments = new ArrayList<>();
-    private LocalDateTime updateAt;
+    private String updateAt;
     private PostCategory category;
     private String writer;
     private int viewCount;
@@ -54,7 +55,7 @@ public class PostInfoResponseDto {
                 this.comments.add(new CommentInfoResponseDto(comment));
             }
         }
-        this.updateAt=post.getUpdatedAt();
+        this.updateAt=post.getUpdatedAt().format(DateTimeFormatter.ISO_DATE);
         this.category=post.getCategory();
         this.writer=post.getUser().getNickname();
         this.viewCount=post.getViewCount();
@@ -87,7 +88,7 @@ public class PostInfoResponseDto {
                 this.comments.add(new CommentInfoResponseDto(comment));
             }
         }
-        this.updateAt=post.getUpdatedAt();
+        this.updateAt=post.getUpdatedAt().format(DateTimeFormatter.ISO_DATE);
         this.category=post.getCategory();
         this.writer=post.getUser().getNickname();
         this.viewCount=post.getViewCount();
@@ -125,7 +126,7 @@ public class PostInfoResponseDto {
                 this.comments.add(new CommentInfoResponseDto(comment));
             }
         }
-        this.updateAt=post.getUpdatedAt();
+        this.updateAt=post.getUpdatedAt().format(DateTimeFormatter.ISO_DATE);
         this.category=post.getCategory();
         this.writer=post.getUser().getNickname();
         this.viewCount=post.getViewCount();

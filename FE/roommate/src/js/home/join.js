@@ -5,9 +5,9 @@ import "../../css/join.css";
 function Join(){
 
     const code = new URL(window.location.href).searchParams.get("code");
-    const restApiKey = '10965eecbd4e1c23538795681c05f934';
-    const redirectUri = 'http://localhost:3000/oauth/kakao/redirect';
-    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${redirectUri}&response_type=code&`
+    const restApiKey = {restApiKey};
+    const redirectUri = {redirectUri};
+    const kakaoUrl = {kakaoUrl};
 
     const[name, setName] = useState("");
     const[uid, setUid] = useState("");
@@ -202,7 +202,7 @@ const getKakaoCode = () =>{
                     type="button"
                     onClick={getKakaoCode}
                 >
-                    회원가입
+                    카카오 회원가입
                 </button>
                 </form>
                 </div>
