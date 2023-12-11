@@ -1,5 +1,6 @@
 package com.roommate.roommate.config.security;
 
+import com.roommate.roommate.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+import static com.roommate.roommate.exception.ExceptionCode.INVALID_TOKEN;
+
 @RequiredArgsConstructor
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -23,18 +26,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest servletRequest, HttpServletResponse servletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
-        // 헤더에서 토큰 받아오기
-        String token = jwtTokenProvider.resolveToken(servletRequest);
+        try {
+            // 헤더에서 토큰 받아오기
+            String token = jwtTokenProvider.resolveToken(servletRequest);
 
-        // 토큰이 유효하다면
-        if(token !=null && jwtTokenProvider.validateToken(token)){
-            // 토큰으로부터 유저 정보를 받아
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            // SecurityContext에 Authentication 객체 저장
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // 토큰이 유효하다면
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                // 토큰으로부터 유저 정보를 받아
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                // SecurityContext에 Authentication 객체 저장
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+            // 다음 Filter 실행, 강제로 시큐리티의 세션에 접근하여 Authentication 객체를 저장
+            filterChain.doFilter(servletRequest, servletResponse);
+
+        } catch (RuntimeException e) {
+            throw new CustomException(e, INVALID_TOKEN);
         }
-        // 다음 Filter 실행, 강제로 시큐리티의 세션에 접근하여 Authentication 객체를 저장
-        filterChain.doFilter(servletRequest, servletResponse);
-    }
 
+    }
 }

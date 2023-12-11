@@ -207,6 +207,11 @@ public class UserService {
 
         user.setToken(refreshToken);
         userRepository.save(user);
-        return  new AccountTokenInfoDto(accessToken, refreshToken);
+        return new AccountTokenInfoDto(accessToken, refreshToken);
+    }
+
+    public AccountTokenInfoDto refreshToken(User user, String refreshToken){
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getId(),Role.ROLE_USER.toString());
+        return new AccountTokenInfoDto(accessToken, refreshToken);
     }
 }

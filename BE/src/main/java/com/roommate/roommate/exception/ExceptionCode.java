@@ -35,6 +35,7 @@ public enum ExceptionCode {
      * 401 UNAUTHORIZED : 인증되지 않은 사용자
      */
     UNAUTHORIZED_MEMBER(UNAUTHORIZED, "로그인이 필요합니다."),
+    INVALID_TOKEN(UNAUTHORIZED, "토큰이 유효하지 않습니다."),
 
 
     /**
