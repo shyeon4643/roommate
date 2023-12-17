@@ -30,18 +30,4 @@ server:
 logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
-cloud:
-  aws:
-    credentuaks:
-      accessKey:
-      secretKey:
-    s3:
-      bucket:
-    region:
-      static:
 
-oauth2:
-  kakao:
-    clientId: ${Client-id}
-    redirectUri: ${redirectUri}
-    clientSecret: ${clientSecret}

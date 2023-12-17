@@ -16,21 +16,21 @@ function BoardTable({postData}){
                     {postData && postData.map((response) => (
                         <div className="board_table" key={response.postId} onClick={() => movepage(response)}>
                             <div className="board_table_img">
-                                <img src={`/static/photos/postPhotos/${response.path}`} alt="게시물 이미지" className="post_image"/>
+                                <img src={`/static/photos/postPhoto/${response.path}`} alt="게시물 이미지" className="post_image"/>
                             </div>
                             <div className="board_table_inform">
                             <li id="board_title">{response.title}</li>
                             <li id="board_body">{response.body}</li>
                             <li id="board_write">{response.writer==null?"알수없음" : response.writer}</li>
                             <li id="board_likeCount">
-                                <FaHeart id="heart_icon"/>
-                                {response.likeCount}</li>
+                                 조회수 : {response.viewCount}
+                                 <FaHeart id="heart_icon"/>
+                                {response.likeCount}
+                                </li>
                             </div>
                         </div>
                     ))}
-                </ul>
-            </div>
-            <div className="board_table_footer">
+                    <div className="board_table_footer">
             <Link to="/writePost" className="board_write_button">
                     글쓰기
                 </Link>
@@ -43,6 +43,10 @@ function BoardTable({postData}){
             </button>
             </div>
             </div>
+                </ul>
+            
+            </div>
+        
         </div>
     );
 }

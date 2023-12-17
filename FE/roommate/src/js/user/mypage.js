@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../css/mypage.css";
-import Sidebar from "../layout/sidebar";
 import "../layout/sidebar.js";
 import DetailRoommate from "./detailRoommate";
 import myImage from '../../photo.png';

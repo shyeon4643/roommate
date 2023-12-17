@@ -3,6 +3,7 @@ package com.roommate.roommate.post.service;
 import com.roommate.roommate.post.domain.Comment;
 import com.roommate.roommate.post.domain.Post;
 import com.roommate.roommate.post.dto.request.CreateCommentRequestDto;
+import com.roommate.roommate.post.dto.response.CommentInfoResponseDto;
 import com.roommate.roommate.post.repository.CommentRepository;
 import com.roommate.roommate.post.repository.PostRepository;
 import com.roommate.roommate.user.domain.User;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.roommate.roommate.exception.ExceptionCode.SERVER_ERROR;
 
@@ -30,8 +32,8 @@ public class CommentService {
      * 500(SERVER_ERROR)
      */
     @Transactional
-    public Comment saveComment(Long postId, CreateCommentRequestDto createCommentRequestDto,
-                               Long id){
+    public CommentInfoResponseDto saveComment(Long postId, CreateCommentRequestDto createCommentRequestDto,
+                                              Long id){
         try{
             User user = userService.findById(id);
             Post post = postRepository.findById(postId).get();
@@ -42,7 +44,9 @@ public class CommentService {
                     .build();
 
             commentRepository.save(comment);
-            return comment;
+
+            return new CommentInfoResponseDto(comment);
+
         }catch(RuntimeException e){
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
@@ -54,13 +58,13 @@ public class CommentService {
      * 500(SERVER_ERROR)
      * */
     @Transactional
-    public Comment updateComment(Long id, Long commentId, CreateCommentRequestDto createCommentRequestDto){
+    public CommentInfoResponseDto updateComment(Long id, Long commentId, CreateCommentRequestDto createCommentRequestDto){
         try{
             User user = userService.findById(id);
             Comment comment = commentRepository.findByIdAndUserId(commentId,user.getId());
             comment.update(createCommentRequestDto.getBody());
 
-            return comment;
+            return new CommentInfoResponseDto(comment);
         }catch(RuntimeException e){
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
@@ -72,11 +76,12 @@ public class CommentService {
      * 500(SERVER_ERROR)
      * */
     @Transactional(readOnly = true)
-    public List<Comment> findAllCommentByUser(Long id){
+    public List<CommentInfoResponseDto> findAllCommentByUser(Long id){
         try{
             User user = userService.findById(id);
             List<Comment> comments = commentRepository.findByUserIdAndIsDeletedIsFalse(user.getId());
-            return comments;
+            return comments.stream().map(comment
+                    -> new CommentInfoResponseDto(comment)).collect(Collectors.toList());
         }catch(RuntimeException e){
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
@@ -88,12 +93,12 @@ public class CommentService {
      * 500(SERVER_ERROR)
      * */
     @Transactional
-    public Comment deleteComment(Long commentId, Long id){
+    public CommentInfoResponseDto deleteComment(Long commentId, Long id){
         try{
             User user = userService.findById(id);
             Comment comment = commentRepository.findByIdAndUserIdAndIsDeletedIsFalse(commentId,user.getId());
             comment.delete();
-            return comment;
+            return new CommentInfoResponseDto(comment);
         }catch(RuntimeException e){
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);

@@ -1,19 +1,22 @@
 package com.roommate.roommate.post.domain;
 
-import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
+import com.roommate.roommate.common.BaseEntity;
 import com.roommate.roommate.user.domain.User;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.roomate.roomate.common.BaseEntity;
 
 @Entity
-@Data
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Post extends BaseEntity {
 
     @Id
@@ -34,31 +37,24 @@ public class Post extends BaseEntity {
     private int viewCount;
     private int fee;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<LikedPost> likes = new ArrayList<>();
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<PostPhoto> postPhotos = new ArrayList<>();
 
-    public void update(CreatePostRequestDto createPostRequestDto){
-        this.title= createPostRequestDto.getTitle();
-        this.body= createPostRequestDto.getBody();
-        this.area=PostArea.valueOf(createPostRequestDto.getArea());
-        this.category=PostCategory.valueOf(createPostRequestDto.getCategory());
-    }
-
-    public void delete(){
-        this.setIsDeleted(true);
-    }
 
     @Builder
-    public Post(String title, String body, int fee, String category, String area, User user){
+    public Post(String title, String body, int fee, PostCategory category, PostArea area, User user){
         this.title=title;
         this.body=body;
-        this.category=PostCategory.valueOf(category);
-        this.area=PostArea.valueOf(area);
+        this.category=category;
+        this.area=area;
         this.fee=fee;
         this.user=user;
         this.setIsDeleted(false);
@@ -73,6 +69,22 @@ public class Post extends BaseEntity {
             this.likeCount=0;
 
         }
+    }
+
+    public void increaseViewCount() {
+        this.viewCount++;
+    }
+
+    public void update(String area, String body, String title, int fee, String category){
+        this.title= title;
+        this.body= body;
+        this.area=PostArea.valueOf(area);
+        this.category=PostCategory.valueOf(category);
+        this.fee=fee;
+    }
+
+    public void delete(){
+        this.setIsDeleted(true);
     }
 
 

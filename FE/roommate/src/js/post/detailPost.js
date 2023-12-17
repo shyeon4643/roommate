@@ -71,7 +71,7 @@ function DetailPost(){
             method: "PATCH",
             url: `/posts/${category}/${postId}/like`,
         }).then((result) => {
-            window.location.href = `/${category}/posts`;
+            window.location.href = `/posts/${category}`;
         });
     };
 
@@ -83,7 +83,7 @@ function DetailPost(){
             method: "PATCH",
             url: `/posts/${category}/${postId}/like/${selectedPost.likedId}`,
         }).then((result) => {
-            window.location.href = `/${category}/posts`;
+            window.location.href = `/posts/${category}`;
         });
     };
 
@@ -122,6 +122,7 @@ function DetailPost(){
                 <div className="detailPost_count_heart">
                 <div className="detailPost_count">
                 <p>좋아요 : {selectedPost.likeCount}</p>
+                <p>조회수 : {selectedPost.viewCount}</p>
                 </div>
                 <div className="detailPost_heart">
                 {selectedPost.like == false? (
@@ -134,7 +135,7 @@ function DetailPost(){
             </div>
             <div className="detailPost_body_body">
                 {selectedPost.path && selectedPost.path.map((path, index) => (
-                <img key={index} src={`/static/photos/postPhotos/${path}`} alt={`Post Photo ${index}`} />
+                <img key={index} src={`/static/photos/postPhoto/${path}`} alt={`Post Photo ${index}`} />
 
   ))}
   <p>{selectedPost.body}</p>

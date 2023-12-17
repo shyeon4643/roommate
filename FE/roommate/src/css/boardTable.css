@@ -52,9 +52,21 @@ padding:1%;
     border-radius: 5%;
     width:6%;
     height: 70%;
-    margin-left:80%;
+    margin-left:90%;
 }
 
 #board_write{
     font-weight: bold;
 }
+
+#heart_icon{
+    padding-left: 10px;
+}
+
+
+.board_table_footer {
+    width: 100%;
+    bottom:10%;
+    background-color: #fff;
+    padding: 10px; 
+  }

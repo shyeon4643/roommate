@@ -20,23 +20,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "FROM Post p " +
             "LEFT JOIN post_photo pp ON p.post_id = pp.post_id " +
             "LEFT JOIN comment c ON p.post_id = c.post_id " +
-            "WHERE p.category = :postCategory AND p.is_deleted = false", nativeQuery = true)
+            "WHERE p.category = :postCategory AND p.is_deleted = false " +
+            "ORDER BY p.created_at DESC", nativeQuery = true)
     Page<Post> findByCategoryAndIsDeletedIsFalse(@Param("postCategory") String postCategory, Pageable pageable);
-    @Query(value = "SELECT DISTINCT p.*, pp.*, c.*, u.* " +
-            "FROM Post p " +
-            "LEFT JOIN post_photo pp ON p.post_id = pp.post_id " +
-            "LEFT JOIN comment c ON p.post_id = c.post_id " +
-            "LEFT JOIN user u ON c.user_id = u.user_id " +
-            "WHERE p.area = :postArea AND p.is_deleted = false", nativeQuery = true)
-    List<Post> findByAreaAndIsDeletedIsFalse(@Param("postArea")String postArea);
+
+    @Query("SELECT p FROM Post p ORDER BY (p.viewCount + p.likeCount) DESC")
+    Slice<Post> findTop5ByOrderByViewCountPlusLikeCountDesc(Pageable pageable);
 
 
     Post findByUserIdAndIsDeletedIsFalse(Long userId);
-
-    @Query("SELECT p from Post p where p.isDeleted = false ORDER BY p.createdAt DESC")
-    Slice<Post> findAllByOrderByCreatedAtDescAndIsDeletedIsFalse(Pageable pageable);
-
-    Post findByUserId(Long userId);
     Post findByIdAndUserId(Long postId, Long userId);
 
     @Query("SELECT DISTINCT p " +

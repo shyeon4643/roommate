@@ -7,7 +7,6 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 public class Mbti {

@@ -98,14 +98,6 @@
     justify-content: center;
 }
 
-.board_table_footer {
-    position: fixed;
-    width: 100%;
-    bottom:10%;
-    background-color: #fff;
-    padding: 10px; 
-    z-index: 0;
-  }
   
   .board_table_container {
     margin-bottom: 60px; 

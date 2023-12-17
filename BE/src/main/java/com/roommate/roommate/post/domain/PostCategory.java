@@ -1,9 +1,11 @@
 package com.roommate.roommate.post.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 
 @Getter
+@AllArgsConstructor
 public enum PostCategory {
     charter("charter"),
     monthly("monthly"),
@@ -11,7 +13,5 @@ public enum PostCategory {
 
     private final String value;
 
-    PostCategory(String value) {
-        this.value = value;
-    }
 }
+

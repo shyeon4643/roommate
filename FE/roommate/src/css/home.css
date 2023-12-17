@@ -55,28 +55,44 @@ h2{
     top: 9px;
 }
 
-.mbti_posts li{
+.home_posts li{
     font-size: 20px;
     font-weight: bold;
     width: 30%;
     margin-right: 10px; 
 }
 
-.mbti_posts{
+.home_posts{
     margin-top: 2%;
     width : 80%;
     list-style: none;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;  
 }
 
-.mbti_posts img{
+.home_posts img{
     width : 70%;
     height: 100px;
 } 
 
-.mbti_posts_writer{
+.home_posts_writer{
     font-size: 15px;
     
+}
+
+.home_post_button{
+    border-right: 1px solid rgb(197, 197, 197);
+    font-size: 15px;
+    font-weight: bold;
+    background-color: white;
+    border : none;
+}
+
+.home_posts_sort{
+    display: flex;
+    height: 40px;
+}
+
+.home_posts_list{
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;  
 }

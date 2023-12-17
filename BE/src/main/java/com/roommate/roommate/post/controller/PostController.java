@@ -5,12 +5,10 @@ import com.roommate.roommate.common.PageResponse;
 import com.roommate.roommate.common.SliceResponse;
 import com.roommate.roommate.config.security.JwtTokenProvider;
 import com.roommate.roommate.post.domain.Post;
-import com.roommate.roommate.post.domain.LikedPost;
 import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
 import com.roommate.roommate.post.dto.response.LikedInfoResponseDto;
 import com.roommate.roommate.post.dto.response.PostInfoResponseDto;
 import com.roommate.roommate.post.service.PostService;
-import com.roommate.roommate.user.domain.User;
 import com.roommate.roommate.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,9 +19,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,58 +38,31 @@ public class PostController {
     private final PostService postService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @ApiOperation(value="게시글 등록")
-    @ApiResponses(value ={
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "POST_SAVE",
-                    content = @Content(schema = @Schema(implementation = PostInfoResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "ALREADY_HAVE_POST"),
-            @ApiResponse(responseCode = "404",
-                    description = "POST_NOT_FOUND"),
-            @ApiResponse(responseCode = "500",
-                    description = "SERVER_ERROR"),
-    })
-    @PostMapping(value="/post",consumes = "multipart/form-data")
+    @ApiOperation(value = "게시글 등록")
+    @PostMapping(value = "/post", consumes = "multipart/form-data")
     public ResponseEntity<DefaultResponseDto> savePost(HttpServletRequest servletRequest,
                                                        CreatePostRequestDto createPostRequestDto)
-            throws Exception{
-            Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
-            User user = userService.findById(id);
-            Post post = postService.savePost(createPostRequestDto, user);
-            PostInfoResponseDto response = new PostInfoResponseDto(post,user);
-            return ResponseEntity.status(200)
-                    .body(DefaultResponseDto.builder()
-                            .responseCode("POST_REGISTERED")
-                            .responseMessage("게시글 등록 완료")
-                            .data(response)
-                            .build());
+            throws Exception {
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
+
+        PostInfoResponseDto response = postService.savePost(createPostRequestDto, id);
+
+        return ResponseEntity.status(200)
+                .body(DefaultResponseDto.builder()
+                        .responseCode("POST_REGISTERED")
+                        .responseMessage("게시글 등록 완료")
+                        .data(response)
+                        .build());
 
     }
 
 
-
-    @ApiOperation(value="내가 쓴 게시글 단건 조회")
-    @ApiResponses(value ={
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "POSTS_FOUND",
-                    content = @Content(schema = @Schema(implementation = PostInfoResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "UNAUTHORIZED_MEMBER"),
-            @ApiResponse(responseCode = "404",
-                    description = "POSTS_NOT_FOUND"),
-            @ApiResponse(responseCode = "500",
-                    description = "SERVER_ERROR"),
-    })
+    @ApiOperation(value = "내가 쓴 게시글 단건 조회")
     @GetMapping("/user/post")
-    public ResponseEntity<DefaultResponseDto> findAllPostsByUser(HttpServletRequest servletRequest){
+    public ResponseEntity<DefaultResponseDto> findPostByUser(HttpServletRequest servletRequest) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
-        User user = userService.findById(id);
-        Post post = postService.findUserPost(user);
 
-        PostInfoResponseDto response = new PostInfoResponseDto(post, user);
+        PostInfoResponseDto response = postService.findPostByUser(id);
 
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
@@ -103,31 +73,14 @@ public class PostController {
     }
 
 
-    @ApiOperation(value="카테고리별 게시글 조회")
-    @ApiResponses(value ={
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "POSTS_FOUND",
-                    content = @Content(schema = @Schema(implementation = PostInfoResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "UNAUTHORIZED_MEMBER"),
-            @ApiResponse(responseCode = "404",
-                    description = "POSTS_NOT_FOUND"),
-            @ApiResponse(responseCode = "500",
-                    description = "SERVER_ERROR"),
-    })
+    @ApiOperation(value = "카테고리별 게시글 조회")
     @GetMapping("/posts/{category}")
-    public ResponseEntity<DefaultResponseDto> findAllPostsByCategory(@PathVariable("category")String category,
+    public ResponseEntity<DefaultResponseDto> findAllPostsByCategory(@PathVariable("category") String category,
                                                                      HttpServletRequest servletRequest,
-                                                                     Pageable pageable){
+                                                                     Pageable pageable) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
-        User user = userService.findById(id);
-        Page<Post> posts = postService.findAllPostsByCategory(category, pageable);
 
-        PageResponse<PostInfoResponseDto> response = new PageResponse<>(new PageImpl<>(posts.getContent().stream().map(post
-                -> new PostInfoResponseDto(post,user)).collect(Collectors.toList()),
-                posts.getPageable(),
-                posts.getTotalElements()));
+        PageResponse<PostInfoResponseDto> response = postService.findAllPostsByCategory(category, pageable, id);
 
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
@@ -137,24 +90,12 @@ public class PostController {
                         .build());
     }
 
-    @ApiOperation(value="게시글 검색")
-    @ApiResponses(value ={
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "POSTS_FOUND",
-                    content = @Content(schema = @Schema(implementation = PostInfoResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "UNAUTHORIZED_MEMBER"),
-            @ApiResponse(responseCode = "404",
-                    description = "POSTS_NOT_FOUND"),
-            @ApiResponse(responseCode = "500",
-                    description = "SERVER_ERROR"),
-    })
+    @ApiOperation(value = "게시글 검색")
     @GetMapping("/search")
     public ResponseEntity<DefaultResponseDto> searchPost(@PageableDefault Pageable pageable,
-                                                         @RequestParam ("keyword")String keyword){
+                                                         @RequestParam("keyword") String keyword) {
 
-        Page<Post> posts = postService.searchPost(keyword,pageable);
+        Page<Post> posts = postService.searchPost(keyword, pageable);
 
         List<PostInfoResponseDto> response = posts.getContent().stream()
                 .map(post -> new PostInfoResponseDto(post))
@@ -169,29 +110,14 @@ public class PostController {
     }
 
 
-    @ApiOperation(value="게시물 단건 조회")
-    @ApiResponses(value ={
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "POST_FOUND",
-                    content = @Content(schema = @Schema(implementation = PostInfoResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "UNAUTHORIZED_MEMBER"),
-            @ApiResponse(responseCode = "404",
-                    description = "POST_NOT_FOUND"),
-            @ApiResponse(responseCode = "500",
-                    description = "SERVER_ERROR"),
-    })
+    @ApiOperation(value = "게시물 단건 조회")
     @GetMapping("/posts/{category}/{postId}")
-    public ResponseEntity<DefaultResponseDto> findOnePost(@PathVariable("postId") Long postId,
-                                                          HttpServletRequest servletRequest){
+    public ResponseEntity<DefaultResponseDto> DetailPost(@PathVariable("postId") Long postId,
+                                                         HttpServletRequest servletRequest) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
-        User user = userService.findById(id);
 
-        Post post = postService.findOnePost(postId);
+        PostInfoResponseDto response = postService.detailPost(id, postId);
 
-        LikedPost likedPost = postService.isLike(user,post);
-        PostInfoResponseDto response = new PostInfoResponseDto(post,user,likedPost);
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("POST_FOUND")
@@ -200,8 +126,8 @@ public class PostController {
                         .build());
     }
 
-    @ApiOperation(value="게시글 수정")
-    @ApiResponses(value ={
+    @ApiOperation(value = "게시글 수정")
+    @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
                     description = "POST_UPDATEED",
@@ -216,12 +142,11 @@ public class PostController {
     @PatchMapping("/posts/{category}/{postId}")
     public ResponseEntity<DefaultResponseDto> updatePost(@PathVariable("postId") Long postId,
                                                          @RequestBody CreatePostRequestDto createPostRequestDto,
-                                                         HttpServletRequest servletRequest){
+                                                         HttpServletRequest servletRequest) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
-        User user = userService.findById(id);
-        Post post = postService.updatePost(postId, createPostRequestDto, user);
 
-        PostInfoResponseDto response = new PostInfoResponseDto(post,user);
+        PostInfoResponseDto response = postService.updatePost(postId, createPostRequestDto, id);
+
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("POST_UPDATEED")
@@ -231,29 +156,14 @@ public class PostController {
     }
 
 
-
-
-    @ApiOperation(value="게시글 삭제")
-    @ApiResponses(value ={
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "POST_DELETED",
-                    content = @Content(schema = @Schema(implementation = PostInfoResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "UNAUTHORIZED_MEMBER"),
-            @ApiResponse(responseCode = "404",
-                    description = "POST_NOT_FOUND"),
-            @ApiResponse(responseCode = "500",
-                    description = "SERVER_ERROR"),
-    })
-    @DeleteMapping("/posts/{category}/{postId}")
+    @ApiOperation(value = "게시글 삭제")
+    @DeleteMapping("/post/{category}/{postId}")
     public ResponseEntity<DefaultResponseDto> deletePost(@PathVariable("postId") Long postId,
-                                                         HttpServletRequest servletRequest){
+                                                         HttpServletRequest servletRequest) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
-        User user = userService.findById(id);
-        Post post = postService.deletePost(postId,user);
 
-        PostInfoResponseDto response = new PostInfoResponseDto(post,user);
+        PostInfoResponseDto response = postService.deletePost(postId, id);
+
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("POST_DELETED")
@@ -264,26 +174,12 @@ public class PostController {
 
 
     @ApiOperation(value = "좋아요한 게시글 다건 조회")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "LIKED_POST_FOUND",
-                    content = @Content(schema = @Schema(implementation = PostInfoResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "UNAUTHORIZED_MEMBER"),
-            @ApiResponse(responseCode = "404",
-                    description = "COMMENT_NOT_FOUND"),
-            @ApiResponse(responseCode = "500",
-                    description = "SERVER_ERROR"),
-    })
     @GetMapping("/user/posts/likes")
     public ResponseEntity<DefaultResponseDto> findAllLikedPostsByUser(HttpServletRequest servletRequest) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
-        User user = userService.findById(id);
-        List<Post> posts = postService.findAllLikedPostsByUser(user);
 
-        List<PostInfoResponseDto> response = posts.stream().map(post
-                -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
+        List<PostInfoResponseDto> response = postService.findAllLikedPostsByUser(id);
+
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("LIKED_POST_FOUND")
@@ -293,25 +189,13 @@ public class PostController {
     }
 
     @ApiOperation(value = "좋아요 등록")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "LIKE_WORK",
-                    content = @Content(schema = @Schema(implementation = LikedInfoResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "UNAUTHORIZED_MEMBER"),
-            @ApiResponse(responseCode = "404",
-                    description = "COMMENT_NOT_FOUND"),
-            @ApiResponse(responseCode = "500",
-                    description = "SERVER_ERROR"),
-    })
     @PatchMapping("/posts/{category}/{postId}/like")
     public ResponseEntity<DefaultResponseDto> saveLike(@PathVariable("postId") Long postId,
                                                        HttpServletRequest servletRequest) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
-        LikedPost likedPost = postService.saveLike(postId,id);
 
-        LikedInfoResponseDto response = new LikedInfoResponseDto(likedPost);
+        LikedInfoResponseDto response = postService.saveLike(postId, id);
+
         return ResponseEntity.status(200)
                 .body(DefaultResponseDto.builder()
                         .responseCode("LIKE_WORK")
@@ -321,79 +205,56 @@ public class PostController {
     }
 
     @ApiOperation(value = "좋아요 취소")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "LIKE_WORK",
-                    content = @Content(schema = @Schema(implementation = LikedInfoResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "UNAUTHORIZED_MEMBER"),
-            @ApiResponse(responseCode = "404",
-                    description = "COMMENT_NOT_FOUND"),
-            @ApiResponse(responseCode = "500",
-                    description = "SERVER_ERROR"),
-    })
     @PatchMapping("/posts/{category}/{postId}/like/{likeId}")
-    public ResponseEntity<DefaultResponseDto> deletedLike(@PathVariable("postId") Long postId,
-                                                          @PathVariable("likeId") Long likeId,
+    public ResponseEntity<DefaultResponseDto> deletedLike(@PathVariable("likeId") Long likeId,
                                                           HttpServletRequest servletRequest) {
-            Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
-            LikedPost likedPost = postService.deletedLike(likeId, id);
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
 
-            LikedInfoResponseDto response = new LikedInfoResponseDto(likedPost);
-            return ResponseEntity.status(200)
-                    .body(DefaultResponseDto.builder()
-                            .responseCode("LIKE_WORK")
-                            .responseMessage("좋아요 등록/취소")
-                            .data(response)
-                            .build());
+        LikedInfoResponseDto response = postService.deletedLike(likeId, id);
+
+        return ResponseEntity.status(200)
+                .body(DefaultResponseDto.builder()
+                        .responseCode("LIKE_WORK")
+                        .responseMessage("좋아요 등록/취소")
+                        .data(response)
+                        .build());
 
     }
 
 
-    @ApiOperation(value = "홈 게시물")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "FIND_POSTS",
-                    content = @Content(schema = @Schema(implementation = LikedInfoResponseDto.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "UNAUTHORIZED_MEMBER"),
-            @ApiResponse(responseCode = "404",
-                    description = "MBTI_POSTS_NOT_FOUND"),
-            @ApiResponse(responseCode = "500",
-                    description = "SERVER_ERROR"),
-    })
-    @GetMapping("/home/posts")
-    public ResponseEntity<DefaultResponseDto> homePosts(HttpServletRequest servletRequest, Pageable pageable) {
-        String jwtHeader = servletRequest.getHeader("JWT");
-        Slice<Post> posts;
-        if(jwtHeader != null && !jwtHeader.isEmpty()){
-            Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
-            User user = userService.findById(id);
-            posts = postService.homePosts(user, pageable);
+    @ApiOperation(value = "mbti 게시물")
+    @GetMapping("/home/posts/mbti")
+    public ResponseEntity<DefaultResponseDto> mbtiPosts(HttpServletRequest servletRequest, Pageable pageable) {
 
-            SliceResponse<PostInfoResponseDto> response = new SliceResponse(posts.map(post
-                    -> new PostInfoResponseDto(post)));
+        Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
 
-            return ResponseEntity.status(200)
-                    .body(DefaultResponseDto.builder()
-                            .responseCode("FIND_POSTS")
-                            .responseMessage("게시물 조회 완료")
-                            .data(response)
-                            .build());
-        }else {
-            posts = postService.findPostsByRecent(pageable);
+        SliceResponse<PostInfoResponseDto> response = postService.findPostsByMbti(id, pageable);
 
-            SliceResponse<PostInfoResponseDto> response = new SliceResponse(posts.map(post
-                    -> new PostInfoResponseDto(post)));
-            return ResponseEntity.status(200)
-                    .body(DefaultResponseDto.builder()
-                            .responseCode("FIND_POSTS")
-                            .responseMessage("게시물 조회 완료")
-                            .data(response)
-                            .build());
-        }
+
+        return ResponseEntity.status(200)
+                .body(DefaultResponseDto.builder()
+                        .responseCode("FIND_POSTS")
+                        .responseMessage("게시물 조회 완료")
+                        .data(response)
+                        .build());
+
+
     }
 
+    @ApiOperation(value = "인기 게시물")
+    @GetMapping("/home/posts/popular")
+    public ResponseEntity<DefaultResponseDto> popularPosts(HttpServletRequest servletRequest, Pageable pageable) {
+
+        SliceResponse<PostInfoResponseDto> response = postService.findPopularPosts(pageable);
+
+
+        return ResponseEntity.status(200)
+                .body(DefaultResponseDto.builder()
+                        .responseCode("FIND_POSTS")
+                        .responseMessage("게시물 조회 완료")
+                        .data(response)
+                        .build());
+
+
+    }
 }

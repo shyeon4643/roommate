@@ -1,9 +1,10 @@
 package com.roommate.roommate.post.service;
 
+import com.roommate.roommate.common.PageResponse;
 import com.roommate.roommate.common.SliceResponse;
 import com.roommate.roommate.post.domain.*;
 import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
-import com.roommate.roommate.post.dto.request.SearchPostDto;
+import com.roommate.roommate.post.dto.response.LikedInfoResponseDto;
 import com.roommate.roommate.post.dto.response.PostInfoResponseDto;
 import com.roommate.roommate.post.repository.PostLikedRepository;
 import com.roommate.roommate.post.repository.PostPhotoRepository;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.roommate.roommate.exception.ExceptionCode.DUPLICATE_POST;
 import static com.roommate.roommate.exception.ExceptionCode.SERVER_ERROR;
@@ -34,145 +36,142 @@ import static com.roommate.roommate.exception.ExceptionCode.SERVER_ERROR;
 @Transactional(readOnly = true)
 @Slf4j
 public class PostService {
-    private final UserRepository userRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
+    private final MbtiRepository mbtiRepository;
     private final PostRepository postRepository;
     private final PostLikedRepository postLikedRepository;
     private final PostPhotoRepository postPhotoRepository;
-    private final MbtiRepository mbtiRepository;
 
-    /*
-     * 게시글 등록
-     * 500(SERVER_ERROR)
-     * */
     @Transactional
-    public Post savePost(CreatePostRequestDto createPostRequestDto, User user) throws Exception {
+    public PostInfoResponseDto savePost(CreatePostRequestDto createPostRequestDto, Long id) throws Exception {
         try {
-            if(postRepository.findByUserId(user.getId())!=null) {
+            User user = userService.findById(id);
+
+            if(postRepository.findByUserIdAndIsDeletedIsFalse(id)!=null) {
                 throw new CustomException(null,DUPLICATE_POST);
             }
+
             Post post = Post.builder()
                     .title(createPostRequestDto.getTitle())
                     .body(createPostRequestDto.getBody())
-                    .area(createPostRequestDto.getArea())
-                    .category(createPostRequestDto.getCategory())
+                    .area(PostArea.valueOf(createPostRequestDto.getArea()))
+                    .category(PostCategory.valueOf(createPostRequestDto.getCategory()))
                     .fee(createPostRequestDto.getFee())
                     .user(user)
                     .build();
+
             if(createPostRequestDto.getFiles()!=null) {
                 savePhoto(post, createPostRequestDto.getFiles());
             }
+
             postRepository.save(post);
-            return post;
+
+            return new PostInfoResponseDto(post, user);
+
         } catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
         }
 
     }
-    /*
-     * 카테고리별 게시글 조회
-     * 500(SERVER_ERROR)
-     * */
-    public Page<Post> findAllPostsByCategory(String category, Pageable pageable){
+
+    public PageResponse<PostInfoResponseDto> findAllPostsByCategory(String category, Pageable pageable, Long id){
         try{
             Page<Post> posts = postRepository.findByCategoryAndIsDeletedIsFalse(category, pageable);
 
-            return posts;
+            User user = userService.findById(id);
+
+            List<PostInfoResponseDto> postDtos = posts.getContent().stream()
+                    .map(post -> new PostInfoResponseDto(post, user))
+                    .collect(Collectors.toList());
+
+            Page<PostInfoResponseDto> pageResponse = new PageImpl<>(postDtos, pageable, posts.getTotalElements());
+
+            return new PageResponse(pageResponse);
+
         }catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
         }
     }
 
-    /*
-     * 지역별 게시글 조회
-     * 500(SERVER_ERROR)
-     * */
-    public List<Post> findAllPostsByArea(String area){
-        try{
-            List<Post> posts = postRepository.findByAreaAndIsDeletedIsFalse(area);
 
-            return posts;
-        }catch (RuntimeException e) {
-            e.printStackTrace();
-            throw new CustomException(e,SERVER_ERROR);
-        }
-    }
-
-    /*
-     * 유저가 쓴 게시글 조회
-     * 500(SERVER_ERROR)
-     * */
-    public Post findUserPost(User user){
+    public PostInfoResponseDto findPostByUser(Long id){
         try{
+            User user = userService.findById(id);
+
             Post post = postRepository.findByUserIdAndIsDeletedIsFalse(user.getId());
 
-            return post;
+
+            return new PostInfoResponseDto(post, user);
         }catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
         }
     }
 
-    /*
-     * 게시글 단건 조회
-     * 500(SERVER_ERROR)
-     * */
-    public Post findOnePost(Long postId){
+    @Transactional
+    public PostInfoResponseDto detailPost(Long id, Long postId){
         try{
+            User user = userService.findById(id);
+
             Post post = postRepository.findById(postId).get();
+            post.increaseViewCount();
 
-            return post;
+            LikedPost likedPost = isLike(user,post);
+
+            return new PostInfoResponseDto(post, user, likedPost);
         }catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
         }
     }
 
-    /*
-     * 게시글 수정
-     * 500(SERVER_ERROR)
-     * */
     @Transactional
-    public Post updatePost(Long postId, CreatePostRequestDto createPostRequestDto, User user){
+    public PostInfoResponseDto updatePost(Long postId, CreatePostRequestDto createPostRequestDto, Long id){
         try{
+            User user = userService.findById(id);
             Post post = postRepository.findByIdAndUserId(postId, user.getId());
-            post.update(createPostRequestDto);
 
-            return post;
+            post.update(createPostRequestDto.getArea(), createPostRequestDto.getBody(), createPostRequestDto.getTitle(),
+                     createPostRequestDto.getFee(), createPostRequestDto.getCategory());
+
+            return new PostInfoResponseDto(post, user);
         }catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
         }
     }
 
-    /*
-     * 게시글 삭제
-     * 500(SERVER_ERROR)
-     * */
     @Transactional
-    public Post deletePost(Long postId, User user){
+    public PostInfoResponseDto deletePost(Long postId, Long id){
         try{
+            User user = userService.findById(id);
             Post post = postRepository.findByIdAndUserId(postId, user.getId());
             post.delete();
 
-            return post;
+            return new PostInfoResponseDto(post, user);
         }catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
         }
     }
 
-    public List<Post> findAllLikedPostsByUser(User user){
-        List<Post> posts = new ArrayList<>();
+    public List<PostInfoResponseDto> findAllLikedPostsByUser(Long id){
         try {
+            User user = userService.findById(id);
+
+            List<Post> posts = new ArrayList<>();
             List<LikedPost> postLikes = postLikedRepository.findByUserIdAndIsDeletedIsFalse(user.getId());
+
             for(LikedPost likedPost : postLikes){
                 posts.add(likedPost.getPost());
             }
 
-            return posts;
+            return posts.stream().map(post
+                    -> new PostInfoResponseDto(post,user)).collect(Collectors.toList());
+
         } catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
@@ -188,10 +187,12 @@ public class PostService {
     }
 
     @Transactional
-    public LikedPost saveLike(Long postId, Long id) {
+    public LikedInfoResponseDto saveLike(Long postId, Long id) {
         try {
             User user = userService.findById(id);
+
             Post post = postRepository.findById(postId).get();
+
             if(postLikedRepository.findByUserIdAndPostId(user.getId(),postId)==null) {
                 LikedPost likedPost = LikedPost.builder()
                         .post(post)
@@ -199,11 +200,16 @@ public class PostService {
                         .build();
 
                 postLikedRepository.save(likedPost);
-                return likedPost;
+
+                return new LikedInfoResponseDto(likedPost);
+
             }else{
+
                 LikedPost likedPost = postLikedRepository.findByUserIdAndPostId(user.getId(), post.getId());
+
                 likedPost.save();
-                return likedPost;
+
+                return new LikedInfoResponseDto(likedPost);
             }
 
         } catch (RuntimeException e) {
@@ -214,13 +220,16 @@ public class PostService {
     }
 
     @Transactional
-    public LikedPost deletedLike(Long likeId, Long id) {
+    public LikedInfoResponseDto deletedLike(Long likeId, Long id) {
         try {
             User user = userService.findById(id);
+
             LikedPost likedPost = postLikedRepository.findByIdAndUserId(likeId,user.getId());
+
             likedPost.delete();
 
-            return likedPost;
+            return new LikedInfoResponseDto(likedPost);
+
         } catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
@@ -231,7 +240,7 @@ public class PostService {
     @Transactional
     public void savePhoto(Post post, List<MultipartFile> files) throws Exception {
         if (files.size() != 0) {
-            String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/photos/postPhotos";
+            String projectPath = System.getProperty("user.dir") + "/src/main/resources/static/photos/postPhoto";
             for (MultipartFile file : files) {
                 String filename = file.getOriginalFilename();
                 String extension = filename.substring(filename.lastIndexOf("."));
@@ -251,38 +260,67 @@ public class PostService {
     }
     public Page<Post> searchPost(String keyword, Pageable pageable)
     {
-        int page = (pageable.getPageNumber()==0)?0:(pageable.getPageNumber()-1);
-        return postRepository.findByTitleContainingOrAreaContaining(keyword,pageable);
+        try {
+            int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
+            return postRepository.findByTitleContainingOrAreaContaining(keyword, pageable);
+        }catch(RuntimeException e){
+            e.getStackTrace();
+            throw new CustomException(e, SERVER_ERROR);
+        }
 
     }
 
-    public Slice<Post> homePosts(User user, Pageable pageable) {
-        List<User> sameGender = userRepository.findAllByGender(user.getGender()); // 성별 필터
-        Mbti mbti = mbtiRepository.findByMbti(user.getMbti());
-        List<Post> posts = new ArrayList<>();
-        if(!sameGender.isEmpty()||sameGender.size()>=5) {
-            for (User sameGenderUser : sameGender) {
-                if (sameGenderUser.getMbti().equals(mbti.getFirstMbti()) ||
-                        sameGenderUser.getMbti().equals(mbti.getSecondMbti()) || sameGenderUser.getMbti()
-                        .equals(mbti.getThirdMbti()) || sameGenderUser.getMbti().equals(mbti.getFourthMbti())) {
-                    for (int i = 0; i < sameGenderUser.getPosts().size(); i++) {
-                        if (sameGenderUser.getPosts().get(i).getIsDeleted() == false) {
-                            posts.add(sameGenderUser.getPosts().get(i));
+    public SliceResponse<PostInfoResponseDto> findPostsByMbti(Long id, Pageable pageable){
+        try {
+            User user = userService.findById(id);
+            List<User> sameGenderUsers = userRepository.findByGender(user.getGender());
+            Mbti mbti = mbtiRepository.findByMbti(user.getMbti());
+            List<Post> posts = new ArrayList<>();{
+                for (User sameGenderUser : sameGenderUsers) {
+                    if (sameGenderUser.getMbti().equals(mbti.getFirstMbti()) ||
+                            sameGenderUser.getMbti().equals(mbti.getSecondMbti()) || sameGenderUser.getMbti()
+                            .equals(mbti.getThirdMbti()) || sameGenderUser.getMbti().equals(mbti.getFourthMbti())) {
+                        for (int i = 0; i < sameGenderUser.getPosts().size(); i++) {
+                            if (sameGenderUser.getPosts().get(i).getIsDeleted() == false && posts.size()!=5) {
+                                posts.add(sameGenderUser.getPosts().get(i));
+                            }
                         }
                     }
                 }
             }
-            int start = (int) pageable.getOffset();
-            int end = (start + pageable.getPageSize()) > posts.size() ? posts.size() : (start + pageable.getPageSize());
-            return new SliceImpl<>(posts.subList(start, end), pageable, posts.size() > end);
-        }else{
-            return findPostsByRecent(pageable);
-        }
-}
+            List<PostInfoResponseDto> postDtos = posts.stream()
+                    .map(post -> new PostInfoResponseDto(post))
+                    .collect(Collectors.toList());
 
-public Slice<Post> findPostsByRecent(Pageable pageable){
+            int page = pageable.getPageNumber();
+            int size = pageable.getPageSize();
+
+            return convertToSliceResponse(postDtos, page, size);
+
+        }catch(RuntimeException e){
+            e.getStackTrace();
+            throw new CustomException(e, SERVER_ERROR);
+        }
+    }
+
+    public SliceResponse<PostInfoResponseDto> convertToSliceResponse(List<PostInfoResponseDto> postDtos, int page, int size) {
+        int totalElements = postDtos.size();
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+
+        List<PostInfoResponseDto> pageContent = postDtos.stream()
+                .skip((long) page * size)
+                .limit(size)
+                .collect(Collectors.toList());
+
+        return new SliceResponse<>(page, size, page < totalPages - 1, pageContent);
+    }
+
+    public SliceResponse<PostInfoResponseDto> findPopularPosts(Pageable pageable){
         try {
-            return postRepository.findAllByOrderByCreatedAtDescAndIsDeletedIsFalse(pageable);
+            Slice<Post> posts = postRepository.findTop5ByOrderByViewCountPlusLikeCountDesc(pageable);
+
+           return new SliceResponse(posts.map(post -> new PostInfoResponseDto(post)));
+
         }catch (RuntimeException e){
             e.getStackTrace();
             throw new CustomException(e,SERVER_ERROR);

@@ -143,7 +143,7 @@ function WritePost(){
               <option value="양천구" >양천구</option>
               <option value="영등포구" >영등포구</option>
               <option value="용산구" >용산구</option>
-              <option value="온평구" >온평구</option>
+              <option value="은평구" >은평구</option>
               <option value="종로구" >중구</option>
               <option value="중랑구" >중랑구</option>
             </select>

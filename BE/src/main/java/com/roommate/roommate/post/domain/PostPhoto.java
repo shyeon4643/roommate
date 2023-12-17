@@ -1,13 +1,12 @@
 package com.roommate.roommate.post.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.roommate.roommate.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
 
-import com.roomate.roomate.common.BaseEntity;
-
-@Data
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

@@ -1,4 +1,4 @@
-package com.roomate.roomate.common;
+package com.roommate.roommate.common;
 
 import lombok.Getter;
 import lombok.Setter;

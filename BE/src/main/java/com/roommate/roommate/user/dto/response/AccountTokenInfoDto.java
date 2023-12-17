@@ -1,6 +1,5 @@
 package com.roommate.roommate.user.dto.response;
 
-import com.roommate.roommate.feign.kakao.dto.KakaoInfoDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,16 +7,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class AccountTokenInfoDto {
 
-    private String accessToken;
-    private String refreshToken;
+    private String token;
 
-    public AccountTokenInfoDto(KakaoInfoDto kakaoInfoDto){
-        this.accessToken = kakaoInfoDto.getAccessToken();
-        this.refreshToken = kakaoInfoDto.getRefreshToken();
-    }
 
-    public AccountTokenInfoDto(String accessToken, String refreshToken){
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+    public AccountTokenInfoDto(String token){
+        this.token = token;
     }
 }

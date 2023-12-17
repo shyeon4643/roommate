@@ -18,12 +18,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByIdAndIsDeletedIsFalse(Long id);
 
     User findByUidAndIsDeletedIsFalse(String uid);
+    List<User> findByGender(Gender gender);
     @EntityGraph(attributePaths = "posts")
     @Query("SELECT u FROM User u WHERE u.gender = :gender")
     List<User> findAllByGender(@Param("gender") Gender gender);
 
     boolean existsByUid(String uid);
     boolean existsByEmail(String Email);
-
-    User findByKakaoId(Long kakaoId);
 }

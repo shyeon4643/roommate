@@ -1,7 +1,7 @@
 package com.roommate.roommate.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.roomate.roomate.common.BaseEntity;
+import com.roommate.roommate.common.BaseEntity;
 import com.roommate.roommate.post.domain.Comment;
 import com.roommate.roommate.post.domain.Post;
 import com.roommate.roommate.post.domain.LikedPost;
@@ -13,14 +13,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.util.*;
 
 @Entity
 @BatchSize(size = 100)
-@Data
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class User extends BaseEntity implements UserDetails {
 
     @Id
@@ -37,23 +36,26 @@ public class User extends BaseEntity implements UserDetails {
     private String mbti;
     private String nickname;
     private Character role;
+    @Setter
     private String token;
+
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Setter
     @Embedded
     private DetailRoommate detailRoommate;
 
-    private Long kakaoId;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = false)
     @BatchSize(size = 1000)
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @BatchSize(size = 1000)
     private List<LikedPost> likes = new ArrayList<>();
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = false)
     @BatchSize(size = 1000)
     private List<Comment> comments = new ArrayList<>();
 
@@ -65,12 +67,6 @@ public class User extends BaseEntity implements UserDetails {
         likedPosts.removeIf(likedPost -> likedPost.getIsDeleted().equals(true));
         Collections.reverse(likedPosts);
         return likedPosts;
-    }
-    @Override
-    public Collection<?extends GrantedAuthority> getAuthorities(){
-        Collection<GrantedAuthority> collectors = new ArrayList<>();
-        collectors.add(new SimpleGrantedAuthority(Role.convertEnum(this.getRole())));
-        return collectors;
     }
 
     @Builder
@@ -120,39 +116,46 @@ public class User extends BaseEntity implements UserDetails {
         this.password=null;
         this.token=null;
         this.name=null;
+        this.detailRoommate=null;
         this.setUpdatedAt(null);
-        this.setDetailRoommate(null);
         this.setIsDeleted(true);
     }
 
-    // 계정 리턴
+    @Override
+    public Collection<?extends GrantedAuthority> getAuthorities(){
+        Collection<GrantedAuthority> collectors = new ArrayList<>();
+        collectors.add(new SimpleGrantedAuthority(Role.convertEnum(this.getRole())));
+        return collectors;
+    }
+
+
     @Override
     public String getUsername(){
         return this.email;
     }
 
-    // 계정이 만료됐는지 리턴 (true : 만료안됨)
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isAccountNonExpired(){
         return true;
     }
 
-    //계정이 잠겼는지 리턴 (true : 잠기지 않음)
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isAccountNonLocked(){
         return true;
     }
 
-    //비밀번호가 만료됐는지 리턴 (true : 만료안됨)
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isCredentialsNonExpired(){
         return true;
     }
 
-    //계정이 활성화(사용가능) 되어있는지 리턴 (true : 활성화)
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public boolean isEnabled(){

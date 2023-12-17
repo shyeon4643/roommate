@@ -1,5 +1,6 @@
 package com.roommate.roommate.common;
 
+import com.roommate.roommate.post.dto.response.PostInfoResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Getter
 @NoArgsConstructor
@@ -19,10 +21,11 @@ public class SliceResponse<T> {
     private Boolean hasNext;
     private List<T> data;
 
-    public SliceResponse (Slice<T> slice){
+    public SliceResponse(Slice<T> slice){
         this.cuurentPage=slice.getNumber();
         this.size=slice.getNumberOfElements();
         this.hasNext=slice.hasNext();
         this.data=slice.getContent();
     }
+
 }

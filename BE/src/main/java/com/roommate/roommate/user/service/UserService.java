@@ -15,6 +15,8 @@ import com.roommate.roommate.user.dto.request.DetailRoommateRequestDto;
 import com.roommate.roommate.user.dto.request.SignInRequestDto;
 import com.roommate.roommate.user.dto.request.SignUpRequestDto;
 import com.roommate.roommate.user.dto.response.AccountTokenInfoDto;
+import com.roommate.roommate.user.dto.response.UserInfoResponseDto;
+import com.roommate.roommate.user.dto.response.UserLoginResponseDto;
 import com.roommate.roommate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
-import java.util.List;
-import java.util.Optional;
-
 import static com.roommate.roommate.exception.ExceptionCode.*;
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @RequiredArgsConstructor
@@ -38,10 +37,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    /**
-     * 회원 가입
-     * 500(SERVER_ERROR)
-     */
+
     @Transactional
     public User join(SignUpRequestDto request){
         if(userRepository.existsByUid(request.getUid())) {
@@ -68,40 +64,8 @@ public class UserService {
         }
 
 
-    /**
-     * 회원 가입
-     * 500(SERVER_ERROR)
-     */
     @Transactional
-    public User kakaoJoin(SignUpRequestDto request){
-        if(userRepository.existsByUid(request.getUid())) {
-            throw new CustomException(null,DUPLICATE_ID);
-        }
-        if(userRepository.existsByEmail(request.getEmail())) {
-            throw new CustomException(null,DUPLICATE_EMAIL);
-        }
-        User user = User.builder()
-                .name(request.getName())
-                .birth(request.getBirth())
-                .uid(request.getUid())
-                .nickname(request.getNickname())
-                .phoneNum(request.getPhoneNum())
-                .mbti(request.getMbti())
-                .email(request.getEmail())
-                .gender(request.getGender())
-                .build();
-
-        userRepository.save(user);
-        return user;
-
-    }
-
-    /**
-     * 회원 로그인
-     * 500(SERVER_ERROR)
-     */
-    @Transactional
-    public User login(SignInRequestDto signInRequestDto){
+    public UserLoginResponseDto login(SignInRequestDto signInRequestDto){
         try {
             User user = userRepository.findByUidAndIsDeletedIsFalse(signInRequestDto.getUid());
 
@@ -109,7 +73,7 @@ public class UserService {
                 throw new CustomException(null,INCORRECT_PASSWORD_REQUIRED);
             }
 
-            return user;
+            return new UserLoginResponseDto(user, createToken(user));
         }catch(RuntimeException e){
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
@@ -117,9 +81,20 @@ public class UserService {
     }
 
     @Transactional
-    public User detailRoommate(DetailRoommateRequestDto detailRoommateRequestDto, Long id){
+    public AccountTokenInfoDto createToken(User user){
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getId(),Role.ROLE_USER.toString());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId(),Role.ROLE_USER.toString());
+
+        user.setToken(refreshToken);
+        userRepository.save(user);
+        return new AccountTokenInfoDto(accessToken);
+    }
+
+    @Transactional
+    public UserInfoResponseDto writeDetailRoommate(DetailRoommateRequestDto detailRoommateRequestDto, Long id){
         try {
-            User user = findById(id);
+            User user = userRepository.findById(id).get();
+
             DetailRoommate detailRoommate = DetailRoommate.builder()
                     .pet(Pet.valueOf(detailRoommateRequestDto.getPet()))
                     .wishRoommate(detailRoommateRequestDto.getWishRoommate())
@@ -130,9 +105,11 @@ public class UserService {
                     .lifeCycle(LifeCycle.valueOf(detailRoommateRequestDto.getLifeCycle()))
                     .smoking(Smoking.valueOf(detailRoommateRequestDto.getSmoking()))
                     .build();
+
             user.setDetailRoommate(detailRoommate);
+
             userRepository.save(user);
-            return user;
+            return new UserInfoResponseDto(user);
         }catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
@@ -140,8 +117,9 @@ public class UserService {
     }
 
     @Transactional
-    public User updateDetailRoommate(DetailRoommateRequestDto detailRoommateRequestDto, Long id){
-        User user = findById(id);
+    public UserInfoResponseDto updateDetailRoommate(DetailRoommateRequestDto detailRoommateRequestDto, Long id){
+        User user = userRepository.findById(id).get();
+
         user.getDetailRoommate().update(
                 LifeCycle.valueOf(detailRoommateRequestDto.getLifeCycle()),
                 Smoking.valueOf(detailRoommateRequestDto.getSmoking()),
@@ -152,43 +130,32 @@ public class UserService {
                 PostCategory.valueOf(detailRoommateRequestDto.getCategory()),
                 PostArea.valueOf(detailRoommateRequestDto.getArea())
         );
+
         userRepository.save(user);
-        return user;
+
+        return new UserInfoResponseDto(user);
     }
 
     @Transactional
-    public void updatePassword(User user, String password){
+    public UserInfoResponseDto updateUserInformation(Long id, String password, String nickname, String Email){
         try{
-        user.updatePassword(passwordEncoder.encode(password));
-    } catch (RuntimeException e) {
-        e.printStackTrace();
-        throw new CustomException(e,SERVER_ERROR);
-    }
-}
-
-    @Transactional
-    public void updateEmail(User user, String email){
-        try{
-            user.updateEmail(email);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            throw new CustomException(e,SERVER_ERROR);
-        }
-    }
-
-    @Transactional
-    public void updateNickname(User user, String nickname){
-        try{
+            User user = userRepository.findById(id).get();
+            user.updatePassword(passwordEncoder.encode(password));
             user.updateNickname(nickname);
-        } catch (RuntimeException e) {
+            user.updateEmail(Email);
+            userRepository.save(user);
+            return new UserInfoResponseDto(user);
+        }catch (RuntimeException e) {
             e.printStackTrace();
             throw new CustomException(e,SERVER_ERROR);
         }
     }
 
+
     @Transactional
-    public void deleteUser(User user){
+    public void deleteUser(Long id){
         try{
+            User user = findById(id);
             user.delete();
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -196,22 +163,13 @@ public class UserService {
         }
     }
 
+    public UserInfoResponseDto myPage(Long id){
+        User user = userRepository.findById(id).get();
+        return new UserInfoResponseDto(user);
+    }
+
     public User findById(Long id){
         return userRepository.findById(id).get();
     }
 
-    @Transactional
-    public AccountTokenInfoDto createToken(User user){
-        String accessToken = jwtTokenProvider.generateAccessToken(user.getId(),Role.ROLE_USER.toString());
-        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId(),Role.ROLE_USER.toString());
-
-        user.setToken(refreshToken);
-        userRepository.save(user);
-        return new AccountTokenInfoDto(accessToken, refreshToken);
-    }
-
-    public AccountTokenInfoDto refreshToken(User user, String refreshToken){
-        String accessToken = jwtTokenProvider.generateAccessToken(user.getId(),Role.ROLE_USER.toString());
-        return new AccountTokenInfoDto(accessToken, refreshToken);
-    }
 }

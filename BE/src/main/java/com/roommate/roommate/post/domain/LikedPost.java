@@ -1,14 +1,14 @@
 package com.roommate.roommate.post.domain;
 
+import com.roommate.roommate.common.BaseEntity;
 import com.roommate.roommate.user.domain.User;
 import lombok.*;
 
 import javax.persistence.*;
 
-import com.roomate.roomate.common.BaseEntity;
 
 @Entity
-@Data
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class LikedPost extends BaseEntity {

@@ -31,23 +31,6 @@ function Login(){
         }
     }
 
-    const handleGetKakaoCode = () =>{
-        const restApiKey = '10965eecbd4e1c23538795681c05f934';
-        const redirectUri = 'http://localhost:3000/oauth/kakao/redirect';
-
-        
-        const data ={
-            uid : uid,
-            password : password
-        }
-        const queryParams = new URLSearchParams(data);
-        const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${restApiKey}&redirect_uri=${redirectUri}&response_type=code&${queryParams.toString()}`
-        window.location.href = kakaoUrl;
-    }
-
-
-
-   
 
     return(
         <div className="login_container">
@@ -70,13 +53,6 @@ function Login(){
                     onClick={handleLogin}
                 >
                   로그인
-                </button>
-                <button
-                    className="kakao_login_submit_button"
-                    type="button"
-                    onClick={handleGetKakaoCode}
-                >
-                  카카오 로그인 하러 가기
                 </button>
                 </form>
             </div>
