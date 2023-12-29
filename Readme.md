@@ -25,15 +25,15 @@
 
 ### 서비스 UI
 ---
-|![image](https://github.com/shyeon4643/roommate/assets/62410059/e69a7bf9-4326-4780-9860-ee29f8b5c62b)
-|
-|:--:|:------------:|
-|![img_3.png](img/img_3.png)|![img_4.png](img/img_4.png)|
----
+![image](https://github.com/shyeon4643/roommate/assets/62410059/e69a7bf9-4326-4780-9860-ee29f8b5c62b)
+
+![img_3.png](img/img_3.png)|![img_4.png](img/img_4.png)
+
 ## Database Schema Diagram
+---
 ![img.png](img/img.png)
 
----
 
 ## API
+---
 ![img_5.png](img/img_5.png)
