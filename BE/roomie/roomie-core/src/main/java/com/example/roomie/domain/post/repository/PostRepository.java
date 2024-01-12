@@ -1,7 +1,6 @@
 package com.example.roomie.domain.post.repository;
 
-
-import com.roommate.roommate.post.domain.Post;
+import com.example.roomie.domain.post.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;

@@ -1,6 +1,6 @@
 package com.roomie.roomie.security;
 
-import com.roommate.roommate.exception.CustomException;
+import com.roomie.roomie.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.roommate.roommate.exception.ExceptionCode.INVALID_TOKEN;
+import static com.roomie.roomie.exception.ExceptionCode.INVALID_TOKEN;
 
 @RequiredArgsConstructor
 @Slf4j

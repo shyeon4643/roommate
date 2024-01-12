@@ -1,9 +1,9 @@
 package com.example.roomie.domain.post;
 
+import com.example.roomie.common.BaseEntity;
 import com.example.roomie.domain.post.enums.PostArea;
 import com.example.roomie.domain.post.enums.PostCategory;
-import com.roommate.roommate.common.BaseEntity;
-import com.roommate.roommate.user.domain.User;
+import com.example.roomie.domain.user.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

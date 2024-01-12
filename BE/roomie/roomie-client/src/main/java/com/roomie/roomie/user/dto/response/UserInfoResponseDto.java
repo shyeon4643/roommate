@@ -1,19 +1,17 @@
 package com.roomie.roomie.user.dto.response;
 
-import com.roommate.roommate.post.domain.PostArea;
-import com.roommate.roommate.post.domain.PostCategory;
-import com.roommate.roommate.user.domain.User;
-import com.roommate.roommate.user.domain.enums.Gender;
-import com.roommate.roommate.user.domain.enums.LifeCycle;
-import com.roommate.roommate.user.domain.enums.Pet;
-import com.roommate.roommate.user.domain.enums.Smoking;
-import io.swagger.annotations.ApiModel;
+import com.example.roomie.domain.post.enums.PostArea;
+import com.example.roomie.domain.post.enums.PostCategory;
+import com.example.roomie.domain.user.User;
+import com.example.roomie.domain.user.enums.Gender;
+import com.example.roomie.domain.user.enums.LifeCycle;
+import com.example.roomie.domain.user.enums.Pet;
+import com.example.roomie.domain.user.enums.Smoking;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@ApiModel(value = "User 기본 응답")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

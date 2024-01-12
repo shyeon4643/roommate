@@ -1,34 +1,31 @@
 package com.roomie.roomie.post.controller;
 
-import com.roommate.roommate.common.DefaultResponseDto;
-import com.roommate.roommate.common.PageResponse;
-import com.roommate.roommate.common.SliceResponse;
-import com.roommate.roommate.config.security.JwtTokenProvider;
-import com.roommate.roommate.post.domain.Post;
-import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
-import com.roommate.roommate.post.dto.response.LikedInfoResponseDto;
-import com.roommate.roommate.post.dto.response.PostInfoResponseDto;
-import com.roommate.roommate.post.service.PostService;
-import com.roommate.roommate.user.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import com.example.roomie.common.response.PageResponse;
+import com.example.roomie.common.response.SliceResponse;
+import com.example.roomie.domain.post.Post;
+import com.example.roomie.domain.post.service.PostService;
+import com.example.roomie.domain.user.service.UserService;
+import com.roomie.roomie.common.DefaultResponseDto;
+import com.roomie.roomie.post.dto.request.CreatePostRequestDto;
+import com.roomie.roomie.post.dto.response.LikedInfoResponseDto;
+import com.roomie.roomie.post.dto.response.PostInfoResponseDto;
+import com.roomie.roomie.security.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Api(tags = "게시글")
+@Tag(name = "게시글", description = "게시글 API")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -37,7 +34,7 @@ public class PostController {
     private final PostService postService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @ApiOperation(value = "게시글 등록")
+    @Operation(summary = "게시글 등록")
     @PostMapping(value = "/post", consumes = "multipart/form-data")
     public ResponseEntity<DefaultResponseDto> savePost(HttpServletRequest servletRequest,
                                                        CreatePostRequestDto createPostRequestDto)
@@ -56,7 +53,7 @@ public class PostController {
     }
 
 
-    @ApiOperation(value = "내가 쓴 게시글 단건 조회")
+    @Operation(summary = "내가 쓴 게시글 단건 조회")
     @GetMapping("/user/post")
     public ResponseEntity<DefaultResponseDto> findPostByUser(HttpServletRequest servletRequest) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
@@ -72,7 +69,7 @@ public class PostController {
     }
 
 
-    @ApiOperation(value = "카테고리별 게시글 조회")
+    @Operation(summary = "카테고리별 게시글 조회")
     @GetMapping("/posts/{category}")
     public ResponseEntity<DefaultResponseDto> findAllPostsByCategory(@PathVariable("category") String category,
                                                                      HttpServletRequest servletRequest,
@@ -89,7 +86,7 @@ public class PostController {
                         .build());
     }
 
-    @ApiOperation(value = "게시글 검색")
+    @Operation(summary = "게시글 검색")
     @GetMapping("/search")
     public ResponseEntity<DefaultResponseDto> searchPost(@PageableDefault Pageable pageable,
                                                          @RequestParam("keyword") String keyword) {
@@ -109,7 +106,7 @@ public class PostController {
     }
 
 
-    @ApiOperation(value = "게시물 단건 조회")
+    @Operation(summary = "게시물 단건 조회")
     @GetMapping("/posts/{category}/{postId}")
     public ResponseEntity<DefaultResponseDto> DetailPost(@PathVariable("postId") Long postId,
                                                          HttpServletRequest servletRequest) {
@@ -125,7 +122,7 @@ public class PostController {
                         .build());
     }
 
-    @ApiOperation(value = "게시글 수정")
+    @Operation(summary = "게시글 수정")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -155,7 +152,7 @@ public class PostController {
     }
 
 
-    @ApiOperation(value = "게시글 삭제")
+    @Operation(summary = "게시글 삭제")
     @DeleteMapping("/post/{category}/{postId}")
     public ResponseEntity<DefaultResponseDto> deletePost(@PathVariable("postId") Long postId,
                                                          HttpServletRequest servletRequest) {
@@ -172,7 +169,7 @@ public class PostController {
     }
 
 
-    @ApiOperation(value = "좋아요한 게시글 다건 조회")
+    @Operation(summary = "좋아요한 게시글 다건 조회")
     @GetMapping("/user/posts/likes")
     public ResponseEntity<DefaultResponseDto> findAllLikedPostsByUser(HttpServletRequest servletRequest) {
         Long id = Long.parseLong(jwtTokenProvider.getUsername(servletRequest.getHeader("JWT")));
@@ -187,7 +184,7 @@ public class PostController {
                         .build());
     }
 
-    @ApiOperation(value = "좋아요 등록")
+    @Operation(summary = "좋아요 등록")
     @PatchMapping("/posts/{category}/{postId}/like")
     public ResponseEntity<DefaultResponseDto> saveLike(@PathVariable("postId") Long postId,
                                                        HttpServletRequest servletRequest) {
@@ -203,7 +200,7 @@ public class PostController {
                         .build());
     }
 
-    @ApiOperation(value = "좋아요 취소")
+    @Operation(summary = "좋아요 취소")
     @PatchMapping("/posts/{category}/{postId}/like/{likeId}")
     public ResponseEntity<DefaultResponseDto> deletedLike(@PathVariable("likeId") Long likeId,
                                                           HttpServletRequest servletRequest) {
@@ -221,7 +218,7 @@ public class PostController {
     }
 
 
-    @ApiOperation(value = "mbti 게시물")
+    @Operation(summary = "mbti 게시물")
     @GetMapping("/home/posts/mbti")
     public ResponseEntity<DefaultResponseDto> mbtiPosts(HttpServletRequest servletRequest, Pageable pageable) {
 
@@ -240,7 +237,7 @@ public class PostController {
 
     }
 
-    @ApiOperation(value = "인기 게시물")
+    @Operation(summary = "인기 게시물")
     @GetMapping("/home/posts/popular")
     public ResponseEntity<DefaultResponseDto> popularPosts(HttpServletRequest servletRequest, Pageable pageable) {
 

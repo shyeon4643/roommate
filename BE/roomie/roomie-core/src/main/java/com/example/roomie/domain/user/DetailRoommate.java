@@ -1,11 +1,11 @@
 package com.example.roomie.domain.user;
 
-import com.roommate.roommate.post.domain.PostArea;
-import com.roommate.roommate.post.domain.PostCategory;
-import com.roommate.roommate.user.domain.enums.Gender;
-import com.roommate.roommate.user.domain.enums.LifeCycle;
-import com.roommate.roommate.user.domain.enums.Pet;
-import com.roommate.roommate.user.domain.enums.Smoking;
+import com.example.roomie.domain.post.enums.PostArea;
+import com.example.roomie.domain.post.enums.PostCategory;
+import com.example.roomie.domain.user.enums.Gender;
+import com.example.roomie.domain.user.enums.LifeCycle;
+import com.example.roomie.domain.user.enums.Pet;
+import com.example.roomie.domain.user.enums.Smoking;
 import lombok.*;
 
 import javax.persistence.Embeddable;

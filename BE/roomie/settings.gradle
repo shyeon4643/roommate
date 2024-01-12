@@ -1,5 +1,5 @@
 rootProject.name = 'roomie'
-include(':roomie-client')
-include(':roomie-common')
-include(':roomie-core')
-include(':roomie-security')
+include ':roomie-client'
+include ':roomie-common'
+include ':roomie-core'
+include ':roomie-security'

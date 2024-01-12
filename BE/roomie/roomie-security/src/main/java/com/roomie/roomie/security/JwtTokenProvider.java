@@ -1,6 +1,6 @@
 package com.roomie.roomie.security;
 
-import com.roommate.roommate.exception.CustomException;
+import com.roomie.roomie.exception.CustomException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -20,7 +20,7 @@ import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-import static com.roommate.roommate.exception.ExceptionCode.*;
+import static com.roomie.roomie.exception.ExceptionCode.*;
 
 @Component
 @RequiredArgsConstructor

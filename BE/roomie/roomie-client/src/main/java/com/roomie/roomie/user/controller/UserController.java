@@ -1,32 +1,32 @@
 package com.roomie.roomie.user.controller;
 
-import com.roommate.roommate.common.DefaultResponseDto;
-import com.roommate.roommate.config.security.JwtTokenProvider;
-import com.roommate.roommate.user.domain.User;
-import com.roommate.roommate.user.dto.request.DetailRoommateRequestDto;
-import com.roommate.roommate.user.dto.request.SignInRequestDto;
-import com.roommate.roommate.user.dto.request.SignUpRequestDto;
-import com.roommate.roommate.user.dto.request.UpdateUserRequestDto;
-import com.roommate.roommate.user.dto.response.UserInfoResponseDto;
-import com.roommate.roommate.user.dto.response.UserLoginResponseDto;
-import com.roommate.roommate.user.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+
+import com.example.roomie.domain.user.User;
+import com.example.roomie.domain.user.service.UserService;
+import com.roomie.roomie.common.DefaultResponseDto;
+import com.roomie.roomie.security.JwtTokenProvider;
+import com.roomie.roomie.user.dto.request.DetailRoommateRequestDto;
+import com.roomie.roomie.user.dto.request.SignInRequestDto;
+import com.roomie.roomie.user.dto.request.SignUpRequestDto;
+import com.roomie.roomie.user.dto.request.UpdateUserRequestDto;
+import com.roomie.roomie.user.dto.response.UserInfoResponseDto;
+import com.roomie.roomie.user.dto.response.UserLoginResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-@Api(tags = "홈")
+@Tag(name = "회원", description = "회원 API")
 @RestController
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @ApiOperation(value = "회원 가입")
+    @Operation(summary = "회원 가입")
     @PostMapping("/join")
     public ResponseEntity<DefaultResponseDto> join(@RequestBody @Valid SignUpRequestDto signUpRequesetDto) {
 
@@ -40,7 +40,7 @@ public class UserController {
                         .build());
     }
 
-    @ApiOperation(value = "회원 로그인")
+    @Operation(summary = "회원 로그인")
     @PostMapping("/login")
     public ResponseEntity<DefaultResponseDto> login(@RequestBody @Valid SignInRequestDto signInRequesetDto) {
 
@@ -54,7 +54,7 @@ public class UserController {
                         .build());
     }
 
-    @ApiOperation(value = "원하는 룸메이트 작성")
+    @Operation(summary = "원하는 룸메이트 작성")
     @PostMapping("/detailRoommate")
     public ResponseEntity<DefaultResponseDto> writeDetailRoommate(
             @RequestBody @Valid DetailRoommateRequestDto detailRoommateRequestDto,
@@ -72,7 +72,7 @@ public class UserController {
                         .build());
     }
 
-    @ApiOperation(value = "원하는 룸메이트 정보 변경")
+    @Operation(summary = "원하는 룸메이트 정보 변경")
     @PatchMapping("/detailRoommate")
     public ResponseEntity<DefaultResponseDto<Object>> updateDetailRoommate(
             HttpServletRequest servletRequest,
@@ -91,7 +91,7 @@ public class UserController {
                         .build());
     }
 
-    @ApiOperation(value = "마이페이지 조회")
+    @Operation(summary = "마이페이지 조회")
     @GetMapping("/mypage")
     public ResponseEntity<DefaultResponseDto<Object>> myPage(
             HttpServletRequest servletRequest
@@ -108,7 +108,7 @@ public class UserController {
                         .build());
     }
 
-    @ApiOperation(value = "회원 단건 조회")
+    @Operation(summary = "회원 단건 조회")
     @GetMapping("/user/{userId}")
     public ResponseEntity<DefaultResponseDto<Object>> findOneUser(
             @PathVariable("userId") Long userId
@@ -126,7 +126,7 @@ public class UserController {
                         .build());
     }
 
-    @ApiOperation(value = "회원 정보 변경")
+    @Operation(summary = "회원 정보 변경")
     @PatchMapping("/user")
     public ResponseEntity<DefaultResponseDto<Object>> updateUser(
             HttpServletRequest servletRequest,
@@ -148,6 +148,7 @@ public class UserController {
     }
 
 
+    @Operation(summary = "회원 탈퇴")
     @DeleteMapping("/user")
     public ResponseEntity<DefaultResponseDto<Object>> deleteUser(
             HttpServletRequest servletRequest

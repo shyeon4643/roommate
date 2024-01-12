@@ -1,6 +1,6 @@
 package com.example.roomie.domain.post.repository;
 
-import com.roommate.roommate.post.domain.Comment;
+import com.example.roomie.domain.post.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

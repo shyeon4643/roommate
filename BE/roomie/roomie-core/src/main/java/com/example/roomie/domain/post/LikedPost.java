@@ -1,7 +1,7 @@
 package com.example.roomie.domain.post;
 
-import com.roommate.roommate.common.BaseEntity;
-import com.roommate.roommate.user.domain.User;
+import com.example.roomie.common.BaseEntity;
+import com.example.roomie.domain.user.User;
 import lombok.*;
 
 import javax.persistence.*;

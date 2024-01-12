@@ -1,22 +1,19 @@
 package com.example.roomie.domain.post.service;
 
-import com.roommate.roommate.post.domain.Comment;
-import com.roommate.roommate.post.domain.Post;
-import com.roommate.roommate.post.dto.request.CreateCommentRequestDto;
-import com.roommate.roommate.post.dto.response.CommentInfoResponseDto;
-import com.roommate.roommate.post.repository.CommentRepository;
-import com.roommate.roommate.post.repository.PostRepository;
-import com.roommate.roommate.user.domain.User;
-import com.roommate.roommate.user.service.UserService;
+import com.example.roomie.domain.post.Comment;
+import com.example.roomie.domain.post.Post;
+import com.example.roomie.domain.post.repository.CommentRepository;
+import com.example.roomie.domain.post.repository.PostRepository;
+import com.example.roomie.domain.user.User;
+import com.example.roomie.domain.user.service.UserService;
+import com.roomie.roomie.exception.CustomException;
+import com.roomie.roomie.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
-import com.roommate.roommate.exception.CustomException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static com.roommate.roommate.exception.ExceptionCode.SERVER_ERROR;
 
 @Service
 @RequiredArgsConstructor

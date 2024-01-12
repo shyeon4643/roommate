@@ -1,7 +1,6 @@
 package com.example.roomie.domain.post;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.roommate.roommate.common.BaseEntity;
+import com.example.roomie.common.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;

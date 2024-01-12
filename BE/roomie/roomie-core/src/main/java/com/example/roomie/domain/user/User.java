@@ -1,16 +1,12 @@
 package com.example.roomie.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.roommate.roommate.common.BaseEntity;
-import com.roommate.roommate.post.domain.Comment;
-import com.roommate.roommate.post.domain.Post;
-import com.roommate.roommate.post.domain.LikedPost;
-import com.roommate.roommate.user.domain.enums.Gender;
+import com.example.roomie.common.BaseEntity;
+import com.example.roomie.domain.post.Comment;
+import com.example.roomie.domain.post.LikedPost;
+import com.example.roomie.domain.post.Post;
+import com.example.roomie.domain.user.enums.Gender;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.*;

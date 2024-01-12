@@ -1,6 +1,6 @@
 package com.roomie.roomie.user.dto.request;
 
-import com.roommate.roommate.user.domain.enums.Gender;
+import com.example.roomie.domain.user.enums.Gender;
 import lombok.*;
 
 import javax.validation.constraints.Email;

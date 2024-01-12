@@ -1,26 +1,11 @@
 package com.roomie.roomie.config;
 
-import com.roommate.roommate.config.security.CustomAccessDeniedHandler;
-import com.roommate.roommate.config.security.CustomAuthenticationEntryPoint;
-import com.roommate.roommate.config.security.JwtAuthenticationFilter;
-import com.roommate.roommate.config.security.JwtTokenProvider;
-import io.swagger.models.HttpMethod;
-import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
+import com.roomie.roomie.security.CustomAccessDeniedHandler;
+import com.roomie.roomie.security.CustomAuthenticationEntryPoint;
+import com.roomie.roomie.security.JwtAuthenticationFilter;
+import com.roomie.roomie.security.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity // 웹 보안 활성화

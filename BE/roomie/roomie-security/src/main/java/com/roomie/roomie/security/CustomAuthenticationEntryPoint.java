@@ -1,7 +1,7 @@
 package com.roomie.roomie.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.roommate.roommate.common.EntryPointErrorResponse;
+import com.roomie.roomie.common.EntryPointErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

@@ -1,34 +1,30 @@
 package com.example.roomie.domain.post.service;
 
-import com.roommate.roommate.common.PageResponse;
-import com.roommate.roommate.common.SliceResponse;
-import com.roommate.roommate.post.dto.request.CreatePostRequestDto;
-import com.roommate.roommate.post.dto.response.LikedInfoResponseDto;
-import com.roommate.roommate.post.dto.response.PostInfoResponseDto;
-import com.roommate.roommate.post.repository.PostLikedRepository;
-import com.roommate.roommate.post.repository.PostPhotoRepository;
-import com.roommate.roommate.post.repository.PostRepository;
-import com.roommate.roommate.user.domain.Mbti;
-import com.roommate.roommate.user.domain.User;
-import com.roommate.roommate.user.repository.MbtiRepository;
-import com.roommate.roommate.user.repository.UserRepository;
-import com.roommate.roommate.user.service.UserService;
+import com.example.roomie.domain.post.LikedPost;
+import com.example.roomie.domain.post.Post;
+import com.example.roomie.domain.post.PostPhoto;
+import com.example.roomie.domain.post.enums.PostArea;
+import com.example.roomie.domain.post.repository.PostLikedRepository;
+import com.example.roomie.domain.post.repository.PostPhotoRepository;
+import com.example.roomie.domain.post.repository.PostRepository;
+import com.example.roomie.domain.user.Mbti;
+import com.example.roomie.domain.user.User;
+import com.example.roomie.domain.user.repository.MbtiRepository;
+import com.example.roomie.domain.user.repository.UserRepository;
+import com.example.roomie.domain.user.service.UserService;
+import com.roomie.roomie.exception.CustomException;
+import com.roomie.roomie.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import com.roommate.roommate.exception.CustomException;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import static com.roommate.roommate.exception.ExceptionCode.DUPLICATE_POST;
-import static com.roommate.roommate.exception.ExceptionCode.SERVER_ERROR;
 
 @Service
 @RequiredArgsConstructor

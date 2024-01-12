@@ -1,7 +1,5 @@
 package com.roomie.roomie.security;
 
-import com.roommate.roommate.user.domain.User;
-import com.roommate.roommate.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

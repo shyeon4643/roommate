@@ -1,30 +1,20 @@
 package com.example.roomie.domain.user.service;
 
-import com.roommate.roommate.config.security.JwtTokenProvider;
-import com.roommate.roommate.exception.CustomException;
-import com.roommate.roommate.post.domain.PostArea;
-import com.roommate.roommate.post.domain.PostCategory;
-import com.roommate.roommate.user.domain.DetailRoommate;
-import com.roommate.roommate.user.domain.Role;
-import com.roommate.roommate.user.domain.User;
-import com.roommate.roommate.user.domain.enums.Gender;
-import com.roommate.roommate.user.domain.enums.LifeCycle;
-import com.roommate.roommate.user.domain.enums.Pet;
-import com.roommate.roommate.user.domain.enums.Smoking;
-import com.roommate.roommate.user.dto.request.DetailRoommateRequestDto;
-import com.roommate.roommate.user.dto.request.SignInRequestDto;
-import com.roommate.roommate.user.dto.request.SignUpRequestDto;
-import com.roommate.roommate.user.dto.response.AccountTokenInfoDto;
-import com.roommate.roommate.user.dto.response.UserInfoResponseDto;
-import com.roommate.roommate.user.dto.response.UserLoginResponseDto;
-import com.roommate.roommate.user.repository.UserRepository;
+import com.example.roomie.domain.post.enums.PostArea;
+import com.example.roomie.domain.post.enums.PostCategory;
+import com.example.roomie.domain.user.Role;
+import com.example.roomie.domain.user.User;
+import com.example.roomie.domain.user.enums.Gender;
+import com.example.roomie.domain.user.enums.LifeCycle;
+import com.example.roomie.domain.user.enums.Pet;
+import com.example.roomie.domain.user.enums.Smoking;
+import com.example.roomie.domain.user.repository.UserRepository;
+import com.roomie.roomie.exception.CustomException;
+import com.roomie.roomie.exception.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.roommate.roommate.exception.ExceptionCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -81,7 +71,7 @@ public class UserService {
 
     @Transactional
     public AccountTokenInfoDto createToken(User user){
-        String accessToken = jwtTokenProvider.generateAccessToken(user.getId(),Role.ROLE_USER.toString());
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getId(), Role.ROLE_USER.toString());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getId(),Role.ROLE_USER.toString());
 
         user.setToken(refreshToken);

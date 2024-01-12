@@ -1,14 +1,13 @@
 package com.example.roomie.domain.user.repository;
 
-
-import com.roommate.roommate.user.domain.User;
-import com.roommate.roommate.user.domain.enums.Gender;
-import java.util.List;
-
+import com.example.roomie.domain.user.User;
+import com.example.roomie.domain.user.enums.Gender;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
