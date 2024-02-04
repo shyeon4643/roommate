@@ -16,9 +16,9 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Post extends BaseEntity {
 
     @Id
@@ -40,11 +40,14 @@ public class Post extends BaseEntity {
     private int fee;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<LikedPost> likes = new ArrayList<>();
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<PostPhoto> postPhotos = new ArrayList<>();
 
 
