@@ -1,5 +1,4 @@
 package com.roommate.roommate.post.domain;
-
 import com.roommate.roommate.common.BaseEntity;
 import com.roommate.roommate.user.domain.User;
 import lombok.AccessLevel;
@@ -7,16 +6,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Post extends BaseEntity {
 
     @Id
@@ -32,20 +30,16 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;
-
     private int likeCount;
     private int viewCount;
     private int fee;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<LikedPost> likes = new ArrayList<>();
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", fetch = FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<PostPhoto> postPhotos = new ArrayList<>();
 
 
@@ -59,7 +53,6 @@ public class Post extends BaseEntity {
         this.user=user;
         this.setIsDeleted(false);
     }
-
     public void savedLikeCount(boolean like){
         if(like==false) {
             this.likeCount++;
@@ -67,14 +60,11 @@ public class Post extends BaseEntity {
             this.likeCount--;
         }else if(this.likeCount<=0){
             this.likeCount=0;
-
         }
     }
-
     public void increaseViewCount() {
         this.viewCount++;
     }
-
     public void update(String area, String body, String title, int fee, String category){
         this.title= title;
         this.body= body;
@@ -82,12 +72,9 @@ public class Post extends BaseEntity {
         this.category=PostCategory.valueOf(category);
         this.fee=fee;
     }
-
     public void delete(){
         this.setIsDeleted(true);
     }
-
-
     public List<Comment> getComments(){
         int size = this.comments.size();
         if(size<1) return null;
